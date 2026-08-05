@@ -1,0 +1,133 @@
+# HomeLab public repository
+#
+# This file reduces the risk of accidentally committing secrets, live
+# configuration, backups, logs, and machine-specific files. It is not a
+# substitute for reviewing staged changes before every commit.
+
+# Environment files and local overrides
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+*.local.*
+!*.local.example
+
+# Secrets and credential stores
+secrets/
+private/
+credentials/
+*.secret
+*.secrets
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.kdbx
+*.ovpn
+*.mobileconfig
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+authorized_keys
+known_hosts
+
+# VPN and automation credentials
+wg*.conf
+vault-password*
+vault_password*
+credentials.json
+service-account*.json
+service_account*.json
+
+# Backups, exports, dumps, and archives
+backups/
+backup/
+exports/
+dumps/
+*.bak
+*.backup
+*.bkp
+*.old
+*.orig
+*.save
+*.dump
+*.sql
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.rar
+
+# Proxmox and firewall backup artifacts
+*.vma
+*.vma.gz
+*.vma.lzo
+*.vma.zst
+opnsense-backup*.xml
+opnsense-config*.xml
+pfsense-backup*.xml
+pfsense-config*.xml
+
+# Logs, runtime state, and local databases
+logs/
+*.log
+*.pid
+*.sock
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Terraform local state and variable values
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+!*.example.tfvars
+!*.example.tfvars.json
+crash.log
+crash.*.log
+
+# Ansible inventories and private variable overrides
+inventory.local
+inventory.local.*
+host_vars/**/*.local.*
+group_vars/**/*.local.*
+
+# Containers and local service data
+docker-compose.override.yml
+docker-compose.override.yaml
+compose.override.yml
+compose.override.yaml
+data/
+volumes/
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Temporary and generated files
+tmp/
+temp/
+cache/
+.cache/
+*.tmp
+*.temp
+coverage/
+dist/
+build/
+
