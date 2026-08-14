@@ -1,6 +1,6 @@
 # Personal HomeLab
 
-> **Status:** Work in progress — physical assembly and initial virtualization setup.
+> **Status:** Work in progress — operational network foundation and virtualization platform.
 
 This repository documents the design, deployment, and evolution of my personal HomeLab. The project is being built to develop practical skills in virtualization, Linux systems administration, networking, cybersecurity, monitoring, automation, and self-hosted services.
 
@@ -10,13 +10,13 @@ The documentation reflects only work that has actually been completed. Planned c
 
 | Area | Status | Verified progress |
 | --- | --- | --- |
-| Physical rack | Assembled | The rack and its current hardware have been physically installed. Final cabling is still in progress. |
-| Proxmox host | Installed | Proxmox VE is installed on the main mini PC and access to its web interface has been verified. |
+| Physical rack | Assembled | The rack and its current hardware have been installed. The main network path is connected, while final cable organization remains in progress. |
+| Proxmox host | Operational foundation | Proxmox VE is installed, updated, reachable through the HomeLab network, and protected with a separate administrative account and multi-factor authentication. |
 | Installation media | Available | An operating system ISO has been uploaded to Proxmox storage. |
 | Virtual machines | Not deployed | Initial VM creation was started, but no complete VM has been created and booted yet. |
-| Firewall appliance | Pending migration | The dedicated appliance was received with pfSense preinstalled. OPNsense has not yet been installed or configured. |
-| Managed switch | Pending setup | The switch is available, but cabling and configuration have not yet been completed. |
-| Production network path | Not deployed | The planned firewall-to-switch network path is not currently operating as the main home network. |
+| Firewall appliance | Operational | OPNsense is installed on the dedicated appliance. Initial WAN, LAN, DNS, DHCP, internet-connectivity, and administrative-access checks have been completed. |
+| Managed switch | Partially deployed | The switch is carrying wired HomeLab traffic, but managed configuration, firmware review, and future segmentation remain pending. |
+| HomeLab network path | Operational | The path from the ISP equipment through OPNsense and the managed switch to selected wired devices has been tested successfully. |
 | Self-hosted services | Planned | Docker, Home Assistant, monitoring, automation, and AI services have not yet been deployed. |
 
 ## Hardware Overview
@@ -33,9 +33,9 @@ The current build includes:
 
 Model names are included only where they are useful for technical context. Serial numbers, MAC addresses, public IP addresses, internal hostnames, credentials, and other sensitive identifiers are intentionally excluded.
 
-## Target Architecture
+## Current Network Architecture
 
-The intended high-level network path is:
+The verified high-level network path is:
 
 ```text
 ISP equipment
@@ -47,7 +47,7 @@ Managed switch
 Proxmox host and network devices
 ```
 
-This diagram represents the target design. It does not imply that the complete network path is currently deployed.
+This base path is operational for selected wired devices. Managed-switch administration, VLAN segmentation, VPN access, and service workloads are not yet deployed.
 
 ## Project Roadmap
 
@@ -55,11 +55,16 @@ This diagram represents the target design. It does not imply that the complete n
 - [x] Install Proxmox VE
 - [x] Verify access to the Proxmox web interface
 - [x] Upload installation media to Proxmox
+- [x] Update and harden the initial Proxmox administration setup
+- [x] Install OPNsense on the dedicated firewall appliance
+- [x] Configure and validate the initial WAN and LAN roles
+- [x] Enable and validate the initial DHCP service
+- [x] Connect OPNsense, the managed switch, and selected wired devices
+- [x] Verify internet and DNS connectivity through the new HomeLab path
 - [ ] Complete and document the physical cabling
-- [ ] Install OPNsense on the dedicated firewall appliance
-- [ ] Configure the initial WAN and LAN interfaces safely
-- [ ] Connect and configure the managed switch
-- [ ] Verify the new network path before making it the primary network
+- [ ] Complete the managed-switch administration and firmware review
+- [ ] Design and deploy network segmentation only after the base network is stable
+- [ ] Add controlled remote access through a reviewed VPN design
 - [ ] Create and document the first Linux virtual machine
 - [ ] Deploy container-based services
 - [ ] Add monitoring with Prometheus and Grafana
@@ -85,7 +90,8 @@ This repository follows four rules:
 | [Architecture](docs/architecture.md) | Verified current state and separate target architecture. |
 | [Physical setup](docs/physical-setup.md) | Rack assembly status, pending cabling work, and photo-review guidance. |
 | [Proxmox installation](docs/proxmox-installation.md) | Verified Proxmox VE installation progress and current limitations. |
-| [Network design](docs/network-design.md) | Planned firewall-to-switch topology and validation criteria. |
+| [OPNsense deployment](docs/opnsense-deployment.md) | Sanitized installation, initial network roles, security controls, and connectivity validation. |
+| [Network design](docs/network-design.md) | Verified base topology and planned managed-network improvements. |
 | [Project roadmap](docs/project-roadmap.md) | Completed, in-progress, and planned phases with completion criteria. |
 | [Security and privacy](docs/security-and-privacy.md) | Rules for sanitizing files, screenshots, logs, and configurations. |
 
@@ -112,8 +118,7 @@ Examples and future configuration templates will use placeholders and documentat
 
 Additional implementation notes will be added only after the corresponding work has been completed and verified. Planned topics include:
 
-- OPNsense installation and initial configuration
-- Managed-switch deployment
+- Managed-switch administration and firmware review
 - The first complete Linux virtual machine
 - Network segmentation and secure remote access
 - Container-hosted services

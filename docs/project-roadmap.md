@@ -2,7 +2,7 @@
 
 > **Last verified:** August 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Physical cabling and network foundation
+> **Current focus:** Managed-switch setup, final cabling, and completion of the network foundation
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -24,11 +24,11 @@ No fixed completion dates are published at this stage. The project is developed 
 | --- | --- | --- |
 | 1. Physical foundation | Assemble the rack and prepare safe equipment placement and cable management | **In progress** |
 | 2. Virtualization foundation | Install Proxmox VE and deploy the first validated guest workload | **In progress** |
-| 3. Network foundation | Deploy OPNsense and the managed switch as a tested network path | **Pending** |
+| 3. Network foundation | Deploy OPNsense and the managed switch as a tested network path | **In progress** |
 | 4. Core service platform | Create Linux workloads and a controlled container-hosting environment | **Planned** |
-| 5. Automation and observability | Deploy Home Assistant, local voice integration, Prometheus, and Grafana | **Planned** |
+| 5. Automation and observability | Deploy Home Assistant, local voice integration, n8n, Prometheus, and Grafana | **Planned** |
 | 6. Assistant platform | Deploy and integrate Hermes Agent as a persistent HomeLab assistant | **Planned** |
-| 7. Security and resilience | Add segmentation, controlled remote access, backups, recovery tests, and hardening | **Planned** |
+| 7. Security and resilience | Add segmentation, controlled remote access, backups, recovery tests, and hardening | **In progress** |
 | 8. Advanced labs | Build isolated cybersecurity, development, and optional AI-compute experiments | **Under evaluation** |
 
 ## Phase 1 — Physical Foundation
@@ -40,6 +40,7 @@ No fixed completion dates are published at this stage. The project is developed 
 - [x] Assemble the 12U open rack.
 - [x] Install the rack shelf and cable-management accessories.
 - [x] Make the firewall appliance, managed switch, UPS, display, and KVM equipment available for the build.
+- [x] Connect and validate the base firewall-to-switch path and selected wired devices.
 - [ ] Complete and label the final cabling.
 - [ ] Verify power distribution and document the connected load safely.
 - [ ] Produce sanitized physical-layout photographs or diagrams suitable for the public repository.
@@ -60,6 +61,9 @@ No fixed completion dates are published at this stage. The project is developed 
 - [x] Install Proxmox VE on the GMKtec virtualization host.
 - [x] Verify access to the Proxmox web interface.
 - [x] Upload an operating system ISO to local storage.
+- [x] Apply the available host updates and configure the package source for the non-subscribed lab environment.
+- [x] Configure stable private management connectivity and local name resolution.
+- [x] Create a separate administrative account and protect it with multi-factor authentication.
 - [ ] Complete, boot, and validate the first virtual machine.
 - [ ] Document guest resource allocation and installation decisions.
 - [ ] Define an initial backup and restoration procedure.
@@ -72,26 +76,36 @@ No fixed completion dates are published at this stage. The project is developed 
 
 ## Phase 3 — Network Foundation
 
-**Status: Pending**
+**Status: In progress**
 
-The dedicated firewall appliance currently has pfSense preinstalled. The target platform is OPNsense, but the migration and final network deployment have not started. The TP-Link JetStream TL-SG2008P V3 is also available but is not yet connected or configured.
+OPNsense is installed on the dedicated firewall appliance and the base path through the managed switch is operational for selected wired devices. The switch is forwarding traffic, but its administrative setup and the wider network-foundation completion checks remain pending.
 
-### Planned work
+### Verified progress
 
-- [ ] Record the existing connectivity requirements before making changes.
-- [ ] Install OPNsense on the dedicated Intel N100 appliance.
-- [ ] Assign and validate WAN and LAN roles without publishing live interface details.
-- [ ] Back up the initial sanitized configuration privately.
-- [ ] Connect and update the managed switch.
-- [ ] Configure switch management and test wired connectivity.
-- [ ] Validate internet access, local administration, DNS, and expected client connectivity.
-- [ ] Prepare a rollback procedure before using the new path for normal household connectivity.
+- [x] Install OPNsense on the dedicated Intel N100 appliance.
+- [x] Confirm reliable boot from internal storage.
+- [x] Assign and validate the initial WAN and LAN roles without publishing live interface details.
+- [x] Enable the initial Kea DHCPv4 service for the HomeLab LAN.
+- [x] Validate client addressing, DNS resolution, internet connectivity, and local administration.
+- [x] Connect the managed switch and use it to forward traffic to selected wired devices.
+- [x] Confirm that the Proxmox host remains accessible through the new path.
+- [x] Export an initial OPNsense configuration backup privately.
+- [x] Enable multi-factor authentication for OPNsense administration.
+
+### Remaining work
+
+- [ ] Confirm and document required DHCP reservations privately.
+- [ ] Discover and secure the managed-switch administration path.
+- [ ] Review and update the switch firmware where appropriate.
+- [ ] Configure stable switch management and validate it without publishing live values.
+- [ ] Validate the remaining essential household connectivity requirements.
+- [ ] Prepare and review a rollback procedure before wider network changes.
 - [ ] Document the final high-level topology using sanitized labels.
 
 ### Completion criteria
 
 - OPNsense boots reliably and the intended network roles have been tested.
-- The managed switch operates in the approved network path.
+- The managed switch operates in the approved network path and its administration is secured.
 - Essential client connectivity has been validated.
 - A rollback path and private configuration backup exist.
 - Public documentation contains no live addresses, credentials, identifiers, or remote-access details.
@@ -119,11 +133,12 @@ The final VM and container layout has not been selected. Docker or another conta
 - [ ] Deploy Home Assistant in an appropriate isolated workload.
 - [ ] Integrate the available Home Assistant Voice hardware.
 - [ ] Define which local devices may be controlled and what permissions they require.
+- [ ] Deploy n8n for approved workflows after its access and secret-management boundaries are defined.
 - [ ] Deploy Prometheus for selected metrics.
 - [ ] Deploy Grafana dashboards for infrastructure health and capacity.
 - [ ] Configure alerting only after useful thresholds and notification paths are defined.
 
-No home-automation, voice, Prometheus, or Grafana service is currently deployed.
+No home-automation, voice, n8n, Prometheus, or Grafana service is currently deployed.
 
 ## Phase 6 — Assistant Platform
 
@@ -147,7 +162,15 @@ Hermes Agent is not currently installed or connected to the HomeLab.
 
 ## Phase 7 — Security and Resilience
 
-**Status: Planned**
+**Status: In progress**
+
+### Verified foundation controls
+
+- [x] Enable multi-factor authentication for OPNsense administration.
+- [x] Use a separate administrative account with multi-factor authentication for normal Proxmox administration.
+- [x] Keep live configuration exports and credentials outside the public repository.
+- [x] Export an initial private OPNsense configuration backup.
+- [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
 
@@ -155,12 +178,12 @@ Hermes Agent is not currently installed or connected to the HomeLab.
 - [ ] Introduce VLANs only after the base network is stable and recovery access is understood.
 - [ ] Apply least-privilege firewall rules and test expected traffic explicitly.
 - [ ] Add controlled remote access through a reviewed VPN design.
-- [ ] Create configuration and service backups outside the public repository.
+- [ ] Define recurring configuration and service backups outside the public repository.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
 
-VLANs, VPN access, production firewall rules, and automated backups are not currently deployed or verified.
+VLANs, VPN access, advanced least-privilege firewall policy, and automated backups are not currently deployed or verified.
 
 ## Phase 8 — Advanced Labs
 
@@ -175,18 +198,19 @@ Possible future work includes:
 - A future NAS and a documented storage, backup, and recovery design
 - Additional specialised agents coordinated through the persistent assistant platform
 
-These items are exploratory and may change as the project, studies, budget, and technical requirements evolve.
+The GPU-equipped workstation has been selected as a future on-demand compute node rather than a permanently dedicated Hermes resource. Wake-on-LAN and post-task power management remain planned and have not been integrated. The other advanced-lab items remain exploratory and may change as the project, studies, budget, and technical requirements evolve.
 
 ## Immediate Next Milestones
 
 The next verified updates should follow this order:
 
-1. Complete the current physical cabling work.
-2. Install and perform initial validation of OPNsense on the dedicated firewall appliance.
-3. Connect and perform the initial managed-switch setup.
-4. Test the intended firewall-to-switch network path and retain a rollback option.
-5. Complete and validate the first Proxmox virtual machine.
-6. Update the architecture, physical setup, Proxmox notes, and this roadmap with verified results.
+1. Discover and secure the managed-switch administration path.
+2. Review the switch firmware and establish stable private management settings.
+3. Confirm required DHCP reservations and remaining essential client connectivity.
+4. Complete the current physical cable organization and safe labeling.
+5. Review rollback and configuration-recovery procedures for the base network.
+6. Complete, update, and validate the first Proxmox virtual machine.
+7. Create and verify the first VM backup before deploying important services.
 
 This order may be adjusted if testing identifies a safer dependency sequence. Any change will be documented rather than silently presented as part of the original plan.
 

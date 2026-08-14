@@ -12,78 +12,72 @@ The diagrams intentionally omit real addresses, internal hostnames, wireless net
 
 ## Current Verified State
 
-At the time of this update, the existing home network remains responsible for normal connectivity. The Proxmox host is installed and its management interface has been reached successfully through the existing network.
+The dedicated OPNsense appliance now provides the firewall and routing layer for the HomeLab LAN. Its upstream connection remains behind the existing ISP equipment, while its internal connection feeds the managed PoE switch. Selected wired devices, including the Proxmox host and an administration client, have been tested successfully through this path.
 
-The dedicated firewall appliance and managed switch are physically available, but they are not yet operating as the production network path. No complete virtual machine or self-hosted service has been deployed.
+The managed switch is currently forwarding traffic, but its administrative setup, firmware review, and future segmentation remain pending. No complete virtual machine or self-hosted service has been deployed.
 
 ```mermaid
 flowchart TD
-    ISP["ISP equipment"] --> NET["Existing home network"]
-    NET --> PVE["Proxmox VE host<br/>Installed and accessible"]
-
-    FW["Dedicated firewall appliance<br/>Available; OPNsense pending"]
-    SW["Managed PoE switch<br/>Available; setup pending"]
-
-    FW -. "not yet in production path" .-> SW
+    ISP["ISP equipment"] --> FW["OPNsense firewall<br/>Operational base"]
+    FW --> SW["Managed PoE switch<br/>Traffic forwarding active"]
+    SW --> PVE["Proxmox VE host<br/>Installed and accessible"]
+    SW --> CLIENT["Selected wired clients<br/>Connectivity verified"]
 ```
 
 ### Verified Components
 
 | Layer | Component | Verified state |
 | --- | --- | --- |
-| Physical | 12U rack and rack accessories | Assembled; final cabling is in progress. |
-| Compute | GMKtec virtualization host | Proxmox VE is installed and web access has been verified. |
+| Physical | 12U rack and rack accessories | Assembled; the base network path is connected and final cable organization is in progress. |
+| Compute | GMKtec virtualization host | Proxmox VE is installed, updated, accessible through the HomeLab LAN, and protected with a separate administrative account and multi-factor authentication. |
 | Storage | Proxmox local storage | An operating system ISO has been uploaded. |
 | Virtualization | Virtual machines | No complete VM has been created and booted. |
-| Edge security | Dedicated Intel N100 appliance | Available with pfSense preinstalled; OPNsense migration is pending. |
-| Switching | TP-Link managed PoE switch | Available; not yet connected or configured. |
+| Edge security | Dedicated Intel N100 appliance | OPNsense is installed; initial WAN, LAN, DHCP, DNS, internet-access, and local-administration checks have been completed. |
+| Switching | TP-Link managed PoE switch | Connected and forwarding HomeLab traffic; managed setup and segmentation remain pending. |
 | Services | Home automation, monitoring, containers, and AI services | Not deployed. |
 
-## Target Physical and Network Architecture
+## Next Network Stage
 
-The target design introduces a dedicated firewall between the ISP equipment and the managed switch. The switch will provide the main wired distribution point for the virtualization host and other approved network devices.
+The next network stage will keep OPNsense as the firewall and routing layer while turning the switch from a basic forwarding point into a deliberately managed distribution layer. Segmentation will be introduced only after switch access, firmware, management settings, rollback access, and the unsegmented base network have been verified.
 
 ```mermaid
 flowchart TD
-    ISP["ISP equipment"] --> FW["Dedicated OPNsense firewall"]
-    FW --> SW["Managed PoE switch"]
-    SW --> PVE["Proxmox VE host"]
-    SW --> ADMIN["Administration and client devices"]
-    SW --> IOT["Future automation and IoT devices"]
+    FW["OPNsense firewall"] --> SW["Managed PoE switch"]
+    SW -. "future segmentation" .-> TRUSTED["Trusted clients"]
+    SW -. "future segmentation" .-> SERVICES["HomeLab services"]
+    SW -. "future segmentation" .-> IOT["Automation and IoT"]
 ```
 
-This is a target design. OPNsense, switch management, network segmentation, and production cutover remain pending and will be documented only after successful configuration and testing.
+This is a target design. VLANs, inter-network firewall policy, VPN access, and service isolation are not currently deployed.
 
 ## Target Logical Architecture
 
-Proxmox VE will remain the virtualization layer. Future workloads will be separated by role so that infrastructure, automation, observability, and experimental services can be maintained and documented independently.
+Proxmox VE will remain the always-available virtualization layer. Future workloads will be separated by role so that infrastructure, automation, observability, and experimental services can be maintained and documented independently.
 
 ```mermaid
 flowchart TD
-    PVE["Proxmox VE"] --> CORE["Core Linux workloads"]
-    PVE --> AUTO["Automation workloads"]
-    PVE --> LAB["Monitoring and lab workloads"]
-
-    CORE --> CONTAINERS["Containerized services"]
-    AUTO --> HA["Home Assistant and voice"]
-    AUTO --> HERMES["Hermes Agent"]
-    LAB --> OBS["Prometheus and Grafana"]
+    PVE["Proxmox VE"] --> CORE["Core and container workloads"]
+    PVE --> AUTO["Home Assistant, n8n, and Hermes"]
+    PVE --> OBS["Prometheus and Grafana"]
+    AUTO -. "approved heavy tasks" .-> GPU["GPU workstation<br/>On-demand compute"]
 ```
 
 All workloads in this diagram are **planned**. Their final VM or container placement, resource allocation, network access, and backup strategy will be decided and documented during deployment.
+
+The GPU-equipped primary workstation is not intended to be permanently dedicated to Hermes or other HomeLab services. The target design treats it as an on-demand compute node for approved heavy local-AI tasks. When the workstation is off, an authorized automation may request Wake-on-LAN; automatic suspension or shutdown after an automated task will be evaluated later. The GPU must remain available for interactive workloads such as streaming and must not be consumed merely because the computer is powered on.
 
 ## Planned Functional Layers
 
 | Layer | Planned role | Current status |
 | --- | --- | --- |
-| Edge and routing | OPNsense routing, firewalling, and controlled remote access | Planned; not installed or configured. |
-| Network distribution | Managed switching and future segmentation | Planned; switch setup has not started. |
-| Virtualization | Linux virtual machines and isolated service workloads | Proxmox installed; guest deployment pending. |
+| Edge and routing | OPNsense routing, firewalling, and controlled remote access | Operational base; advanced policy and remote access remain pending. |
+| Network distribution | Managed switching and future segmentation | Traffic forwarding is active; management and segmentation remain pending. |
+| Virtualization | Linux virtual machines and isolated service workloads | Proxmox installed, updated, and hardened; guest deployment pending. |
 | Containers | Reproducible deployment of selected services | Planned. |
 | Home automation | Home Assistant and local voice interfaces | Planned; hardware is available. |
 | Observability | Metrics and dashboards with Prometheus and Grafana | Planned. |
 | Assistant platform | Persistent local assistant using Hermes Agent | Planned. |
-| AI compute | Optional workloads on the GPU-equipped workstation | Under evaluation; not integrated as a permanent node. |
+| AI compute | Heavy local inference on the GPU-equipped workstation | Planned as an on-demand node; Wake-on-LAN and workload controls are not yet integrated. |
 | Storage and backups | Future NAS, service backups, and recovery procedures | Planned; final design not selected. |
 
 ## Architecture Principles
@@ -101,15 +95,12 @@ The project will follow these principles as it evolves:
 
 ## Future Documentation
 
-The architecture will be updated when each milestone is verified. Planned supporting documents include:
+The existing physical-setup, Proxmox, network-design, roadmap, and changelog documents will be updated as milestones are verified. New implementation records will be added only after the corresponding work is completed. Planned topics include:
 
-- Physical rack assembly and sanitized cabling documentation
-- Proxmox VE installation and first-VM deployment notes
-- OPNsense installation and initial validation
-- Managed-switch setup and safe network-segmentation design
+- First-VM deployment notes
+- Managed-switch setup and safe network-segmentation implementation
 - Service deployment records
-- Monitoring, backup, and recovery documentation
-- A changelog recording completed milestones
+- Monitoring, backup, and recovery procedures
 
 ## Public Documentation Boundaries
 

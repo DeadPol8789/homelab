@@ -12,6 +12,7 @@ The inventory is intentionally limited to information that is useful for a techn
 | Status | Meaning |
 | --- | --- |
 | In use | The device is currently performing its documented role. |
+| Partially deployed | The device is performing a verified base function, but its intended managed configuration is not complete. |
 | Assembled | The hardware has been physically placed or assembled, but final cabling or configuration may still be in progress. |
 | Available | The device is owned and ready for a future deployment step, but is not yet operating in its intended HomeLab role. |
 | Planned | The item is not currently part of the deployed environment. It may be purchased or integrated later. |
@@ -20,19 +21,19 @@ The inventory is intentionally limited to information that is useful for a techn
 
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
-| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE is installed and its web interface is accessible. An installation ISO has been uploaded, but no complete virtual machine has been deployed yet. |
-| Desktop workstation | NVIDIA GeForce RTX 5070 Ti, 32 GB RAM | Supporting workstation and possible future GPU compute node for local AI workloads | **Available:** not currently integrated as a permanent HomeLab node. |
+| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE is installed, updated, accessible through the HomeLab LAN, and protected with a separate administrative account and multi-factor authentication. No complete virtual machine has been deployed yet. |
+| Desktop workstation | NVIDIA GeForce RTX 5070 Ti, 32 GB RAM | Primary personal workstation and future on-demand compute node for heavy local-AI workloads | **In use independently:** it is not dedicated to the HomeLab and is not yet integrated with Hermes or automation. Future Wake-on-LAN and workload controls are planned. |
 
 ## Network and Security
 
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
-| Dedicated fanless firewall appliance | Intel N100, 8 GB RAM, 128 GB NVMe SSD, 4 × Intel i226-V 2.5 GbE interfaces | Dedicated OPNsense firewall and router | **Available:** received with pfSense preinstalled. OPNsense installation, interface assignment, cabling, and production deployment are still pending. |
-| TP-Link JetStream TL-SG2008P V3 | 8-port managed switch with PoE support | Main managed switch for wired devices and future network segmentation | **Available:** not yet connected or configured. |
+| Dedicated fanless firewall appliance | Intel N100, 8 GB RAM, 128 GB NVMe SSD, 4 × Intel i226-V 2.5 GbE interfaces | Dedicated OPNsense firewall and router | **In use:** OPNsense is installed and the initial upstream, LAN, DHCP, DNS, internet-connectivity, local-administration, and multi-factor-authentication checks have been completed. |
+| TP-Link JetStream TL-SG2008P V3 | 8-port managed switch with PoE support | Main managed switch for wired devices and future network segmentation | **Partially deployed:** connected and forwarding traffic for selected HomeLab devices. Administrative access, firmware review, management settings, and VLAN configuration remain pending. |
 | 24-port Cat6 patch panel | 1U rack-mount patch panel | Structured Ethernet termination and cable organization | **Assembled:** part of the current rack build; final cabling is still in progress. |
-| Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **Available:** final routing and connection work is still in progress. |
+| Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **In use:** the base firewall-to-switch and selected client connections are operational; final routing, labeling, and organization remain in progress. |
 
-The intended firewall-to-switch network path is not yet the production network. Network segmentation, VLANs, VPN access, and firewall rules will only be documented as deployed after they have been configured and verified.
+The base path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Network segmentation, VLANs, VPN access, and advanced firewall policy will only be documented as deployed after they have been configured and verified.
 
 ## Rack, Power, and Local Administration
 
@@ -60,8 +61,8 @@ The HomeLab will eventually serve several wired and wireless client devices. The
 
 | Device category | Intended relationship to the HomeLab | Current status |
 | --- | --- | --- |
-| Main desktop workstation | Administration, development, testing, and optional GPU workloads | Existing device; permanent HomeLab integration is planned. |
-| Laptops | Administration and client testing | Existing devices; final wired connectivity is pending. |
+| Main desktop workstation | Administration, development, testing, and future on-demand GPU workloads | Connected as a client; automated heavy-compute integration is planned but not deployed. |
+| Laptops | Administration and client testing | At least one wired client has been used to validate connectivity through OPNsense and the switch. |
 | Smart-home and camera devices | Future isolated or controlled network clients | Deployment and integration will be documented individually after verification. |
 
 ## Planned Hardware
