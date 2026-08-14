@@ -1,27 +1,29 @@
 # HomeLab Network Design
 
 > **Last verified:** August 2026  
-> **Implementation status:** Planned — the dedicated firewall and managed switch are not yet in the active network path
+> **Implementation status:** Operational base path — managed switching, segmentation, and remote access remain in progress
 
-This document records the intended network foundation for the HomeLab. It describes design goals, deployment order, validation criteria, and public-documentation boundaries without exposing the live home network.
+This document records both the verified network foundation and the next planned stages for the HomeLab. It describes the operational base path, remaining validation work, segmentation principles, and public-documentation boundaries without exposing the live home network.
 
-The design below is **not an implementation record**. OPNsense has not yet been installed on the dedicated firewall appliance, the managed switch has not yet been configured, and no VLAN or VPN design has been deployed.
+OPNsense is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is forwarding traffic, but its administrative configuration is not complete. No VLAN or VPN design has been deployed.
 
 ## Current Verified State
 
-The existing home network continues to provide normal connectivity. The Proxmox VE host is installed and has been accessed through that existing network.
+The existing ISP equipment provides the upstream connection to the dedicated OPNsense appliance. OPNsense provides the HomeLab LAN, and the managed PoE switch distributes connectivity to the Proxmox host and selected wired clients.
 
 | Component | Verified state |
 | --- | --- |
-| Existing home network | Provides current connectivity. |
-| Proxmox VE host | Installed and accessible through the existing network. |
-| Dedicated firewall appliance | Available with pfSense preinstalled; migration to OPNsense is pending. |
-| Managed PoE switch | Available; not yet connected or configured. |
-| Dedicated firewall-to-switch path | Not deployed. |
+| ISP equipment | Provides the upstream network connection. |
+| Dedicated firewall appliance | OPNsense is installed and the initial WAN, LAN, DHCP, DNS, internet-connectivity, and local-administration checks have passed. |
+| DHCP service | Kea DHCPv4 is active for the HomeLab LAN; final verification and documentation of individual reservations remain pending. |
+| Managed PoE switch | Connected and forwarding wired traffic; management access, firmware review, and segmentation remain pending. |
+| Proxmox VE host | Installed, updated, and accessible through the HomeLab network path. |
+| Selected wired clients | Address assignment, DNS resolution, and internet connectivity have been verified through OPNsense and the switch. |
+| Dedicated firewall-to-switch path | Operational for selected HomeLab devices. |
 | VLANs and network segmentation | Not deployed. |
 | Remote-access VPN | Not deployed. |
 
-## Target Network Path
+## Operational Base Network Path
 
 ```mermaid
 flowchart TD
@@ -29,62 +31,63 @@ flowchart TD
     FW --> SW["Managed PoE switch"]
     SW --> PVE["Proxmox VE host"]
     SW --> CLIENTS["Approved wired clients"]
-    SW --> DEVICES["Future infrastructure and automation devices"]
+    SW --> DEVICES["Selected wired devices"]
 ```
 
-This diagram uses generic labels deliberately. The final operating mode of the ISP equipment, physical port assignments, addressing plan, and management details will be documented privately during deployment and represented publicly only in sanitized form.
+This diagram uses generic labels deliberately. The operating mode of the ISP equipment, physical port assignments, addressing plan, and management details are documented privately and represented publicly only in sanitized form.
 
 ## Component Responsibilities
 
 | Component | Intended responsibility | Current status |
 | --- | --- | --- |
-| ISP equipment | Maintain the external service handoff required by the connection | Existing; final integration mode not yet documented. |
-| OPNsense appliance | Routing, firewall policy, DHCP/DNS decisions, and later controlled remote access | Planned; not installed or configured. |
-| Managed switch | Wired distribution, PoE delivery where required, and later VLAN transport | Pending initial setup. |
+| ISP equipment | Maintain the external service handoff required by the connection | In use as the upstream connection. |
+| OPNsense appliance | Routing, base firewall policy, LAN addressing, DHCP/DNS services, and later controlled remote access | Operational base; advanced policy and remote access remain pending. |
+| Managed switch | Wired distribution, PoE delivery where required, and later VLAN transport | Forwarding traffic; administrative configuration remains pending. |
 | Proxmox VE host | Run isolated guest workloads for future HomeLab services | Hypervisor installed; no complete VM deployed. |
-| Client and infrastructure devices | Consume only the connectivity required for their approved roles | Connection plan pending. |
+| Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected wired devices are connected; final role-based segmentation remains pending. |
 
 ## Design Principles
 
-- **Safe migration:** the new network path must be tested before it replaces normal household connectivity.
-- **Rollback first:** the existing working path must remain recoverable during initial deployment.
+- **Safe migration:** changes are introduced with selected clients before wider household dependencies are moved.
+- **Rollback first:** the upstream network and private configuration backups must remain available during further changes.
 - **Least privilege:** future rules should allow only the traffic required by each role.
 - **Stable foundation before segmentation:** basic routing, DNS, administration, and client access must work reliably before VLANs are introduced.
 - **Management protection:** administrative interfaces should not be exposed directly to the internet.
 - **Documented changes:** every implementation step should record its objective, result, validation, and recovery method.
 - **Privacy by design:** public examples must use placeholders or documentation-only values.
 
-## Initial Deployment Sequence
+## Completed Base Deployment Sequence
 
-The intended order is:
+The base path was introduced in the following order:
 
-1. Record the services and devices that must continue working during the migration.
-2. Prepare installation media and a recovery path for the firewall appliance.
-3. Install OPNsense and identify WAN and LAN roles locally.
-4. Configure the minimum required LAN services without publishing live values.
-5. Test the firewall with a limited client before changing the normal network path.
-6. Connect the managed switch and secure its management access.
+1. Prepare installation media and install OPNsense on the dedicated appliance.
+2. Confirm independent boot from internal storage.
+3. Assign and test the upstream and internal network roles locally.
+4. Enable the minimum required LAN and DHCP services.
+5. Test local administration, client addressing, and DNS resolution.
+6. Connect the managed switch as the wired distribution point.
 7. Test a wired client and the Proxmox host through the firewall-to-switch path.
-8. Validate essential connectivity and retain a tested rollback option.
-9. Update this document with the verified implementation result.
+8. Confirm internet access and save an initial private configuration backup.
+9. Record the verified result using only sanitized public information.
 
-This sequence may change if the ISP equipment or required household services introduce dependencies that have not yet been verified.
+Managed-switch administration and wider household dependencies remain separate follow-up work.
 
 ## Initial Validation Checklist
 
-The network foundation will not be marked as completed until the relevant checks have been performed:
+The checklist distinguishes passed base-network tests from the work still required before the complete network-foundation phase can be closed:
 
-- [ ] OPNsense boots reliably after installation and restart.
-- [ ] WAN and LAN roles are confirmed locally.
-- [ ] An approved test client receives the intended network configuration.
-- [ ] Internet connectivity works through the new path.
-- [ ] DNS resolution works as intended.
-- [ ] The OPNsense management interface is reachable only from an approved local path.
+- [x] OPNsense boots reliably after installation and restart.
+- [x] WAN and LAN roles are confirmed locally.
+- [x] An approved test client receives the intended network configuration.
+- [x] Internet connectivity works through the new path.
+- [x] DNS resolution works as intended.
+- [x] The OPNsense management interface is reachable from an approved local path.
 - [ ] The managed switch is reachable through its approved management path.
-- [ ] The Proxmox host remains accessible through the intended administration path.
+- [x] The Proxmox host remains accessible through the intended administration path.
 - [ ] Essential household connectivity has been checked.
 - [ ] Disconnecting or reverting the new path has been reviewed or tested.
-- [ ] Public evidence has been sanitized before publication.
+- [x] An initial private OPNsense configuration backup has been exported.
+- [x] Public documentation has been sanitized before publication.
 
 Passing these checks will verify the base network only. It will not mean that VLANs, VPN access, advanced firewall policy, monitoring, or high availability have been completed.
 
@@ -131,7 +134,6 @@ Example configurations added later should use explicit placeholders or documenta
 
 After the relevant work has been completed and verified, this design will be complemented by:
 
-- OPNsense installation and initial configuration notes
 - Managed-switch setup and validation notes
 - A sanitized as-built network diagram
 - Segmentation and firewall-policy documentation
@@ -139,4 +141,4 @@ After the relevant work has been completed and verified, this design will be com
 - Backup and recovery procedures for network configurations
 - Troubleshooting records and lessons learned
 
-Until then, all of these items remain planned work.
+The OPNsense deployment record now documents the completed base-firewall stage. All remaining items in this list are planned work.
