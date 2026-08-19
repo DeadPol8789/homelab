@@ -29,7 +29,7 @@ The inventory is intentionally limited to information that is useful for a techn
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
 | Dedicated fanless firewall appliance | Intel N100, 8 GB RAM, 128 GB NVMe SSD, 4 × Intel i226-V 2.5 GbE interfaces | Dedicated OPNsense firewall and router | **In use:** OPNsense is installed and the initial upstream, LAN, DHCP, DNS, internet-connectivity, local-administration, and multi-factor-authentication checks have been completed. |
-| TP-Link JetStream TL-SG2008P V3 | 8-port managed switch with PoE support | Main managed switch for wired devices and future network segmentation | **Partially deployed:** connected and forwarding traffic for selected HomeLab devices. Administrative access, firmware review, management settings, and VLAN configuration remain pending. |
+| TP-Link JetStream TL-SG2008P V3 | 8-port managed switch with PoE support | Main managed switch for wired devices and future network segmentation | **In use:** connected and forwarding traffic, with local administrative access and stable private management settings configured. Firmware compatibility has been reviewed; VLAN configuration remains pending. |
 | 24-port Cat6 patch panel | 1U rack-mount patch panel | Structured Ethernet termination and cable organization | **Assembled:** part of the current rack build; final cabling is still in progress. |
 | Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **In use:** the base firewall-to-switch and selected client connections are operational; final routing, labeling, and organization remain in progress. |
 

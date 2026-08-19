@@ -14,12 +14,12 @@ The diagrams intentionally omit real addresses, internal hostnames, wireless net
 
 The dedicated OPNsense appliance now provides the firewall and routing layer for the HomeLab LAN. Its upstream connection remains behind the existing ISP equipment, while its internal connection feeds the managed PoE switch. Selected wired devices, including the Proxmox host and an administration client, have been tested successfully through this path.
 
-The managed switch is currently forwarding traffic, but its administrative setup, firmware review, and future segmentation remain pending. No complete virtual machine or self-hosted service has been deployed.
+The managed switch is forwarding traffic, its local administration is accessible, stable private management settings are configured, and firmware compatibility has been reviewed. Future segmentation remains pending. No complete virtual machine or self-hosted service has been deployed.
 
 ```mermaid
 flowchart TD
     ISP["ISP equipment"] --> FW["OPNsense firewall<br/>Operational base"]
-    FW --> SW["Managed PoE switch<br/>Traffic forwarding active"]
+    FW --> SW["Managed PoE switch<br/>Administration configured"]
     SW --> PVE["Proxmox VE host<br/>Installed and accessible"]
     SW --> CLIENT["Selected wired clients<br/>Connectivity verified"]
 ```
@@ -33,12 +33,12 @@ flowchart TD
 | Storage | Proxmox local storage | An operating system ISO has been uploaded. |
 | Virtualization | Virtual machines | No complete VM has been created and booted. |
 | Edge security | Dedicated Intel N100 appliance | OPNsense is installed; initial WAN, LAN, DHCP, DNS, internet-access, and local-administration checks have been completed. |
-| Switching | TP-Link managed PoE switch | Connected and forwarding HomeLab traffic; managed setup and segmentation remain pending. |
+| Switching | TP-Link managed PoE switch | Connected, forwarding traffic, and reachable through a stable private management configuration; segmentation remains pending. |
 | Services | Home automation, monitoring, containers, and AI services | Not deployed. |
 
 ## Next Network Stage
 
-The next network stage will keep OPNsense as the firewall and routing layer while turning the switch from a basic forwarding point into a deliberately managed distribution layer. Segmentation will be introduced only after switch access, firmware, management settings, rollback access, and the unsegmented base network have been verified.
+The next network stage will keep OPNsense as the firewall and routing layer while introducing controlled segmentation through the managed switch. Switch access, firmware compatibility, stable private management, and the unsegmented base path have been verified. VLANs will be introduced only after the segmentation design and recovery path are documented.
 
 ```mermaid
 flowchart TD
@@ -71,7 +71,7 @@ The GPU-equipped primary workstation is not intended to be permanently dedicated
 | Layer | Planned role | Current status |
 | --- | --- | --- |
 | Edge and routing | OPNsense routing, firewalling, and controlled remote access | Operational base; advanced policy and remote access remain pending. |
-| Network distribution | Managed switching and future segmentation | Traffic forwarding is active; management and segmentation remain pending. |
+| Network distribution | Managed switching and future segmentation | Traffic forwarding and local management are operational; segmentation remains pending. |
 | Virtualization | Linux virtual machines and isolated service workloads | Proxmox installed, updated, and hardened; guest deployment pending. |
 | Containers | Reproducible deployment of selected services | Planned. |
 | Home automation | Home Assistant and local voice interfaces | Planned; hardware is available. |
@@ -98,7 +98,7 @@ The project will follow these principles as it evolves:
 The existing physical-setup, Proxmox, network-design, roadmap, and changelog documents will be updated as milestones are verified. New implementation records will be added only after the corresponding work is completed. Planned topics include:
 
 - First-VM deployment notes
-- Managed-switch setup and safe network-segmentation implementation
+- Managed-switch VLAN design and safe network-segmentation implementation
 - Service deployment records
 - Monitoring, backup, and recovery procedures
 

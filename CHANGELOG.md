@@ -9,17 +9,19 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 ### Added
 
 - Added a sanitized OPNsense deployment record covering installation, base network roles, validation, security controls, private backup handling, and remaining work.
+- Added a sanitized managed-switch deployment record covering traffic forwarding, local administration, stable private management, firmware compatibility review, validation, and remaining work.
 - Added the planned on-demand GPU-compute role and Wake-on-LAN concept to the target architecture.
 
 ### Changed
 
-- Updated the README to show the operational OPNsense and firewall-to-switch path.
-- Updated the architecture from a planned firewall migration to a verified base network with future segmentation.
-- Updated the hardware inventory to distinguish the operational firewall, partially deployed switch, and on-demand GPU workstation role.
-- Updated the network design with passed base-connectivity checks and remaining managed-network tasks.
-- Updated the physical setup to record the operational base cabling while retaining final organization as in progress.
+- Updated the README to show the operational OPNsense and managed-switch network foundation.
+- Updated the architecture from a planned firewall migration to a verified managed network with future segmentation.
+- Updated the hardware inventory to distinguish the operational firewall, managed switch, and on-demand GPU workstation role.
+- Updated the network design with verified switch administration and the remaining segmentation and recovery tasks.
+- Updated the OPNsense deployment record so that it reflects the verified managed-switch state.
+- Updated the physical setup to record the installed and administrable switch while retaining final cable organization as in progress.
 - Updated the Proxmox record with host updates, HomeLab network connectivity, separate administrative access, and multi-factor authentication.
-- Updated the roadmap so that the network and security-resilience phases are marked as in progress.
+- Updated the roadmap with completed switch-management milestones and reordered recovery and segmentation work.
 
 ### Verified infrastructure progress
 
@@ -28,6 +30,8 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Kea DHCPv4 is active for the HomeLab LAN.
 - Client addressing, DNS resolution, internet connectivity, and local OPNsense administration have been tested.
 - The managed switch is forwarding traffic to selected wired devices.
+- Local managed-switch administration has been verified through a stable private management configuration.
+- Managed-switch firmware compatibility has been reviewed.
 - The Proxmox host remains reachable through the OPNsense and switch path.
 - Proxmox has been updated and normal administration uses a separate account protected by multi-factor authentication.
 - Multi-factor authentication protects OPNsense administration.
@@ -36,10 +40,10 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 ### Still in progress or planned
 
 - Confirming required DHCP reservations privately.
-- Discovering and securing managed-switch administration and reviewing its firmware.
+- Creating a private managed-switch configuration backup and verifying its recovery procedure.
 - Completing cable organization, safe labeling, power-load documentation, and rollback planning.
 - Creating and validating the first Proxmox virtual machine and backup.
-- VLANs, VPN access, advanced firewall policy, and automated configuration backups.
+- VLANs, network segmentation, VPN access, advanced firewall policy, and automated configuration backups.
 - Container-hosted services, Home Assistant, n8n, monitoring, and Hermes Agent.
 - Wake-on-LAN and controlled use of the GPU workstation for approved heavy tasks.
 

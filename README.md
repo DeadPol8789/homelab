@@ -1,6 +1,6 @@
 # Personal HomeLab
 
-> **Status:** Work in progress — operational network foundation and virtualization platform.
+> **Status:** Work in progress — operational managed-network foundation and virtualization platform.
 
 This repository documents the design, deployment, and evolution of my personal HomeLab. The project is being built to develop practical skills in virtualization, Linux systems administration, networking, cybersecurity, monitoring, automation, and self-hosted services.
 
@@ -15,7 +15,7 @@ The documentation reflects only work that has actually been completed. Planned c
 | Installation media | Available | An operating system ISO has been uploaded to Proxmox storage. |
 | Virtual machines | Not deployed | Initial VM creation was started, but no complete VM has been created and booted yet. |
 | Firewall appliance | Operational | OPNsense is installed on the dedicated appliance. Initial WAN, LAN, DNS, DHCP, internet-connectivity, and administrative-access checks have been completed. |
-| Managed switch | Partially deployed | The switch is carrying wired HomeLab traffic, but managed configuration, firmware review, and future segmentation remain pending. |
+| Managed switch | Operational foundation | The switch is forwarding wired traffic, its local administration is accessible, stable private management settings are configured, and firmware compatibility has been reviewed. VLAN segmentation remains pending. |
 | HomeLab network path | Operational | The path from the ISP equipment through OPNsense and the managed switch to selected wired devices has been tested successfully. |
 | Self-hosted services | Planned | Docker, Home Assistant, monitoring, automation, and AI services have not yet been deployed. |
 
@@ -47,7 +47,7 @@ Managed switch
 Proxmox host and network devices
 ```
 
-This base path is operational for selected wired devices. Managed-switch administration, VLAN segmentation, VPN access, and service workloads are not yet deployed.
+This base path is operational for selected wired devices, and the switch can be administered through a stable private management configuration. VLAN segmentation, VPN access, and service workloads are not yet deployed.
 
 ## Project Roadmap
 
@@ -61,8 +61,9 @@ This base path is operational for selected wired devices. Managed-switch adminis
 - [x] Enable and validate the initial DHCP service
 - [x] Connect OPNsense, the managed switch, and selected wired devices
 - [x] Verify internet and DNS connectivity through the new HomeLab path
+- [x] Configure and validate the managed-switch administration path
+- [x] Review the switch firmware and hardware-revision compatibility
 - [ ] Complete and document the physical cabling
-- [ ] Complete the managed-switch administration and firmware review
 - [ ] Design and deploy network segmentation only after the base network is stable
 - [ ] Add controlled remote access through a reviewed VPN design
 - [ ] Create and document the first Linux virtual machine
@@ -91,6 +92,7 @@ This repository follows four rules:
 | [Physical setup](docs/physical-setup.md) | Rack assembly status, pending cabling work, and photo-review guidance. |
 | [Proxmox installation](docs/proxmox-installation.md) | Verified Proxmox VE installation progress and current limitations. |
 | [OPNsense deployment](docs/opnsense-deployment.md) | Sanitized installation, initial network roles, security controls, and connectivity validation. |
+| [Managed-switch deployment](docs/managed-switch-deployment.md) | Sanitized management setup, firmware review, connectivity role, and remaining segmentation work. |
 | [Network design](docs/network-design.md) | Verified base topology and planned managed-network improvements. |
 | [Project roadmap](docs/project-roadmap.md) | Completed, in-progress, and planned phases with completion criteria. |
 | [Security and privacy](docs/security-and-privacy.md) | Rules for sanitizing files, screenshots, logs, and configurations. |
@@ -118,7 +120,7 @@ Examples and future configuration templates will use placeholders and documentat
 
 Additional implementation notes will be added only after the corresponding work has been completed and verified. Planned topics include:
 
-- Managed-switch administration and firmware review
+- Managed-switch VLAN and segmentation implementation
 - The first complete Linux virtual machine
 - Network segmentation and secure remote access
 - Container-hosted services

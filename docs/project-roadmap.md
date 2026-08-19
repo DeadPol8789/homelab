@@ -2,7 +2,7 @@
 
 > **Last verified:** August 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Managed-switch setup, final cabling, and completion of the network foundation
+> **Current focus:** Managed-switch recovery planning, final cabling, and network segmentation design
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -78,7 +78,7 @@ No fixed completion dates are published at this stage. The project is developed 
 
 **Status: In progress**
 
-OPNsense is installed on the dedicated firewall appliance and the base path through the managed switch is operational for selected wired devices. The switch is forwarding traffic, but its administrative setup and the wider network-foundation completion checks remain pending.
+OPNsense is installed on the dedicated firewall appliance and the base path through the managed switch is operational for selected wired devices. The switch is forwarding traffic, its local administration is available through a stable private management configuration, and firmware compatibility has been reviewed. Wider network-foundation completion checks remain pending.
 
 ### Verified progress
 
@@ -88,6 +88,9 @@ OPNsense is installed on the dedicated firewall appliance and the base path thro
 - [x] Enable the initial Kea DHCPv4 service for the HomeLab LAN.
 - [x] Validate client addressing, DNS resolution, internet connectivity, and local administration.
 - [x] Connect the managed switch and use it to forward traffic to selected wired devices.
+- [x] Secure the managed-switch administration path and verify local access.
+- [x] Configure stable private switch management without publishing live values.
+- [x] Review switch firmware compatibility.
 - [x] Confirm that the Proxmox host remains accessible through the new path.
 - [x] Export an initial OPNsense configuration backup privately.
 - [x] Enable multi-factor authentication for OPNsense administration.
@@ -95,9 +98,7 @@ OPNsense is installed on the dedicated firewall appliance and the base path thro
 ### Remaining work
 
 - [ ] Confirm and document required DHCP reservations privately.
-- [ ] Discover and secure the managed-switch administration path.
-- [ ] Review and update the switch firmware where appropriate.
-- [ ] Configure stable switch management and validate it without publishing live values.
+- [ ] Create a private managed-switch configuration backup and verify the recovery procedure.
 - [ ] Validate the remaining essential household connectivity requirements.
 - [ ] Prepare and review a rollback procedure before wider network changes.
 - [ ] Document the final high-level topology using sanitized labels.
@@ -170,6 +171,8 @@ Hermes Agent is not currently installed or connected to the HomeLab.
 - [x] Use a separate administrative account with multi-factor authentication for normal Proxmox administration.
 - [x] Keep live configuration exports and credentials outside the public repository.
 - [x] Export an initial private OPNsense configuration backup.
+- [x] Secure local managed-switch administration through a stable private management configuration.
+- [x] Review managed-switch firmware compatibility.
 - [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
@@ -179,6 +182,7 @@ Hermes Agent is not currently installed or connected to the HomeLab.
 - [ ] Apply least-privilege firewall rules and test expected traffic explicitly.
 - [ ] Add controlled remote access through a reviewed VPN design.
 - [ ] Define recurring configuration and service backups outside the public repository.
+- [ ] Create a private managed-switch configuration backup and verify its recovery procedure.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
@@ -204,11 +208,11 @@ The GPU-equipped workstation has been selected as a future on-demand compute nod
 
 The next verified updates should follow this order:
 
-1. Discover and secure the managed-switch administration path.
-2. Review the switch firmware and establish stable private management settings.
-3. Confirm required DHCP reservations and remaining essential client connectivity.
-4. Complete the current physical cable organization and safe labeling.
-5. Review rollback and configuration-recovery procedures for the base network.
+1. Create a private managed-switch configuration backup and verify its recovery procedure.
+2. Confirm required DHCP reservations and remaining essential client connectivity.
+3. Complete the current physical cable organization and safe labeling.
+4. Review rollback and configuration-recovery procedures for the base network.
+5. Design the first VLAN and segmentation plan without deploying it prematurely.
 6. Complete, update, and validate the first Proxmox virtual machine.
 7. Create and verify the first VM backup before deploying important services.
 

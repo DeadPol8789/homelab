@@ -5,7 +5,7 @@
 
 This document describes the verified physical state of the HomeLab. It focuses on the rack, power, local administration, and current cabling progress without exposing the exact domestic layout or sensitive device information.
 
-The rack has been assembled and the main rack components have been placed. The dedicated firewall, managed switch, Proxmox host, and selected wired clients now form an operational base network path. The rack remains open while cable routing, labeling, power validation, and the managed-switch setup are completed. Exact rack-unit positions and domestic cable routes are intentionally not documented.
+The rack has been assembled and the main rack components have been placed. The dedicated firewall, managed switch, Proxmox host, and selected wired clients now form an operational base network path. The rack remains open while cable routing, labeling, and power validation are completed. Exact rack-unit positions and domestic cable routes are intentionally not documented.
 
 ## Verified Physical State
 
@@ -15,7 +15,7 @@ The rack has been assembled and the main rack components have been placed. The d
 | Rack components | **Placed** | The patch panel, power distribution, shelf, and cable-management accessories are part of the current build. |
 | Proxmox host | **Installed and accessible** | The virtualization host is connected through the HomeLab network path, and access to Proxmox VE has been verified. |
 | Firewall appliance | **Installed and operational** | OPNsense is installed, the initial network roles are assigned, and connectivity through the appliance has been tested. |
-| Managed switch | **Connected; setup incomplete** | The switch is forwarding traffic for selected devices, but administrative setup, firmware review, and segmentation remain pending. |
+| Managed switch | **Installed and managed** | The switch is forwarding traffic for selected devices, local administration is available through a stable private management configuration, and firmware compatibility has been reviewed. Network segmentation remains pending. |
 | Network cabling | **Operational base; organization in progress** | The firewall-to-switch and selected device connections work. Final routing, labeling, and strain-relief checks remain pending. |
 | Local console | **Available** | A portable display, compact keyboard, and HDMI KVM are available for local maintenance and diagnostics. |
 | Power protection | **Available** | A UPS is available for selected HomeLab and network equipment. Formal load and runtime testing has not yet been documented. |
@@ -44,7 +44,7 @@ The upstream ISP equipment is connected to the dedicated OPNsense appliance. OPN
 ```mermaid
 flowchart TD
     ISP["ISP equipment"] --> FW["OPNsense appliance<br/>Installed and operational"]
-    FW --> SW["Managed PoE switch<br/>Traffic forwarding active"]
+    FW --> SW["Managed PoE switch<br/>Administration configured"]
     SW --> PVE["Proxmox VE host<br/>Accessible"]
     SW --> DEV["Selected wired devices<br/>Connectivity verified"]
 ```
@@ -72,6 +72,8 @@ The completed base work includes:
 5. Connect the Proxmox host and selected wired devices.
 6. Confirm local management, address assignment, DNS resolution, and internet access.
 7. Save an initial OPNsense configuration backup privately.
+8. Configure stable private switch management and verify local administrative access.
+9. Review switch firmware compatibility without publishing live device details.
 
 The remaining physical work is to organize and secure the final cabling, complete safe labeling, review ventilation and strain relief, and document the finished layout without exposing the home environment.
 
