@@ -43,7 +43,7 @@ flowchart TD
 
 This diagram represents the verified high-level path only. It does not disclose physical port numbers, interface identifiers, addresses, device names, or the exact domestic layout.
 
-The managed switch is currently forwarding wired traffic in this path. Its administrative setup, firmware review, management addressing, and future VLAN configuration are separate pending tasks.
+The managed switch is forwarding wired traffic in this path and can be administered through a stable private management configuration. Firmware compatibility has been reviewed. Future VLAN configuration remains a separate pending task.
 
 ## Initial Validation
 
@@ -58,7 +58,7 @@ The following checks were completed before treating the base path as operational
 7. Confirm that the Proxmox host remains reachable through the new network path.
 8. Export an initial private configuration backup.
 
-These checks validate the base network foundation. They do not mean that segmentation, remote access, switch administration, or service isolation has been completed.
+These checks validate the base network foundation. They do not mean that segmentation, remote access, switch backup and recovery, or service isolation has been completed.
 
 ## Security Controls Applied
 
@@ -88,7 +88,7 @@ Several practical checks were important during the deployment:
 
 The following items are not yet considered deployed or fully verified:
 
-- Complete the managed-switch administration and firmware review.
+- Create a private managed-switch configuration backup and verify the recovery procedure.
 - Confirm and document required DHCP reservations privately.
 - Finalize cable organization and safe port labeling.
 - Design VLANs based on device roles and trust levels.
@@ -100,7 +100,7 @@ The following items are not yet considered deployed or fully verified:
 
 ## Completion Boundary
 
-OPNsense is correctly described as an **operational base firewall**. The wider network-foundation phase remains **in progress** until switch administration, final cabling, recovery procedures, and the selected security improvements have been completed and documented.
+OPNsense is correctly described as an **operational base firewall**. The wider network-foundation phase remains **in progress** until network segmentation, final cabling, recovery procedures, and the selected security improvements have been completed and documented.
 
 ## Information Intentionally Omitted
 
