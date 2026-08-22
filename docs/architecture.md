@@ -12,16 +12,17 @@ The diagrams intentionally omit real addresses, internal hostnames, wireless net
 
 ## Current Verified State
 
-The dedicated OPNsense appliance now provides the firewall and routing layer for the HomeLab LAN. Its upstream connection remains behind the existing ISP equipment, while its internal connection feeds the managed PoE switch. Selected wired devices, including the Proxmox host and an administration client, have been tested successfully through this path.
+The dedicated OPNsense appliance provides the firewall, routing, and VLAN gateway layer for the HomeLab. Its upstream connection remains behind the existing ISP equipment, while its internal connection feeds the managed PoE switch. OPNsense has been updated to `26.7.2_2`, and internet and DNS connectivity have been verified after the network changes.
 
-The managed switch is forwarding traffic, its local administration is accessible, stable private management settings are configured, and firmware compatibility has been reviewed. Future segmentation remains pending. No complete virtual machine or self-hosted service has been deployed.
+The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host was migrated to its segmented management path and remains reachable. Final private network-configuration backups have been saved and verified. No complete virtual machine or self-hosted service has been deployed.
 
 ```mermaid
 flowchart TD
-    ISP["ISP equipment"] --> FW["OPNsense firewall<br/>Operational base"]
-    FW --> SW["Managed PoE switch<br/>Administration configured"]
-    SW --> PVE["Proxmox VE host<br/>Installed and accessible"]
-    SW --> CLIENT["Selected wired clients<br/>Connectivity verified"]
+    ISP["ISP equipment"] --> FW["OPNsense firewall<br/>Routing and VLAN gateways"]
+    FW --> SW["Managed PoE switch<br/>VLAN-aware distribution"]
+    SW --> SEG_A["Role-based segment A<br/>Connectivity verified"]
+    SW --> SEG_B["Role-based segment B<br/>Connectivity verified"]
+    SW --> SEG_C["Role-based segment C<br/>Proxmox reachable"]
 ```
 
 ### Verified Components
@@ -29,26 +30,27 @@ flowchart TD
 | Layer | Component | Verified state |
 | --- | --- | --- |
 | Physical | 12U rack and rack accessories | Assembled; the base network path is connected and final cable organization is in progress. |
-| Compute | GMKtec virtualization host | Proxmox VE is installed, updated, accessible through the HomeLab LAN, and protected with a separate administrative account and multi-factor authentication. |
+| Compute | GMKtec virtualization host | Proxmox VE is installed, updated, accessible through its segmented management path, and protected with a separate administrative account and multi-factor authentication. |
 | Storage | Proxmox local storage | An operating system ISO has been uploaded. |
 | Virtualization | Virtual machines | No complete VM has been created and booted. |
-| Edge security | Dedicated Intel N100 appliance | OPNsense is installed; initial WAN, LAN, DHCP, DNS, internet-access, and local-administration checks have been completed. |
-| Switching | TP-Link managed PoE switch | Connected, forwarding traffic, and reachable through a stable private management configuration; segmentation remains pending. |
+| Edge security | Dedicated Intel N100 appliance | OPNsense `26.7.2_2` is installed; routing, DHCP, DNS, internet access, local administration, and the segmented network path have been verified. |
+| Switching | TP-Link managed PoE switch | Firmware `3.30.6` is installed; private management, traffic forwarding, and three role-based VLANs are operational. |
 | Services | Home automation, monitoring, containers, and AI services | Not deployed. |
 
-## Next Network Stage
+## Verified Network Segmentation
 
-The next network stage will keep OPNsense as the firewall and routing layer while introducing controlled segmentation through the managed switch. Switch access, firmware compatibility, stable private management, and the unsegmented base path have been verified. VLANs will be introduced only after the segmentation design and recovery path are documented.
+OPNsense remains the firewall and routing layer, while the managed switch transports the segmented network to approved devices. Three VLANs have been deployed and preserved through the final update and validation cycle. Public labels are deliberately generic and do not reveal live VLAN identifiers, addressing, port assignments, or policy details.
 
 ```mermaid
 flowchart TD
-    FW["OPNsense firewall"] --> SW["Managed PoE switch"]
-    SW -. "future segmentation" .-> TRUSTED["Trusted clients"]
-    SW -. "future segmentation" .-> SERVICES["HomeLab services"]
-    SW -. "future segmentation" .-> IOT["Automation and IoT"]
+    FW["OPNsense firewall<br/>VLAN gateways"] --> SW["Managed PoE switch<br/>Tagged distribution"]
+    SW --> SEG_A["Role-based segment A"]
+    SW --> SEG_B["Role-based segment B"]
+    SW --> SEG_C["Role-based segment C"]
+    SEG_C --> PVE["Proxmox VE host<br/>Reachability verified"]
 ```
 
-This is a target design. VLANs, inter-network firewall policy, VPN access, and service isolation are not currently deployed.
+VLAN transport, Proxmox reachability, internet access, and DNS resolution have been verified. Further least-privilege policy refinement, VPN access, and service-level isolation remain future work.
 
 ## Target Logical Architecture
 
@@ -70,15 +72,15 @@ The GPU-equipped primary workstation is not intended to be permanently dedicated
 
 | Layer | Planned role | Current status |
 | --- | --- | --- |
-| Edge and routing | OPNsense routing, firewalling, and controlled remote access | Operational base; advanced policy and remote access remain pending. |
-| Network distribution | Managed switching and future segmentation | Traffic forwarding and local management are operational; segmentation remains pending. |
+| Edge and routing | OPNsense routing, firewalling, VLAN gateways, and controlled remote access | Operational segmented foundation; advanced policy and remote access remain pending. |
+| Network distribution | Managed switching and role-based segmentation | Traffic forwarding, private management, firmware, and three VLANs are operational. |
 | Virtualization | Linux virtual machines and isolated service workloads | Proxmox installed, updated, and hardened; guest deployment pending. |
 | Containers | Reproducible deployment of selected services | Planned. |
 | Home automation | Home Assistant and local voice interfaces | Planned; hardware is available. |
 | Observability | Metrics and dashboards with Prometheus and Grafana | Planned. |
 | Assistant platform | Persistent local assistant using Hermes Agent | Planned. |
 | AI compute | Heavy local inference on the GPU-equipped workstation | Planned as an on-demand node; Wake-on-LAN and workload controls are not yet integrated. |
-| Storage and backups | Future NAS, service backups, and recovery procedures | Planned; final design not selected. |
+| Storage and backups | Network configuration, future NAS, service backups, and recovery procedures | Final private network-configuration backups are verified; service and storage design remains planned. |
 
 ## Architecture Principles
 
@@ -90,7 +92,7 @@ The project will follow these principles as it evolves:
 - **Safe changes:** major network changes should be tested before becoming the primary network path.
 - **Reproducibility:** relevant deployment steps and sanitized example configurations should be documented.
 - **Observability:** important services should eventually expose health and performance information without publishing sensitive operational data.
-- **Recoverability:** configuration backups and restoration procedures will be added before services are treated as dependable.
+- **Recoverability:** private network-configuration backups are retained, while restoration procedures must continue to be reviewed and tested before services are treated as dependable.
 - **Privacy by design:** public documentation must not reveal details that could identify or weaken the live environment.
 
 ## Future Documentation
@@ -98,7 +100,7 @@ The project will follow these principles as it evolves:
 The existing physical-setup, Proxmox, network-design, roadmap, and changelog documents will be updated as milestones are verified. New implementation records will be added only after the corresponding work is completed. Planned topics include:
 
 - First-VM deployment notes
-- Managed-switch VLAN design and safe network-segmentation implementation
+- Segmentation policy refinement and recovery-validation notes
 - Service deployment records
 - Monitoring, backup, and recovery procedures
 

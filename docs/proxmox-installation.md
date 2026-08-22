@@ -1,15 +1,15 @@
 # Proxmox VE Installation
 
 > **Last verified:** August 2026  
-> **Project status:** Proxmox VE installed, updated, networked, and hardened; no completed virtual machines yet
+> **Project status:** Proxmox VE installed, updated, segmented, and hardened; no completed virtual machines yet
 
 This document records the verified progress of the Proxmox VE deployment used as the virtualization foundation of the HomeLab. It intentionally separates completed work from unfinished tasks and excludes sensitive information about the live environment.
 
 ## Deployment Summary
 
-Proxmox VE has been installed on the GMKtec NucBox M6 Ultra designated as the main virtualization host. The host has been updated, the package source appropriate for a non-subscribed lab environment has been enabled, and access to the web interface has been verified through the operational OPNsense and managed-switch path.
+Proxmox VE has been installed on the GMKtec NucBox M6 Ultra designated as the main virtualization host. The host has been updated, the package source appropriate for a non-subscribed lab environment has been enabled, and access to the web interface has been verified through the operational segmented OPNsense and managed-switch path.
 
-Stable local management addressing and name resolution are configured privately. A separate administrative account with multi-factor authentication is available for normal web administration. An operating system ISO has also been uploaded to Proxmox storage.
+Stable local management addressing and name resolution are configured privately. The host has been migrated to its intended segmented management path and remained reachable after VLAN, firewall, switch-firmware, internet, and DNS validation. A separate administrative account with multi-factor authentication is available for normal web administration. An operating system ISO has also been uploaded to Proxmox storage.
 
 Initial virtual-machine creation was started, but no virtual machine has been fully created, booted, configured, or validated. The current deployment must therefore not be described as hosting operational workloads.
 
@@ -21,8 +21,8 @@ Initial virtual-machine creation was started, but no virtual machine has been fu
 | Proxmox VE installation | **Completed** | Proxmox VE has been installed successfully. |
 | System updates | **Completed** | Available host updates were applied after installation. |
 | Package source | **Configured** | The repository appropriate for a non-subscribed HomeLab environment is enabled. |
-| Management networking | **Configured** | Stable local management connectivity and local name resolution are configured privately. |
-| Management interface access | **Verified** | The web administration interface has been reached through the OPNsense and managed-switch path. |
+| Management networking | **Segmented and verified** | Stable private management connectivity and local name resolution were migrated to the intended segmented path. |
+| Management interface access | **Verified after migration** | The web administration interface remains reachable through the segmented OPNsense and managed-switch path. |
 | Administrative account | **Configured** | A separate account is used for normal administrative access. |
 | Multi-factor authentication | **Enabled** | Time-based one-time-password authentication protects the administrative account. |
 | Installation media upload | **Completed** | An operating system ISO has been uploaded to Proxmox storage. |
@@ -49,13 +49,13 @@ These are target uses only. They must not be interpreted as currently deployed s
 
 ```mermaid
 flowchart TD
-    NET["OPNsense and switch path"] --> PVE["Proxmox VE<br/>Updated and accessible"]
+    NET["Segmented OPNsense and switch path"] --> PVE["Proxmox VE<br/>Migrated and accessible"]
     PVE --> ISO["Operating system ISO<br/>Uploaded"]
     PVE -. "creation started" .-> VM["First virtual machine<br/>Not completed"]
     VM -. "future" .-> SVC["HomeLab services<br/>Not deployed"]
 ```
 
-The host is connected through the operational OPNsense and managed-switch path. The switch's managed configuration, network segmentation, and dedicated service networks remain pending, so the current Proxmox connection still belongs to the unsegmented base HomeLab LAN.
+The host is connected through the operational segmented OPNsense and managed-switch path. Its reachability, internet access, and DNS resolution were checked after migration. Live addressing, VLAN membership, bridge values, and interface details remain private. Dedicated guest and service networks will be documented only after workloads are deployed and verified.
 
 ## Information Intentionally Omitted
 
@@ -97,7 +97,7 @@ The next verified milestone will be the creation of the first Linux VM. It will 
 8. Test a safe shutdown and restart.
 9. Create and verify an initial backup before the VM hosts important services.
 
-Until these checks are complete, the public project status remains **Proxmox VE installed, updated, networked, and hardened; no completed virtual machines**.
+Until these checks are complete, the public project status remains **Proxmox VE installed, updated, segmented, and hardened; no completed virtual machines**.
 
 ## Future Documentation
 

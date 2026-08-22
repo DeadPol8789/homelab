@@ -2,7 +2,7 @@
 
 > **Last verified:** August 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Managed-switch recovery planning, final cabling, and network segmentation design
+> **Current focus:** Recovery testing, inter-VLAN policy refinement, final cabling, and the first virtual machine
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -24,11 +24,11 @@ No fixed completion dates are published at this stage. The project is developed 
 | --- | --- | --- |
 | 1. Physical foundation | Assemble the rack and prepare safe equipment placement and cable management | **In progress** |
 | 2. Virtualization foundation | Install Proxmox VE and deploy the first validated guest workload | **In progress** |
-| 3. Network foundation | Deploy OPNsense and the managed switch as a tested network path | **In progress** |
+| 3. Network foundation | Deploy OPNsense and the managed switch as a tested segmented network path | **Completed** |
 | 4. Core service platform | Create Linux workloads and a controlled container-hosting environment | **Planned** |
 | 5. Automation and observability | Deploy Home Assistant, local voice integration, n8n, Prometheus, and Grafana | **Planned** |
 | 6. Assistant platform | Deploy and integrate Hermes Agent as a persistent HomeLab assistant | **Planned** |
-| 7. Security and resilience | Add segmentation, controlled remote access, backups, recovery tests, and hardening | **In progress** |
+| 7. Security and resilience | Maintain segmentation and add controlled remote access, recovery tests, and further hardening | **In progress** |
 | 8. Advanced labs | Build isolated cybersecurity, development, and optional AI-compute experiments | **Under evaluation** |
 
 ## Phase 1 — Physical Foundation
@@ -63,6 +63,7 @@ No fixed completion dates are published at this stage. The project is developed 
 - [x] Upload an operating system ISO to local storage.
 - [x] Apply the available host updates and configure the package source for the non-subscribed lab environment.
 - [x] Configure stable private management connectivity and local name resolution.
+- [x] Migrate and verify the Proxmox management path within the segmented network.
 - [x] Create a separate administrative account and protect it with multi-factor authentication.
 - [ ] Complete, boot, and validate the first virtual machine.
 - [ ] Document guest resource allocation and installation decisions.
@@ -76,9 +77,9 @@ No fixed completion dates are published at this stage. The project is developed 
 
 ## Phase 3 — Network Foundation
 
-**Status: In progress**
+**Status: Completed**
 
-OPNsense is installed on the dedicated firewall appliance and the base path through the managed switch is operational for selected wired devices. The switch is forwarding traffic, its local administration is available through a stable private management configuration, and firmware compatibility has been reviewed. Wider network-foundation completion checks remain pending.
+OPNsense `26.7.2_2` is installed on the dedicated firewall appliance, and the segmented path through the managed switch is operational for selected wired devices. The switch is running firmware `3.30.6`, its private administration path is operational, and three role-based VLANs have been deployed and verified.
 
 ### Verified progress
 
@@ -91,23 +92,24 @@ OPNsense is installed on the dedicated firewall appliance and the base path thro
 - [x] Secure the managed-switch administration path and verify local access.
 - [x] Configure stable private switch management without publishing live values.
 - [x] Review switch firmware compatibility.
-- [x] Confirm that the Proxmox host remains accessible through the new path.
+- [x] Update OPNsense and the managed-switch firmware to the verified versions.
+- [x] Deploy and validate three role-based VLANs.
+- [x] Migrate the Proxmox management path and verify continued reachability.
+- [x] Retest internet access and DNS resolution after segmentation.
 - [x] Export an initial OPNsense configuration backup privately.
+- [x] Save and check final private network-configuration backups.
 - [x] Enable multi-factor authentication for OPNsense administration.
+- [x] Document the final high-level topology using sanitized labels.
 
-### Remaining work
+### Operational follow-up
 
-- [ ] Confirm and document required DHCP reservations privately.
-- [ ] Create a private managed-switch configuration backup and verify the recovery procedure.
-- [ ] Validate the remaining essential household connectivity requirements.
-- [ ] Prepare and review a rollback procedure before wider network changes.
-- [ ] Document the final high-level topology using sanitized labels.
+The foundation objective is complete. DHCP-reservation review, broader client migration, controlled restoration testing, policy refinement, VPN access, and monitoring remain tracked as operational or security-resilience work rather than blockers for this phase.
 
 ### Completion criteria
 
 - OPNsense boots reliably and the intended network roles have been tested.
 - The managed switch operates in the approved network path and its administration is secured.
-- Essential client connectivity has been validated.
+- Selected essential client connectivity has been validated.
 - A rollback path and private configuration backup exist.
 - Public documentation contains no live addresses, credentials, identifiers, or remote-access details.
 
@@ -173,21 +175,21 @@ Hermes Agent is not currently installed or connected to the HomeLab.
 - [x] Export an initial private OPNsense configuration backup.
 - [x] Secure local managed-switch administration through a stable private management configuration.
 - [x] Review managed-switch firmware compatibility.
+- [x] Update OPNsense and the managed-switch firmware and retest the network path.
+- [x] Deploy and validate three role-based VLANs.
+- [x] Save and check final private network-configuration backups.
 - [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
 
-- [ ] Design network segmentation based on device roles and trust levels.
-- [ ] Introduce VLANs only after the base network is stable and recovery access is understood.
-- [ ] Apply least-privilege firewall rules and test expected traffic explicitly.
+- [ ] Review and refine inter-VLAN rules using least-privilege principles.
 - [ ] Add controlled remote access through a reviewed VPN design.
 - [ ] Define recurring configuration and service backups outside the public repository.
-- [ ] Create a private managed-switch configuration backup and verify its recovery procedure.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
 
-VLANs, VPN access, advanced least-privilege firewall policy, and automated backups are not currently deployed or verified.
+Three role-based VLANs and private network-configuration backups are deployed and verified. VPN access, advanced least-privilege policy, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
 
 ## Phase 8 — Advanced Labs
 
@@ -208,13 +210,13 @@ The GPU-equipped workstation has been selected as a future on-demand compute nod
 
 The next verified updates should follow this order:
 
-1. Create a private managed-switch configuration backup and verify its recovery procedure.
+1. Perform and document a controlled restoration test for the private network backups.
 2. Confirm required DHCP reservations and remaining essential client connectivity.
-3. Complete the current physical cable organization and safe labeling.
-4. Review rollback and configuration-recovery procedures for the base network.
-5. Design the first VLAN and segmentation plan without deploying it prematurely.
-6. Complete, update, and validate the first Proxmox virtual machine.
-7. Create and verify the first VM backup before deploying important services.
+3. Review and refine inter-VLAN policy using least-privilege principles.
+4. Complete the current physical cable organization and safe labeling.
+5. Complete, update, and validate the first Proxmox virtual machine.
+6. Create and verify the first VM backup before deploying important services.
+7. Design controlled remote access through a reviewed VPN solution.
 
 This order may be adjusted if testing identifies a safer dependency sequence. Any change will be documented rather than silently presented as part of the original plan.
 

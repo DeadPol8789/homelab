@@ -1,37 +1,38 @@
 # HomeLab Network Design
 
 > **Last verified:** August 2026  
-> **Implementation status:** Operational managed-network foundation — segmentation and remote access remain in progress
+> **Implementation status:** Operational segmented-network foundation — policy hardening and remote access remain in progress
 
-This document records both the verified network foundation and the next planned stages for the HomeLab. It describes the operational base path, remaining validation work, segmentation principles, and public-documentation boundaries without exposing the live home network.
+This document records both the verified segmented network foundation and the next planned stages for the HomeLab. It describes the operational path, completed validation work, remaining policy and recovery tasks, and public-documentation boundaries without exposing the live home network.
 
-OPNsense is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is forwarding traffic, its local administration is accessible, stable private management settings are configured, and firmware compatibility has been reviewed. No VLAN or VPN design has been deployed.
+OPNsense `26.7.2_2` is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is running firmware `3.30.6`, its private management path is operational, and three role-based VLANs have been deployed and verified. VPN access has not been deployed.
 
 ## Current Verified State
 
-The existing ISP equipment provides the upstream connection to the dedicated OPNsense appliance. OPNsense provides the HomeLab LAN, and the managed PoE switch distributes connectivity to the Proxmox host and selected wired clients.
+The existing ISP equipment provides the upstream connection to the dedicated OPNsense appliance. OPNsense provides routing, firewalling, DHCP, DNS, and the VLAN gateways. The managed PoE switch transports the segmented network to the Proxmox host and selected wired clients.
 
 | Component | Verified state |
 | --- | --- |
 | ISP equipment | Provides the upstream network connection. |
-| Dedicated firewall appliance | OPNsense is installed and the initial WAN, LAN, DHCP, DNS, internet-connectivity, and local-administration checks have passed. |
+| Dedicated firewall appliance | OPNsense `26.7.2_2` is installed; routing, DHCP, DNS, internet connectivity, local administration, and VLAN gateway operation have been verified. |
 | DHCP service | Kea DHCPv4 is active for the HomeLab LAN; final verification and documentation of individual reservations remain pending. |
-| Managed PoE switch | Connected and forwarding wired traffic; local administration and stable private management are configured, and firmware compatibility has been reviewed. Segmentation remains pending. |
-| Proxmox VE host | Installed, updated, and accessible through the HomeLab network path. |
+| Managed PoE switch | Firmware `3.30.6` is installed; private management, traffic forwarding, and three role-based VLANs have been verified. |
+| Proxmox VE host | Installed, updated, migrated to its segmented management path, and reachable after validation. |
 | Selected wired clients | Address assignment, DNS resolution, and internet connectivity have been verified through OPNsense and the switch. |
-| Dedicated firewall-to-switch path | Operational for selected HomeLab devices. |
-| VLANs and network segmentation | Not deployed. |
+| Dedicated firewall-to-switch path | Operational and carrying the segmented HomeLab network. |
+| VLANs and network segmentation | Three role-based VLANs are deployed and verified; live identifiers and mappings remain private. |
 | Remote-access VPN | Not deployed. |
 
-## Operational Base Network Path
+## Operational Segmented Network Path
 
 ```mermaid
 flowchart TD
-    ISP["ISP equipment"] --> FW["Dedicated OPNsense firewall"]
-    FW --> SW["Managed PoE switch"]
-    SW --> PVE["Proxmox VE host"]
-    SW --> CLIENTS["Approved wired clients"]
-    SW --> DEVICES["Selected wired devices"]
+    ISP["ISP equipment"] --> FW["Dedicated OPNsense firewall<br/>Routing and VLAN gateways"]
+    FW --> SW["Managed PoE switch<br/>Tagged distribution"]
+    SW --> SEG_A["Role-based segment A"]
+    SW --> SEG_B["Role-based segment B"]
+    SW --> SEG_C["Role-based segment C"]
+    SEG_C --> PVE["Proxmox VE host<br/>Reachability verified"]
 ```
 
 This diagram uses generic labels deliberately. The operating mode of the ISP equipment, physical port assignments, addressing plan, and management details are documented privately and represented publicly only in sanitized form.
@@ -41,17 +42,17 @@ This diagram uses generic labels deliberately. The operating mode of the ISP equ
 | Component | Intended responsibility | Current status |
 | --- | --- | --- |
 | ISP equipment | Maintain the external service handoff required by the connection | In use as the upstream connection. |
-| OPNsense appliance | Routing, base firewall policy, LAN addressing, DHCP/DNS services, and later controlled remote access | Operational base; advanced policy and remote access remain pending. |
-| Managed switch | Wired distribution, PoE delivery where required, and later VLAN transport | Forwarding traffic with local administration and stable private management configured; VLAN transport remains pending. |
+| OPNsense appliance | Routing, firewall policy, VLAN gateways, DHCP/DNS services, and later controlled remote access | Operational segmented foundation; advanced policy and remote access remain pending. |
+| Managed switch | Wired distribution, VLAN transport, and PoE delivery where required | Firmware, private management, traffic forwarding, and three VLANs are operational. |
 | Proxmox VE host | Run isolated guest workloads for future HomeLab services | Hypervisor installed; no complete VM deployed. |
-| Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected wired devices are connected; final role-based segmentation remains pending. |
+| Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected devices use the segmented path; remaining policy refinement is in progress. |
 
 ## Design Principles
 
 - **Safe migration:** changes are introduced with selected clients before wider household dependencies are moved.
 - **Rollback first:** the upstream network and private configuration backups must remain available during further changes.
-- **Least privilege:** future rules should allow only the traffic required by each role.
-- **Stable foundation before segmentation:** basic routing, DNS, administration, and client access must work reliably before VLANs are introduced.
+- **Least privilege:** current and future rules should allow only the traffic required by each role.
+- **Incremental segmentation:** VLAN, gateway, and client changes must be introduced and validated in recoverable stages.
 - **Management protection:** administrative interfaces should not be exposed directly to the internet.
 - **Documented changes:** every implementation step should record its objective, result, validation, and recovery method.
 - **Privacy by design:** public examples must use placeholders or documentation-only values.
@@ -71,9 +72,14 @@ The base path was introduced in the following order:
 9. Reach the switch administration interface and apply stable private management settings.
 10. Review firmware compatibility against the exact switch variant.
 11. Retest Proxmox and wired-client connectivity after the management changes.
-12. Record the verified result using only sanitized public information.
+12. Update OPNsense and the switch to the verified software and firmware versions.
+13. Deploy three role-based VLANs using private identifiers and port mappings.
+14. Migrate the Proxmox management path and verify continued reachability.
+15. Confirm that all VLANs, internet access, and DNS resolution remain operational.
+16. Save and verify final private network-configuration backups.
+17. Record the verified result using only sanitized public information.
 
-Switch backup and recovery, segmentation, and wider household dependencies remain separate follow-up work.
+Restoration testing, policy refinement, remote access, and wider household dependencies remain separate follow-up work.
 
 ## Initial Validation Checklist
 
@@ -87,19 +93,24 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [x] The OPNsense management interface is reachable from an approved local path.
 - [x] The managed switch is reachable through its approved management path.
 - [x] Stable private switch-management settings have been applied and retested.
-- [x] Firmware compatibility has been reviewed for the exact switch variant.
-- [x] The Proxmox host remains accessible through the intended administration path.
+- [x] Firmware `3.30.6` has been installed after compatibility review.
+- [x] Three role-based VLANs have been deployed and verified.
+- [x] The Proxmox host remains accessible through its migrated administration path.
+- [x] Internet and DNS operation have been retested after segmentation.
 - [ ] Essential household connectivity has been checked.
 - [ ] Disconnecting or reverting the new path has been reviewed or tested.
 - [x] An initial private OPNsense configuration backup has been exported.
-- [ ] A private switch-configuration backup and recovery procedure have been verified.
+- [x] Final private network-configuration backups have been saved and checked.
+- [ ] A controlled restoration procedure has been tested.
 - [x] Public documentation has been sanitized before publication.
 
-Passing these checks will verify the base network only. It will not mean that VLANs, VPN access, advanced firewall policy, monitoring, or high availability have been completed.
+These checks verify the segmented network foundation. They do not mean that VPN access, least-privilege policy refinement, monitoring, restoration testing, or high availability have been completed.
 
-## Future Segmentation Concept
+## Current Segmentation and Future Policy
 
-Network segmentation is planned only after the base path is stable. Possible trust groups include:
+The current deployment uses three role-based VLANs. Their live identifiers, addressing, device membership, port mappings, and policy values are intentionally documented only in private operational records.
+
+Future policy refinement may consider trust groups such as:
 
 - Infrastructure management
 - Trusted personal clients
@@ -108,9 +119,9 @@ Network segmentation is planned only after the base path is stable. Possible tru
 - Laboratory and experimental workloads
 - Guest access
 
-These are conceptual security zones, not deployed VLANs. VLAN identifiers, subnets, switch-port assignments, firewall rules, and inter-zone access policies have not yet been selected or implemented.
+These are conceptual policy categories and are not a public mapping of the three deployed VLANs. The exact VLAN identifiers, subnets, switch-port assignments, firewall rules, and inter-zone access policies are not disclosed.
 
-Any future segmentation design should define:
+Current and future segmentation reviews should define or revalidate:
 
 - Which devices belong to each trust group
 - Which group may initiate connections to another
@@ -146,9 +157,9 @@ Available implementation records:
 Future documentation will cover:
 
 - A sanitized as-built network diagram
-- Segmentation and firewall-policy documentation
+- Segmentation-policy refinement and restoration-test documentation
 - VPN design and remote-access validation
 - Backup and recovery procedures for network configurations
 - Troubleshooting records and lessons learned
 
-The OPNsense and managed-switch deployment records document the completed foundation stages. The remaining items in this list are planned work.
+The OPNsense and managed-switch deployment records document the completed segmented foundation. The remaining items in this list are planned work.
