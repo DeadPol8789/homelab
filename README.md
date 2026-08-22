@@ -1,6 +1,6 @@
 # Personal HomeLab
 
-> **Status:** Work in progress — operational managed-network foundation and virtualization platform.
+> **Status:** Work in progress — operational segmented-network foundation and virtualization platform.
 
 This repository documents the design, deployment, and evolution of my personal HomeLab. The project is being built to develop practical skills in virtualization, Linux systems administration, networking, cybersecurity, monitoring, automation, and self-hosted services.
 
@@ -11,12 +11,12 @@ The documentation reflects only work that has actually been completed. Planned c
 | Area | Status | Verified progress |
 | --- | --- | --- |
 | Physical rack | Assembled | The rack and its current hardware have been installed. The main network path is connected, while final cable organization remains in progress. |
-| Proxmox host | Operational foundation | Proxmox VE is installed, updated, reachable through the HomeLab network, and protected with a separate administrative account and multi-factor authentication. |
+| Proxmox host | Operational foundation | Proxmox VE is installed, updated, reachable through its segmented management path, and protected with a separate administrative account and multi-factor authentication. |
 | Installation media | Available | An operating system ISO has been uploaded to Proxmox storage. |
 | Virtual machines | Not deployed | Initial VM creation was started, but no complete VM has been created and booted yet. |
-| Firewall appliance | Operational | OPNsense is installed on the dedicated appliance. Initial WAN, LAN, DNS, DHCP, internet-connectivity, and administrative-access checks have been completed. |
-| Managed switch | Operational foundation | The switch is forwarding wired traffic, its local administration is accessible, stable private management settings are configured, and firmware compatibility has been reviewed. VLAN segmentation remains pending. |
-| HomeLab network path | Operational | The path from the ISP equipment through OPNsense and the managed switch to selected wired devices has been tested successfully. |
+| Firewall appliance | Operational | OPNsense `26.7.2_2` is installed on the dedicated appliance. Routing, DHCP, DNS, internet connectivity, local administration, and the segmented network path have been verified. |
+| Managed switch | Operational segmented foundation | The switch is running firmware `3.30.6`, its private administration path is operational, and three role-based VLANs are active and verified. |
+| HomeLab network path | Operational and segmented | The path from the ISP equipment through OPNsense and the managed switch to selected segmented devices has been tested successfully. |
 | Self-hosted services | Planned | Docker, Home Assistant, monitoring, automation, and AI services have not yet been deployed. |
 
 ## Hardware Overview
@@ -42,12 +42,14 @@ ISP equipment
     |
 OPNsense firewall
     |
-Managed switch
+VLAN-aware managed switch
     |
-Proxmox host and network devices
+Three role-based network segments
+    |
+Proxmox host and selected devices
 ```
 
-This base path is operational for selected wired devices, and the switch can be administered through a stable private management configuration. VLAN segmentation, VPN access, and service workloads are not yet deployed.
+This segmented path is operational for selected wired devices, and the switch can be administered through a stable private management configuration. The Proxmox host remains reachable after its network migration. VPN access and service workloads are not yet deployed.
 
 ## Project Roadmap
 
@@ -63,8 +65,11 @@ This base path is operational for selected wired devices, and the switch can be 
 - [x] Verify internet and DNS connectivity through the new HomeLab path
 - [x] Configure and validate the managed-switch administration path
 - [x] Review the switch firmware and hardware-revision compatibility
+- [x] Update OPNsense and the managed-switch firmware
+- [x] Design, deploy, and validate three role-based VLANs
+- [x] Migrate and verify the Proxmox management path within the segmented network
+- [x] Save and verify final private network-configuration backups
 - [ ] Complete and document the physical cabling
-- [ ] Design and deploy network segmentation only after the base network is stable
 - [ ] Add controlled remote access through a reviewed VPN design
 - [ ] Create and document the first Linux virtual machine
 - [ ] Deploy container-based services
@@ -92,8 +97,8 @@ This repository follows four rules:
 | [Physical setup](docs/physical-setup.md) | Rack assembly status, pending cabling work, and photo-review guidance. |
 | [Proxmox installation](docs/proxmox-installation.md) | Verified Proxmox VE installation progress and current limitations. |
 | [OPNsense deployment](docs/opnsense-deployment.md) | Sanitized installation, initial network roles, security controls, and connectivity validation. |
-| [Managed-switch deployment](docs/managed-switch-deployment.md) | Sanitized management setup, firmware review, connectivity role, and remaining segmentation work. |
-| [Network design](docs/network-design.md) | Verified base topology and planned managed-network improvements. |
+| [Managed-switch deployment](docs/managed-switch-deployment.md) | Sanitized management setup, firmware state, VLAN deployment, validation, and recovery notes. |
+| [Network design](docs/network-design.md) | Verified segmented topology and planned security improvements. |
 | [Project roadmap](docs/project-roadmap.md) | Completed, in-progress, and planned phases with completion criteria. |
 | [Security and privacy](docs/security-and-privacy.md) | Rules for sanitizing files, screenshots, logs, and configurations. |
 
@@ -120,9 +125,9 @@ Examples and future configuration templates will use placeholders and documentat
 
 Additional implementation notes will be added only after the corresponding work has been completed and verified. Planned topics include:
 
-- Managed-switch VLAN and segmentation implementation
+- Segmentation policy refinement and recovery testing
 - The first complete Linux virtual machine
-- Network segmentation and secure remote access
+- Secure remote access
 - Container-hosted services
 - Monitoring and automation services
 - Sanitized troubleshooting notes and lessons learned

@@ -1,9 +1,9 @@
 # Managed Switch Deployment
 
 > **Last verified:** August 2026  
-> **Project status:** Operational managed-switch foundation; segmentation remains pending
+> **Project status:** Operational segmented managed-switch foundation; further hardening remains in progress
 
-This document records the verified deployment of the TP-Link JetStream managed PoE switch used as the wired distribution point for the HomeLab. It covers its current network role, local management setup, firmware review, validation, and the boundaries that remain before VLAN segmentation is introduced.
+This document records the verified deployment of the TP-Link JetStream managed PoE switch used as the wired distribution point for the HomeLab. It covers its current network role, local management setup, firmware state, VLAN deployment, validation, private backup handling, and remaining hardening boundaries.
 
 The public record intentionally omits the real management address, administrative username, password, MAC address, serial number, exact port assignments, configuration exports, and domestic cable routes.
 
@@ -11,34 +11,35 @@ The public record intentionally omits the real management address, administrativ
 
 The managed switch is installed between the OPNsense firewall and selected wired HomeLab devices. It was first used as a basic forwarding point while the firewall and client connectivity were validated. Its local administration interface has since been reached successfully, and a stable private management configuration has been applied.
 
-Firmware information was reviewed against the exact switch family, hardware revision, and regional package requirements before continuing with the management setup. VLANs and advanced Layer 2 features have not yet been introduced.
+Firmware information was reviewed against the exact switch family, hardware revision, and regional package requirements before the switch was updated to `3.30.6`. Three role-based VLANs were then deployed and verified. Other advanced Layer 2 features are not presented as enabled unless they have been tested separately.
 
 ## Verified Progress
 
 | Stage | Status | Verified result |
 | --- | --- | --- |
 | Physical connection | **Completed** | The switch is connected between OPNsense and selected wired HomeLab devices. |
-| Traffic forwarding | **Verified** | Connected clients can use the base HomeLab network through the switch. |
+| Traffic forwarding | **Verified** | Connected clients can use the segmented HomeLab network through the switch. |
 | Local administration | **Verified** | The switch management interface is reachable from an approved local path. |
 | Stable management configuration | **Configured** | A private management address has been assigned and tested without publishing the live value. |
 | Administrative access | **Configured privately** | Live credentials are stored outside the public repository. |
-| Firmware review | **Completed** | Firmware compatibility was checked against the switch model, hardware revision, and regional requirements. |
-| Proxmox connectivity | **Verified** | The virtualization host remains reachable through the managed-switch path. |
+| Firmware state | **Updated and verified** | Firmware `3.30.6` is installed after compatibility checks against the switch model, hardware revision, and regional requirements. |
+| Proxmox connectivity | **Verified** | The virtualization host remains reachable through its segmented managed-switch path after migration. |
 | Client connectivity | **Verified** | Selected wired clients retain address assignment, DNS resolution, and internet access. |
-| VLAN segmentation | **Not deployed** | VLAN IDs, port profiles, tagging, and inter-network policy remain future work. |
-| Configuration backup | **Pending verification** | No public claim is made until a private export and recovery procedure have been confirmed. |
+| VLAN segmentation | **Deployed and verified** | Three role-based VLANs are active. Live identifiers, port profiles, tagging details, and policy values remain private. |
+| Configuration backup | **Verified privately** | A final private configuration copy has been saved and checked. A full restoration test remains separate work. |
 
 ## Current Network Role
 
 ```mermaid
 flowchart TD
-    FW["OPNsense firewall"] --> SW["Managed PoE switch<br/>Administration configured"]
-    SW --> PVE["Proxmox VE host"]
-    SW --> CLIENTS["Selected wired clients"]
-    SW -. "future" .-> SEG["VLAN-based segmentation"]
+    FW["OPNsense firewall<br/>VLAN gateways"] --> SW["Managed PoE switch<br/>Firmware and VLANs verified"]
+    SW --> SEG_A["Role-based segment A"]
+    SW --> SEG_B["Role-based segment B"]
+    SW --> SEG_C["Role-based segment C"]
+    SEG_C --> PVE["Proxmox VE host<br/>Reachability verified"]
 ```
 
-The switch currently distributes the unsegmented base HomeLab LAN. The diagram does not disclose physical port numbers, management addressing, cable routes, or device identifiers.
+The switch currently transports three role-based VLANs. The diagram does not disclose VLAN identifiers, physical port numbers, management addressing, tagging details, cable routes, or device identifiers.
 
 ## Management Decisions
 
@@ -47,11 +48,11 @@ The initial switch setup follows these principles:
 - Use a stable private management configuration instead of relying on an unpredictable address.
 - Keep the administration interface reachable only through an approved local path.
 - Match firmware packages to the exact model, hardware revision, and region.
-- Validate connectivity after management changes before introducing VLANs.
+- Validate connectivity before and after firmware, management, and VLAN changes.
 - Avoid publishing complete port maps or live configuration exports.
 - Keep the base network recoverable while advanced features are introduced gradually.
 
-The switch is not described as a fully segmented or hardened production platform. Its current status is an operational managed foundation.
+The switch is not described as a fully hardened production platform. Its current status is an operational segmented managed foundation.
 
 ## Validation Performed
 
@@ -59,11 +60,12 @@ The following checks support the current status:
 
 1. Confirm that the local management interface is reachable.
 2. Apply and retest the stable private management configuration.
-3. Confirm that the OPNsense uplink remains operational.
-4. Confirm that the Proxmox host remains accessible.
-5. Confirm address assignment, DNS resolution, and internet connectivity from selected wired clients.
-6. Review firmware compatibility for the exact switch variant before applying firmware-related changes.
-7. Confirm that no VLAN or port-isolation policy has been presented as deployed prematurely.
+3. Review firmware compatibility for the exact switch variant and verify firmware `3.30.6` after the update.
+4. Confirm that the OPNsense uplink remains operational.
+5. Confirm that all three role-based VLANs remain active after the update cycle.
+6. Confirm that the Proxmox host remains accessible through its migrated network path.
+7. Confirm address assignment, DNS resolution, and internet connectivity from selected wired clients.
+8. Save and verify a final private switch-configuration copy.
 
 ## Security Considerations
 
@@ -79,20 +81,18 @@ The following checks support the current status:
 
 The following items remain pending or require separate validation:
 
-- Export and verify a private switch-configuration backup.
-- Define a documented local recovery procedure.
+- Perform and document a controlled local restoration test.
 - Complete final cable organization and private port labeling.
 - Decide whether standalone management or controller-based management best fits the HomeLab.
-- Design VLANs around device roles and trust levels.
-- Define access, trunk, tagged, and untagged port behavior privately.
-- Apply inter-VLAN rules in OPNsense only after the switching design is tested.
+- Review and refine inter-VLAN policy using least-privilege principles.
+- Revalidate private access, trunk, tagged, and untagged behavior after future changes.
 - Review loop-prevention, discovery, time, logging, and monitoring settings.
 - Validate PoE requirements and budget before powering devices from the switch.
 - Add secure monitoring only after its access and credential boundaries are defined.
 
 ## Completion Boundary
 
-The switch is correctly described as an **operational managed-switch foundation**. The full network-foundation phase remains **in progress** until backup and recovery procedures, remaining client requirements, final cabling, and the selected segmentation controls have been completed and documented.
+The switch is correctly described as an **operational segmented managed-switch foundation**. Wider network hardening remains **in progress** until restoration testing, remaining client requirements, final cabling, monitoring decisions, and inter-VLAN policy refinement have been completed and documented.
 
 ## Information Intentionally Omitted
 
