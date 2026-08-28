@@ -30,8 +30,8 @@ The inventory is intentionally limited to information that is useful for a techn
 | --- | --- | --- | --- |
 | Dedicated fanless firewall appliance | Intel N100, 8 GB RAM, 128 GB NVMe SSD, 4 × Intel i226-V 2.5 GbE interfaces | Dedicated OPNsense firewall, router, and VLAN gateway | **In use:** OPNsense `26.7.2_2` is installed, and routing, DHCP, DNS, internet connectivity, local administration, multi-factor authentication, segmented access, and initial cross-segment policy enforcement have been verified. |
 | TP-Link JetStream TL-SG2008P V3 | 8-port managed switch with PoE support | Main managed switch for wired distribution and role-based segmentation | **In use:** firmware `3.30.6` is installed; local administration, stable private management, traffic forwarding, and three role-based VLANs have been verified. |
-| 24-port Cat6 patch panel | 1U rack-mount patch panel | Structured Ethernet termination and cable organization | **Assembled:** part of the current rack build; final cabling is still in progress. |
-| Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **In use:** the base firewall-to-switch and selected client connections are operational; final routing, labeling, and organization remain in progress. |
+| 24-port Cat6 patch panel | 1U rack-mount patch panel | Structured Ethernet termination and cable organization | **In use:** installed as part of the completed physical cabling and organization foundation. |
+| Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **In use:** required connections, final routing, private labeling, and organization have been completed and verified. |
 
 The segmented path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Three role-based VLANs, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. Private name resolution is prepared for the first planned service workload, and final network-configuration backups are stored privately. VPN access and comprehensive firewall-policy review remain pending.
 
@@ -39,11 +39,11 @@ The segmented path from the ISP equipment through OPNsense and the switch to sel
 
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
-| VEVOR open-frame rack | 12U | Central physical structure for HomeLab equipment | **Assembled:** the rack is built and equipment placement has started. It remains open while network cabling is completed. |
-| DIGITUS DN-95401 power distribution unit | 1U, 8 Schuko outlets | Rack power distribution | **Assembled:** included in the current rack build; final cable organization is in progress. |
-| CyberPower UT850EG UPS | 850 VA / 425 W | Basic power protection for selected HomeLab and network equipment | **Available:** part of the current HomeLab power-protection setup. Runtime and load measurements have not yet been formally documented. |
+| VEVOR open-frame rack | 12U | Central physical structure for HomeLab equipment | **In use:** the rack, equipment placement, cabling, organization, and ventilation checks have been completed. |
+| DIGITUS DN-95401 power distribution unit | 1U, 8 Schuko outlets | Rack power distribution | **In use:** installed and reviewed as part of the completed rack power-distribution foundation. |
+| CyberPower UT850EG UPS | 850 VA / 425 W | Basic power protection for selected HomeLab and network equipment | **In use:** connected to the selected HomeLab equipment; power distribution and the connected load have been reviewed. |
 | Adjustable rack shelf | 1U | Support for non-rack-mount equipment | **Assembled:** included in the current physical build. |
-| Rack cable-management accessories | 1U cable manager and 1U brush panel | Cable routing and strain reduction | **Assembled:** final cable routing is still in progress. |
+| Rack cable-management accessories | 1U cable manager and 1U brush panel | Cable routing and strain reduction | **In use:** final routing, organization, and strain-relief checks have been completed. |
 | MSI PRO MP165 E6 portable display | 15.6-inch display | Local console display for administration and diagnostics | **Available:** intended for local rack administration. |
 | UGREEN HDMI KVM switch | Two computers to one HDMI console | Shared local display and USB control between systems | **Available:** intended for local maintenance of the Proxmox host and firewall appliance. |
 | Royal Kludge RK61 keyboard | Compact wireless keyboard | Local rack-console input | **Available:** reserved for HomeLab administration. |

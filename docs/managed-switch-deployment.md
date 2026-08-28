@@ -82,7 +82,6 @@ The following checks support the current status:
 The following items remain pending or require separate validation:
 
 - Perform and document a controlled local restoration test.
-- Complete final cable organization and private port labeling.
 - Decide whether standalone management or controller-based management best fits the HomeLab.
 - Review and refine inter-VLAN policy using least-privilege principles.
 - Revalidate private access, trunk, tagged, and untagged behavior after future changes.
@@ -92,7 +91,7 @@ The following items remain pending or require separate validation:
 
 ## Completion Boundary
 
-The switch is correctly described as an **operational segmented managed-switch foundation**. Wider network hardening remains **in progress** until restoration testing, remaining client requirements, final cabling, monitoring decisions, and inter-VLAN policy refinement have been completed and documented.
+The switch is correctly described as an **operational segmented managed-switch foundation**. Its physical cabling and private labeling are complete. Wider network hardening remains **in progress** until restoration testing, remaining client requirements, monitoring decisions, and comprehensive inter-VLAN policy review have been completed and documented.
 
 ## Information Intentionally Omitted
 

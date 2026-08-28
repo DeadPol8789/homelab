@@ -2,7 +2,7 @@
 
 > **Last verified:** August 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Complete policy review, recovery testing, final cabling, and the first virtual machine
+> **Current focus:** Complete policy review, recovery testing, and the first virtual machine
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -22,7 +22,7 @@ No fixed completion dates are published at this stage. The project is developed 
 
 | Phase | Objective | Current status |
 | --- | --- | --- |
-| 1. Physical foundation | Assemble the rack and prepare safe equipment placement and cable management | **In progress** |
+| 1. Physical foundation | Assemble the rack and complete safe equipment placement, cabling, labeling, ventilation, and power review | **Completed** |
 | 2. Virtualization foundation | Install Proxmox VE and deploy the first validated guest workload | **In progress** |
 | 3. Network foundation | Deploy OPNsense and the managed switch as a tested segmented network path | **Completed** |
 | 4. Core service platform | Create Linux workloads and a controlled container-hosting environment | **Planned** |
@@ -33,7 +33,7 @@ No fixed completion dates are published at this stage. The project is developed 
 
 ## Phase 1 — Physical Foundation
 
-**Status: In progress**
+**Status: Completed**
 
 ### Verified progress
 
@@ -41,9 +41,10 @@ No fixed completion dates are published at this stage. The project is developed 
 - [x] Install the rack shelf and cable-management accessories.
 - [x] Make the firewall appliance, managed switch, UPS, display, and KVM equipment available for the build.
 - [x] Connect and validate the base firewall-to-switch path and selected wired devices.
-- [ ] Complete and label the final cabling.
-- [ ] Verify power distribution and document the connected load safely.
-- [ ] Produce sanitized physical-layout photographs or diagrams suitable for the public repository.
+- [x] Complete and privately label the final cabling.
+- [x] Verify power distribution and document the connected load safely.
+- [x] Verify ventilation, physical stability, cable organization, and strain relief.
+- [x] Document physical completion using sanitized text and diagrams.
 
 ### Completion criteria
 
@@ -51,6 +52,8 @@ No fixed completion dates are published at this stage. The project is developed 
 - Required network and KVM connections are tested.
 - Cable routing does not obstruct ventilation or create unnecessary strain.
 - The public physical-setup documentation matches the verified installation.
+
+The physical-foundation objective is complete. Public rack photographs remain optional and must pass the repository privacy checklist before publication.
 
 ## Phase 2 — Virtualization Foundation
 
@@ -227,10 +230,9 @@ The next verified updates should follow this order:
 1. Perform and document a controlled restoration test for the private network backups.
 2. Confirm required DHCP reservations and remaining essential client connectivity.
 3. Complete the inter-VLAN policy review using least-privilege principles.
-4. Complete the current physical cable organization and safe labeling.
-5. Complete, update, and validate the first Proxmox virtual machine.
-6. Create and verify the first VM backup before deploying important services.
-7. Design controlled remote access through a reviewed VPN solution.
+4. Complete, update, and validate the first Proxmox virtual machine.
+5. Create and verify the first VM backup before deploying important services.
+6. Design controlled remote access through a reviewed VPN solution.
 
 This order may be adjusted if testing identifies a safer dependency sequence. Any change will be documented rather than silently presented as part of the original plan.
 

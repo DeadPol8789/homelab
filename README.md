@@ -10,7 +10,7 @@ The documentation reflects only work that has actually been completed. Planned c
 
 | Area | Status | Verified progress |
 | --- | --- | --- |
-| Physical rack | Assembled | The rack and its current hardware have been installed. The main network path is connected, while final cable organization remains in progress. |
+| Physical rack | Completed | The rack, equipment placement, physical cabling, cable organization, private labeling, ventilation checks, and power-distribution review have been completed. |
 | Proxmox host | Operational foundation | Proxmox VE is installed, updated, reachable through its segmented management path, and protected with a separate administrative account and multi-factor authentication. |
 | Installation media | Available | An operating system ISO has been uploaded to Proxmox storage. |
 | Virtual machines | Deployment in progress | The network and private name-resolution foundation for the first planned service VM has been prepared, but no complete service workload is presented as operational yet. |
@@ -72,7 +72,7 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Apply and verify initial DNS-access rules for approved network roles
 - [x] Verify isolation between the management and server-oriented segments
 - [x] Prepare private name resolution for the first planned service workload
-- [ ] Complete and document the physical cabling
+- [x] Complete and document the physical cabling
 - [ ] Add controlled remote access through a reviewed VPN design
 - [ ] Complete and document the first Linux virtual machine
 - [ ] Deploy container-based services
@@ -97,7 +97,7 @@ This repository follows four rules:
 | --- | --- |
 | [Hardware inventory](docs/hardware-inventory.md) | Sanitized inventory with clear implementation states. |
 | [Architecture](docs/architecture.md) | Verified current state and separate target architecture. |
-| [Physical setup](docs/physical-setup.md) | Rack assembly status, pending cabling work, and photo-review guidance. |
+| [Physical setup](docs/physical-setup.md) | Completed rack and cabling foundation, maintenance principles, and photo-review guidance. |
 | [Proxmox installation](docs/proxmox-installation.md) | Verified Proxmox VE installation progress and current limitations. |
 | [OPNsense deployment](docs/opnsense-deployment.md) | Sanitized installation, initial network roles, security controls, and connectivity validation. |
 | [Managed-switch deployment](docs/managed-switch-deployment.md) | Sanitized management setup, firmware state, VLAN deployment, validation, and recovery notes. |

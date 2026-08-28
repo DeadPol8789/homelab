@@ -107,7 +107,6 @@ Several practical checks were important during the deployment:
 The following items are not yet considered deployed or fully verified:
 
 - Confirm and document required DHCP reservations privately.
-- Finalize cable organization and safe port labeling.
 - Complete the inter-VLAN firewall-policy review using least-privilege principles.
 - Design controlled remote access through a reviewed VPN solution.
 - Evaluate stronger administrative authentication options.
@@ -116,7 +115,7 @@ The following items are not yet considered deployed or fully verified:
 
 ## Completion Boundary
 
-OPNsense is correctly described as an **operational segmented firewall foundation with initial policy enforcement**. Wider network hardening remains **in progress** until comprehensive policy review, final cabling, restoration testing, remote access, monitoring, and the selected security improvements have been completed and documented.
+OPNsense is correctly described as an **operational segmented firewall foundation with initial policy enforcement**. The physical network cabling and private labeling are complete. Wider network hardening remains **in progress** until comprehensive policy review, restoration testing, remote access, monitoring, and the selected security improvements have been completed and documented.
 
 ## Information Intentionally Omitted
 
