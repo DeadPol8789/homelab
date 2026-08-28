@@ -1,7 +1,7 @@
 # OPNsense Deployment
 
 > **Last verified:** August 2026  
-> **Project status:** Operational segmented firewall foundation; advanced network controls remain in progress
+> **Project status:** Operational segmented firewall foundation with initial policy enforcement; advanced network controls remain in progress
 
 This document records the verified deployment of OPNsense on the dedicated HomeLab firewall appliance. It covers the initial installation, software update, segmented network path, essential connectivity tests, private backup handling, and the security controls that have already been applied.
 
@@ -11,7 +11,7 @@ The document intentionally omits real addresses, interface identifiers, internal
 
 The dedicated Intel N100 appliance originally arrived with another firewall platform preinstalled. It was replaced with OPNsense using removable installation media, and the final system was installed on the appliance's internal storage.
 
-After installation, the removable media was disconnected and the appliance was confirmed to boot independently from its internal drive. The initial WAN and LAN roles were assigned and validated before selected devices were moved behind the new firewall path. OPNsense was later updated to `26.7.2_2`, three role-based VLANs were introduced, and connectivity was retested before final private configuration copies were saved and checked.
+After installation, the removable media was disconnected and the appliance was confirmed to boot independently from its internal drive. The initial WAN and LAN roles were assigned and validated before selected devices were moved behind the new firewall path. OPNsense was later updated to `26.7.2_2`, three role-based VLANs were introduced, and connectivity was retested before final private configuration copies were saved and checked. Initial DNS-access, approved-administration, and cross-segment isolation policies were then applied and tested in controlled stages.
 
 ## Verified Progress
 
@@ -24,9 +24,10 @@ After installation, the removable media was disconnected and the appliance was c
 | WAN role | **Operational** | The upstream interface obtains connectivity from the existing ISP equipment. |
 | Internal network role | **Operational and segmented** | OPNsense provides the internal routing and gateway layer for three role-based VLANs. |
 | DHCP service | **Operational base** | Kea DHCPv4 is enabled for the LAN and provides addresses to connected clients. Final documentation of individual reservations remains pending. |
-| DNS resolution | **Verified** | DNS resolution was retested successfully after the update and segmentation changes. |
+| DNS resolution | **Verified by role** | Required DNS access was retested successfully from selected segments, and private name resolution was prepared for the first planned service workload. |
 | Internet connectivity | **Verified** | Internet access was retested through OPNsense and the managed switch after segmentation. |
-| Proxmox reachability | **Verified** | The virtualization host remains accessible through its migrated segmented network path. |
+| Proxmox reachability | **Verified from an approved segment** | The virtualization host remains accessible through its migrated administration path from an authorized client role. |
+| Cross-segment isolation | **Initially enforced and tested** | A selected management-to-service path was blocked and its isolation result was verified. |
 | Local administration | **Verified** | The web administration interface is reachable from the approved local network. |
 | Multi-factor authentication | **Enabled** | Time-based one-time-password authentication protects administrative access. |
 | Configuration backup | **Verified privately** | Initial and final private configuration copies were saved outside the public repository and checked. |
@@ -37,12 +38,11 @@ The operational segmented path is:
 
 ```mermaid
 flowchart TD
-    ISP["ISP equipment"] --> FW["OPNsense firewall<br/>Routing and VLAN gateways"]
+    ISP["ISP equipment"] --> FW["OPNsense firewall<br/>Routing, DNS, and policy enforcement"]
     FW --> SW["Managed PoE switch<br/>Tagged distribution"]
-    SW --> SEG_A["Role-based segment A"]
-    SW --> SEG_B["Role-based segment B"]
-    SW --> SEG_C["Role-based segment C"]
-    SEG_C --> PVE["Proxmox VE host<br/>Reachability verified"]
+    SW --> ZONE_A["Approved client segment<br/>Administration verified"]
+    SW --> ZONE_B["Management segment<br/>Isolation verified"]
+    SW --> ZONE_C["Service segment<br/>Private DNS prepared"]
 ```
 
 This diagram represents the verified high-level path only. It does not disclose physical port numbers, interface identifiers, addresses, device names, or the exact domestic layout.
@@ -66,8 +66,12 @@ The following checks were completed across the initial deployment and the later 
 11. Migrate the Proxmox network path and confirm continued reachability.
 12. Retest VLAN operation, DNS resolution, and internet connectivity.
 13. Save and check final private network-configuration copies.
+14. Apply and verify required DNS access for selected network roles.
+15. Confirm Proxmox administration from an approved client segment.
+16. Apply and verify isolation between selected management and service-oriented roles.
+17. Prepare and verify private name resolution for the first planned service workload.
 
-These checks validate the segmented network foundation. They do not mean that least-privilege inter-VLAN policy, remote access, restoration testing, monitoring, or service-level isolation has been completed.
+These checks validate the segmented network foundation and an initial least-privilege policy baseline. They do not mean that comprehensive inter-VLAN policy review, remote access, restoration testing, monitoring, or workload-level isolation has been completed.
 
 ## Security Controls Applied
 
@@ -78,6 +82,10 @@ The current deployment includes the following verified controls:
 - Multi-factor authentication is enabled for the OPNsense web interface.
 - Initial and final configuration copies are stored privately and excluded from Git.
 - Three role-based VLANs provide separate network boundaries without exposing their live design publicly.
+- Required DNS access is explicitly permitted for selected network roles.
+- Administration of the virtualization host is limited to an approved client path that has been tested.
+- A selected management-to-service path is explicitly blocked and has been tested.
+- Private name resolution is ready for the first planned service workload without publishing the live record.
 - Public documentation uses descriptive labels instead of live infrastructure values.
 - Changes are applied and tested incrementally before additional network features are introduced.
 
@@ -100,7 +108,7 @@ The following items are not yet considered deployed or fully verified:
 
 - Confirm and document required DHCP reservations privately.
 - Finalize cable organization and safe port labeling.
-- Review and refine inter-VLAN firewall rules using least-privilege principles.
+- Complete the inter-VLAN firewall-policy review using least-privilege principles.
 - Design controlled remote access through a reviewed VPN solution.
 - Evaluate stronger administrative authentication options.
 - Define configuration-backup rotation and perform a recovery review.
@@ -108,7 +116,7 @@ The following items are not yet considered deployed or fully verified:
 
 ## Completion Boundary
 
-OPNsense is correctly described as an **operational segmented firewall foundation**. Wider network hardening remains **in progress** until policy refinement, final cabling, restoration testing, remote access, monitoring, and the selected security improvements have been completed and documented.
+OPNsense is correctly described as an **operational segmented firewall foundation with initial policy enforcement**. Wider network hardening remains **in progress** until comprehensive policy review, final cabling, restoration testing, remote access, monitoring, and the selected security improvements have been completed and documented.
 
 ## Information Intentionally Omitted
 
