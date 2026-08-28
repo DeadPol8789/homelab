@@ -2,7 +2,7 @@
 
 > **Last verified:** August 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Recovery testing, inter-VLAN policy refinement, final cabling, and the first virtual machine
+> **Current focus:** Complete policy review, recovery testing, final cabling, and the first virtual machine
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -64,6 +64,8 @@ No fixed completion dates are published at this stage. The project is developed 
 - [x] Apply the available host updates and configure the package source for the non-subscribed lab environment.
 - [x] Configure stable private management connectivity and local name resolution.
 - [x] Migrate and verify the Proxmox management path within the segmented network.
+- [x] Verify Proxmox administration from an approved client segment.
+- [x] Prepare and verify the network-policy and private name-resolution foundation for the first planned service workload.
 - [x] Create a separate administrative account and protect it with multi-factor authentication.
 - [ ] Complete, boot, and validate the first virtual machine.
 - [ ] Document guest resource allocation and installation decisions.
@@ -99,11 +101,15 @@ OPNsense `26.7.2_2` is installed on the dedicated firewall appliance, and the se
 - [x] Export an initial OPNsense configuration backup privately.
 - [x] Save and check final private network-configuration backups.
 - [x] Enable multi-factor authentication for OPNsense administration.
+- [x] Apply and verify required DNS access for selected network roles.
+- [x] Verify approved access to the Proxmox administration path.
+- [x] Apply and verify isolation between selected management and service-oriented roles.
+- [x] Prepare private name resolution for the first planned service workload.
 - [x] Document the final high-level topology using sanitized labels.
 
 ### Operational follow-up
 
-The foundation objective is complete. DHCP-reservation review, broader client migration, controlled restoration testing, policy refinement, VPN access, and monitoring remain tracked as operational or security-resilience work rather than blockers for this phase.
+The foundation objective is complete, and an initial DNS and cross-segment policy baseline has also been verified. DHCP-reservation review, broader client migration, controlled restoration testing, comprehensive policy review, VPN access, and monitoring remain tracked as operational or security-resilience work rather than blockers for this phase.
 
 ### Completion criteria
 
@@ -126,6 +132,8 @@ The foundation objective is complete. DHCP-reservation review, broader client mi
 - [ ] Document update, health-check, backup, and recovery procedures for each service.
 
 The final VM and container layout has not been selected. Docker or another container platform must not be described as deployed until installation and validation are complete.
+
+The network-policy and private name-resolution foundation for the first planned service workload is prepared. This preparation does not mean that the Linux guest, container platform, or any service is deployed.
 
 ## Phase 5 — Automation and Observability
 
@@ -163,6 +171,8 @@ The target architecture combines two different roles:
 
 Hermes Agent is not currently installed or connected to the HomeLab.
 
+Private network preparation for the first planned service workload has been verified, but this does not change the assistant platform from **Planned** until Hermes itself is installed, secured, and tested.
+
 ## Phase 7 — Security and Resilience
 
 **Status: In progress**
@@ -178,18 +188,22 @@ Hermes Agent is not currently installed or connected to the HomeLab.
 - [x] Update OPNsense and the managed-switch firmware and retest the network path.
 - [x] Deploy and validate three role-based VLANs.
 - [x] Save and check final private network-configuration backups.
+- [x] Apply and verify required DNS access for selected network roles.
+- [x] Verify Proxmox administration from an approved client segment.
+- [x] Block and test a selected management-to-service path.
+- [x] Prepare private name resolution for the first planned service workload.
 - [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
 
-- [ ] Review and refine inter-VLAN rules using least-privilege principles.
+- [ ] Complete the inter-VLAN policy review using least-privilege principles.
 - [ ] Add controlled remote access through a reviewed VPN design.
 - [ ] Define recurring configuration and service backups outside the public repository.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
 
-Three role-based VLANs and private network-configuration backups are deployed and verified. VPN access, advanced least-privilege policy, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
+Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, and a selected cross-segment isolation path are deployed and verified. VPN access, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
 
 ## Phase 8 — Advanced Labs
 
@@ -212,7 +226,7 @@ The next verified updates should follow this order:
 
 1. Perform and document a controlled restoration test for the private network backups.
 2. Confirm required DHCP reservations and remaining essential client connectivity.
-3. Review and refine inter-VLAN policy using least-privilege principles.
+3. Complete the inter-VLAN policy review using least-privilege principles.
 4. Complete the current physical cable organization and safe labeling.
 5. Complete, update, and validate the first Proxmox virtual machine.
 6. Create and verify the first VM backup before deploying important services.

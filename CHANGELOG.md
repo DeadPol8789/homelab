@@ -14,15 +14,17 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 
 ### Changed
 
-- Updated the README to show the operational segmented OPNsense and managed-switch foundation.
-- Updated the architecture from future segmentation to a verified three-VLAN network path.
-- Updated the hardware inventory with the verified OPNsense and managed-switch versions and segmented roles.
-- Updated the network design with the completed VLAN deployment, Proxmox migration, connectivity tests, and remaining policy work.
-- Updated the OPNsense deployment record with version `26.7.2_2`, VLAN gateway operation, post-change validation, and private backups.
+- Updated the README to show the operational segmented foundation, initial policy enforcement, and first-workload network preparation.
+- Updated the architecture from future segmentation to a verified three-VLAN network path with approved administration, role-specific DNS access, and selected isolation testing.
+- Updated the hardware inventory with the verified OPNsense and managed-switch versions, segmented roles, policy enforcement, and first-workload network preparation.
+- Updated the network design with the completed VLAN deployment, Proxmox migration, initial DNS and isolation policy baseline, connectivity tests, and remaining comprehensive policy work.
+- Updated the OPNsense deployment record with version `26.7.2_2`, VLAN gateway operation, initial policy enforcement, post-change validation, and private backups.
 - Updated the managed-switch deployment record with firmware `3.30.6`, three verified VLANs, and a final private configuration copy.
 - Updated the physical setup to record the segmented network path while retaining final cable organization as in progress.
-- Updated the Proxmox record with its verified migration to the segmented management path.
-- Updated the roadmap to mark the network-foundation phase as completed and reorder recovery, policy, and virtualization work.
+- Updated the Proxmox record with its verified migration, approved administration path, and prepared private name resolution for the first planned service workload.
+- Updated the roadmap to mark the network-foundation phase as completed, record the initial policy baseline, and reorder recovery, policy, and virtualization work.
+- Corrected the security-and-privacy boundary so it no longer presents OPNsense, the managed switch, or segmentation as undeployed.
+- Expanded the public-sanitization rules for firewall aliases, rule order, traffic direction, live DNS records, ports, and logging details.
 
 ### Verified infrastructure progress
 
@@ -43,14 +45,18 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Proxmox has been updated and normal administration uses a separate account protected by multi-factor authentication.
 - Multi-factor authentication protects OPNsense administration.
 - An initial OPNsense configuration backup has been exported and kept outside the public repository.
+- Required DNS access has been verified for selected network roles.
+- Proxmox administration has been verified from an approved client segment.
+- A selected management-to-service path has been blocked and tested.
+- Private name resolution has been prepared and verified for the first planned service workload.
 
 ### Still in progress or planned
 
 - Confirming required DHCP reservations privately.
 - Performing controlled network-configuration restoration tests.
-- Reviewing and refining inter-VLAN policy using least-privilege principles.
+- Completing the inter-VLAN policy review using least-privilege principles.
 - Completing cable organization, safe labeling, power-load documentation, and recovery planning.
-- Creating and validating the first Proxmox virtual machine and backup.
+- Completing and validating the first Proxmox virtual machine and backup.
 - VPN access, advanced firewall policy, monitoring, and automated backup rotation.
 - Container-hosted services, Home Assistant, n8n, monitoring, and Hermes Agent.
 - Wake-on-LAN and controlled use of the GPU workstation for approved heavy tasks.

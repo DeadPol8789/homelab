@@ -1,11 +1,11 @@
 # HomeLab Network Design
 
 > **Last verified:** August 2026  
-> **Implementation status:** Operational segmented-network foundation — policy hardening and remote access remain in progress
+> **Implementation status:** Operational segmented-network foundation with initial policy enforcement — further hardening and remote access remain in progress
 
 This document records both the verified segmented network foundation and the next planned stages for the HomeLab. It describes the operational path, completed validation work, remaining policy and recovery tasks, and public-documentation boundaries without exposing the live home network.
 
-OPNsense `26.7.2_2` is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is running firmware `3.30.6`, its private management path is operational, and three role-based VLANs have been deployed and verified. VPN access has not been deployed.
+OPNsense `26.7.2_2` is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is running firmware `3.30.6`, its private management path is operational, and three role-based VLANs have been deployed and verified. Initial DNS-access, approved-administration, and cross-segment isolation policies have also been tested. VPN access has not been deployed.
 
 ## Current Verified State
 
@@ -14,25 +14,24 @@ The existing ISP equipment provides the upstream connection to the dedicated OPN
 | Component | Verified state |
 | --- | --- |
 | ISP equipment | Provides the upstream network connection. |
-| Dedicated firewall appliance | OPNsense `26.7.2_2` is installed; routing, DHCP, DNS, internet connectivity, local administration, and VLAN gateway operation have been verified. |
+| Dedicated firewall appliance | OPNsense `26.7.2_2` is installed; routing, DHCP, DNS, internet connectivity, local administration, VLAN gateway operation, and initial policy enforcement have been verified. |
 | DHCP service | Kea DHCPv4 is active for the HomeLab LAN; final verification and documentation of individual reservations remain pending. |
 | Managed PoE switch | Firmware `3.30.6` is installed; private management, traffic forwarding, and three role-based VLANs have been verified. |
-| Proxmox VE host | Installed, updated, migrated to its segmented management path, and reachable after validation. |
-| Selected wired clients | Address assignment, DNS resolution, and internet connectivity have been verified through OPNsense and the switch. |
+| Proxmox VE host | Installed, updated, migrated to its segmented management path, and reachable from an approved client segment after validation. |
+| Selected wired clients | Address assignment, segment-specific DNS access, internet connectivity, approved administration, and selected isolation paths have been verified through OPNsense and the switch. |
 | Dedicated firewall-to-switch path | Operational and carrying the segmented HomeLab network. |
-| VLANs and network segmentation | Three role-based VLANs are deployed and verified; live identifiers and mappings remain private. |
+| VLANs and network segmentation | Three role-based VLANs are deployed. Required DNS access and selected allow-and-block paths between network roles have been verified; live identifiers, mappings, and rules remain private. |
 | Remote-access VPN | Not deployed. |
 
 ## Operational Segmented Network Path
 
 ```mermaid
 flowchart TD
-    ISP["ISP equipment"] --> FW["Dedicated OPNsense firewall<br/>Routing and VLAN gateways"]
+    ISP["ISP equipment"] --> FW["Dedicated OPNsense firewall<br/>Routing, DNS, and policy enforcement"]
     FW --> SW["Managed PoE switch<br/>Tagged distribution"]
-    SW --> SEG_A["Role-based segment A"]
-    SW --> SEG_B["Role-based segment B"]
-    SW --> SEG_C["Role-based segment C"]
-    SEG_C --> PVE["Proxmox VE host<br/>Reachability verified"]
+    SW --> ZONE_A["Approved client segment<br/>Administration verified"]
+    SW --> ZONE_B["Management segment<br/>Isolation verified"]
+    SW --> ZONE_C["Service segment<br/>Private DNS prepared"]
 ```
 
 This diagram uses generic labels deliberately. The operating mode of the ISP equipment, physical port assignments, addressing plan, and management details are documented privately and represented publicly only in sanitized form.
@@ -42,10 +41,10 @@ This diagram uses generic labels deliberately. The operating mode of the ISP equ
 | Component | Intended responsibility | Current status |
 | --- | --- | --- |
 | ISP equipment | Maintain the external service handoff required by the connection | In use as the upstream connection. |
-| OPNsense appliance | Routing, firewall policy, VLAN gateways, DHCP/DNS services, and later controlled remote access | Operational segmented foundation; advanced policy and remote access remain pending. |
+| OPNsense appliance | Routing, firewall policy, VLAN gateways, DHCP/DNS services, and later controlled remote access | Operational segmented foundation with initial DNS and isolation policies verified; comprehensive policy review and remote access remain pending. |
 | Managed switch | Wired distribution, VLAN transport, and PoE delivery where required | Firmware, private management, traffic forwarding, and three VLANs are operational. |
-| Proxmox VE host | Run isolated guest workloads for future HomeLab services | Hypervisor installed; no complete VM deployed. |
-| Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected devices use the segmented path; remaining policy refinement is in progress. |
+| Proxmox VE host | Run isolated guest workloads for future HomeLab services | Hypervisor installed and approved administration verified; network and private name resolution are prepared for the first service workload. |
+| Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected allow, DNS, and isolation paths have been verified; comprehensive policy review remains in progress. |
 
 ## Design Principles
 
@@ -77,9 +76,13 @@ The base path was introduced in the following order:
 14. Migrate the Proxmox management path and verify continued reachability.
 15. Confirm that all VLANs, internet access, and DNS resolution remain operational.
 16. Save and verify final private network-configuration backups.
-17. Record the verified result using only sanitized public information.
+17. Apply and verify required DNS access for selected network roles.
+18. Confirm approved access to the Proxmox administration path.
+19. Apply and verify isolation between selected management and service-oriented roles.
+20. Prepare private name resolution for the first planned service workload.
+21. Record the verified result using only sanitized public information.
 
-Restoration testing, policy refinement, remote access, and wider household dependencies remain separate follow-up work.
+Restoration testing, comprehensive policy review, remote access, and wider household dependencies remain separate follow-up work.
 
 ## Initial Validation Checklist
 
@@ -97,6 +100,10 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [x] Three role-based VLANs have been deployed and verified.
 - [x] The Proxmox host remains accessible through its migrated administration path.
 - [x] Internet and DNS operation have been retested after segmentation.
+- [x] Required DNS access has been verified for selected network roles.
+- [x] Proxmox administration has been verified from an approved client segment.
+- [x] A selected management-to-service path has been blocked and tested.
+- [x] Private name resolution has been prepared and verified for the first planned service workload.
 - [ ] Essential household connectivity has been checked.
 - [ ] Disconnecting or reverting the new path has been reviewed or tested.
 - [x] An initial private OPNsense configuration backup has been exported.
@@ -104,11 +111,11 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [ ] A controlled restoration procedure has been tested.
 - [x] Public documentation has been sanitized before publication.
 
-These checks verify the segmented network foundation. They do not mean that VPN access, least-privilege policy refinement, monitoring, restoration testing, or high availability have been completed.
+These checks verify the segmented network foundation and its initial policy baseline. They do not mean that VPN access, comprehensive least-privilege review, monitoring, restoration testing, or high availability have been completed.
 
-## Current Segmentation and Future Policy
+## Initial Policy Baseline and Future Refinement
 
-The current deployment uses three role-based VLANs. Their live identifiers, addressing, device membership, port mappings, and policy values are intentionally documented only in private operational records.
+The current deployment uses three role-based VLANs. The verified baseline permits required DNS access, allows approved administration of the virtualization host, and blocks a tested path from a management-oriented role toward a service-oriented role. Private name resolution is prepared for the first planned service workload. Live identifiers, addressing, device membership, port mappings, aliases, and policy values are intentionally documented only in private operational records.
 
 Future policy refinement may consider trust groups such as:
 
@@ -157,9 +164,9 @@ Available implementation records:
 Future documentation will cover:
 
 - A sanitized as-built network diagram
-- Segmentation-policy refinement and restoration-test documentation
+- Further segmentation-policy review and restoration-test documentation
 - VPN design and remote-access validation
 - Backup and recovery procedures for network configurations
 - Troubleshooting records and lessons learned
 
-The OPNsense and managed-switch deployment records document the completed segmented foundation. The remaining items in this list are planned work.
+The OPNsense and managed-switch deployment records document the completed segmented foundation. Initial policy enforcement is also verified, while the remaining items in this list are planned work.

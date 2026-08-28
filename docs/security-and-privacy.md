@@ -48,6 +48,7 @@ The following content may be technically useful, but it must be cleaned before p
 - Hostnames, node names, internal domains, and local DNS records
 - Interface names when they expose real device assignments
 - VLAN identifiers and firewall aliases connected to the live environment
+- Firewall-rule names, ordering, directions, source and destination mappings, ports, and logging details tied to the live environment
 - Usernames and paths containing personal or account names
 - Timestamps that reveal personal routines when they are not technically relevant
 - Logs containing addresses, identifiers, query strings, tokens, or unrelated events
@@ -87,7 +88,7 @@ config.example.yml  # Public sanitized example
 config.yml          # Private live configuration where applicable
 ```
 
-A future repository-level `.gitignore` should exclude at least the relevant secret and local-state patterns used by the deployed services. Possible entries include:
+The repository-level `.gitignore` excludes common secret and local-state patterns. Its current rules include entries such as:
 
 ```gitignore
 .env
@@ -106,7 +107,7 @@ private/
 backups/
 ```
 
-This is an initial defensive list, not a complete policy for every future tool. Each new service must be reviewed for its own secret, state, database, and backup files before its directory is added to Git.
+This is an initial defensive list, not a complete policy for every future tool. Each new service must be reviewed for its own secret, state, database, and backup files, and the `.gitignore` must be updated before that service's files are added to Git.
 
 ## Screenshot and Photograph Review
 
@@ -116,7 +117,7 @@ Before publishing an image, inspect the original file at full resolution and ver
 - [ ] No token, password, QR code, recovery code, or authentication prompt is visible.
 - [ ] Browser tabs, bookmarks, notifications, account avatars, and unrelated windows are hidden or cropped out.
 - [ ] Proxmox task logs, node names, storage names, and network details are sanitized.
-- [ ] OPNsense interfaces, rules, certificates, gateways, and remote-access details are sanitized.
+- [ ] OPNsense interfaces, aliases, rules, DNS records, certificates, gateways, and remote-access details are sanitized.
 - [ ] Switch management addresses, device names, MAC tables, LLDP neighbors, and port labels are sanitized.
 - [ ] Hardware serial numbers, asset labels, barcodes, and shipping labels are not readable.
 - [ ] The background, reflections, and visible documents do not reveal personal or location information.
@@ -173,11 +174,15 @@ Credential rotation is the priority; rewriting repository history does not make 
 At the time of this review, the public documentation may state that:
 
 - The physical rack has been assembled and final cabling remains in progress.
-- Proxmox VE is installed and its web interface has been reached successfully.
+- Proxmox VE is installed, updated, hardened, and reachable through its segmented administration path from an approved client role.
 - An operating system ISO has been uploaded to Proxmox storage.
-- No complete virtual machine has been deployed or booted.
-- The dedicated firewall appliance and managed switch are available but not yet deployed in the final network path.
-- OPNsense, managed-switch configuration, virtual machines, containers, monitoring, automation, and AI services remain pending or planned.
+- OPNsense `26.7.2_2` is operational on the dedicated firewall appliance and provides routing, DHCP, DNS, VLAN gateways, and initial policy enforcement.
+- The managed switch is running firmware `3.30.6`; private administration, traffic forwarding, and three role-based VLANs are operational.
+- Required DNS access, approved Proxmox administration, and a selected cross-segment isolation path have been verified using sanitized role descriptions.
+- Private name resolution is prepared for the first planned service workload, while its live record remains private.
+- Initial and final network-configuration copies are stored privately and are not part of the repository.
+- No complete service workload is presented as operational, and Hermes Agent is not installed or connected to the HomeLab.
+- Container hosting, Home Assistant, monitoring, automation, VPN access, and AI services remain pending or planned.
 
 No document should imply that unfinished services are operational.
 

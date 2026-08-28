@@ -1,6 +1,6 @@
 # Personal HomeLab
 
-> **Status:** Work in progress — operational segmented-network foundation and virtualization platform.
+> **Status:** Work in progress — operational segmented-network foundation, initial policy enforcement, and virtualization platform.
 
 This repository documents the design, deployment, and evolution of my personal HomeLab. The project is being built to develop practical skills in virtualization, Linux systems administration, networking, cybersecurity, monitoring, automation, and self-hosted services.
 
@@ -13,10 +13,10 @@ The documentation reflects only work that has actually been completed. Planned c
 | Physical rack | Assembled | The rack and its current hardware have been installed. The main network path is connected, while final cable organization remains in progress. |
 | Proxmox host | Operational foundation | Proxmox VE is installed, updated, reachable through its segmented management path, and protected with a separate administrative account and multi-factor authentication. |
 | Installation media | Available | An operating system ISO has been uploaded to Proxmox storage. |
-| Virtual machines | Not deployed | Initial VM creation was started, but no complete VM has been created and booted yet. |
-| Firewall appliance | Operational | OPNsense `26.7.2_2` is installed on the dedicated appliance. Routing, DHCP, DNS, internet connectivity, local administration, and the segmented network path have been verified. |
+| Virtual machines | Deployment in progress | The network and private name-resolution foundation for the first planned service VM has been prepared, but no complete service workload is presented as operational yet. |
+| Firewall appliance | Operational with initial policy enforcement | OPNsense `26.7.2_2` is installed on the dedicated appliance. Routing, DHCP, DNS, internet connectivity, local administration, segmented network access, and initial cross-segment policy controls have been verified. |
 | Managed switch | Operational segmented foundation | The switch is running firmware `3.30.6`, its private administration path is operational, and three role-based VLANs are active and verified. |
-| HomeLab network path | Operational and segmented | The path from the ISP equipment through OPNsense and the managed switch to selected segmented devices has been tested successfully. |
+| HomeLab network path | Operational, segmented, and policy-tested | The path from the ISP equipment through OPNsense and the managed switch has been tested successfully. Approved management access, segment-specific DNS access, and isolation between selected network roles have also been verified. |
 | Self-hosted services | Planned | Docker, Home Assistant, monitoring, automation, and AI services have not yet been deployed. |
 
 ## Hardware Overview
@@ -49,7 +49,7 @@ Three role-based network segments
 Proxmox host and selected devices
 ```
 
-This segmented path is operational for selected wired devices, and the switch can be administered through a stable private management configuration. The Proxmox host remains reachable after its network migration. VPN access and service workloads are not yet deployed.
+This segmented path is operational for selected wired devices, and the switch can be administered through a stable private management configuration. The Proxmox host remains reachable from an approved client segment after its network migration. Initial DNS-access and cross-segment isolation rules have been tested, and private name resolution is ready for the first planned service workload. VPN access and the Hermes Agent service are not yet deployed.
 
 ## Project Roadmap
 
@@ -69,9 +69,12 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Design, deploy, and validate three role-based VLANs
 - [x] Migrate and verify the Proxmox management path within the segmented network
 - [x] Save and verify final private network-configuration backups
+- [x] Apply and verify initial DNS-access rules for approved network roles
+- [x] Verify isolation between the management and server-oriented segments
+- [x] Prepare private name resolution for the first planned service workload
 - [ ] Complete and document the physical cabling
 - [ ] Add controlled remote access through a reviewed VPN design
-- [ ] Create and document the first Linux virtual machine
+- [ ] Complete and document the first Linux virtual machine
 - [ ] Deploy container-based services
 - [ ] Add monitoring with Prometheus and Grafana
 - [ ] Add Home Assistant and local automation services
@@ -125,8 +128,8 @@ Examples and future configuration templates will use placeholders and documentat
 
 Additional implementation notes will be added only after the corresponding work has been completed and verified. Planned topics include:
 
-- Segmentation policy refinement and recovery testing
-- The first complete Linux virtual machine
+- Further segmentation-policy refinement and recovery testing
+- The first complete Linux virtual machine and its service deployment
 - Secure remote access
 - Container-hosted services
 - Monitoring and automation services
