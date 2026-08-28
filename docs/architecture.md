@@ -29,7 +29,7 @@ flowchart TD
 
 | Layer | Component | Verified state |
 | --- | --- | --- |
-| Physical | 12U rack and rack accessories | Assembled; the base network path is connected and final cable organization is in progress. |
+| Physical | 12U rack and rack accessories | Completed; equipment placement, physical cabling, private labeling, ventilation checks, and power-distribution review have been verified. |
 | Compute | GMKtec virtualization host | Proxmox VE is installed, updated, accessible through its segmented management path, and protected with a separate administrative account and multi-factor authentication. |
 | Storage | Proxmox local storage | An operating system ISO has been uploaded. |
 | Virtualization | Virtual machines | The network and private name-resolution foundation for the first planned service VM is prepared; no complete service workload is presented as operational. |

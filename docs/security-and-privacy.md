@@ -173,7 +173,7 @@ Credential rotation is the priority; rewriting repository history does not make 
 
 At the time of this review, the public documentation may state that:
 
-- The physical rack has been assembled and final cabling remains in progress.
+- The physical foundation is completed, including equipment placement, cabling, private labeling, ventilation checks, power distribution, and connected-load review.
 - Proxmox VE is installed, updated, hardened, and reachable through its segmented administration path from an approved client role.
 - An operating system ISO has been uploaded to Proxmox storage.
 - OPNsense `26.7.2_2` is operational on the dedicated firewall appliance and provides routing, DHCP, DNS, VLAN gateways, and initial policy enforcement.

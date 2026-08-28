@@ -20,7 +20,7 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Updated the network design with the completed VLAN deployment, Proxmox migration, initial DNS and isolation policy baseline, connectivity tests, and remaining comprehensive policy work.
 - Updated the OPNsense deployment record with version `26.7.2_2`, VLAN gateway operation, initial policy enforcement, post-change validation, and private backups.
 - Updated the managed-switch deployment record with firmware `3.30.6`, three verified VLANs, and a final private configuration copy.
-- Updated the physical setup to record the segmented network path while retaining final cable organization as in progress.
+- Updated the physical setup to record the completed rack, cabling, private labeling, ventilation, strain-relief, and power-distribution foundation.
 - Updated the Proxmox record with its verified migration, approved administration path, and prepared private name resolution for the first planned service workload.
 - Updated the roadmap to mark the network-foundation phase as completed, record the initial policy baseline, and reorder recovery, policy, and virtualization work.
 - Corrected the security-and-privacy boundary so it no longer presents OPNsense, the managed switch, or segmentation as undeployed.
@@ -49,13 +49,15 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Proxmox administration has been verified from an approved client segment.
 - A selected management-to-service path has been blocked and tested.
 - Private name resolution has been prepared and verified for the first planned service workload.
+- The physical foundation is complete, including equipment placement, cable organization, private labeling, ventilation and stability checks, power distribution, and connected-load review.
+- The project roadmap's physical-foundation phase now meets its completion criteria.
 
 ### Still in progress or planned
 
 - Confirming required DHCP reservations privately.
 - Performing controlled network-configuration restoration tests.
 - Completing the inter-VLAN policy review using least-privilege principles.
-- Completing cable organization, safe labeling, power-load documentation, and recovery planning.
+- Measuring UPS battery runtime and defining controlled shutdown behavior as separate resilience work.
 - Completing and validating the first Proxmox virtual machine and backup.
 - VPN access, advanced firewall policy, monitoring, and automated backup rotation.
 - Container-hosted services, Home Assistant, n8n, monitoring, and Hermes Agent.

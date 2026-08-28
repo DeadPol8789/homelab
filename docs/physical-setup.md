@@ -1,24 +1,24 @@
 # Physical Setup
 
 > **Last verified:** August 2026  
-> **Project status:** Physical assembly completed; segmented network cabling operational; final organization in progress
+> **Project status:** Physical foundation completed and verified
 
-This document describes the verified physical state of the HomeLab. It focuses on the rack, power, local administration, and current cabling progress without exposing the exact domestic layout or sensitive device information.
+This document describes the verified physical state of the HomeLab. It focuses on the completed rack, power, local administration, and cabling foundation without exposing the exact domestic layout or sensitive device information.
 
-The rack has been assembled and the main rack components have been placed. The dedicated firewall, managed switch, Proxmox host, and selected wired clients now form an operational segmented network path. The rack remains open while cable routing, labeling, and power validation are completed. Exact rack-unit positions and domestic cable routes are intentionally not documented.
+The rack has been assembled and the main rack components have been placed. The dedicated firewall, managed switch, Proxmox host, and selected wired clients form an operational segmented network path. Cable routing, private labeling, strain relief, ventilation, physical stability, power distribution, and the connected load have been reviewed and completed. Exact rack-unit positions and domestic cable routes are intentionally not documented.
 
 ## Verified Physical State
 
 | Area | Verified state | Notes |
 | --- | --- | --- |
-| Rack structure | **Assembled** | The 12U open-frame rack is built and being used as the central structure for the HomeLab. |
-| Rack components | **Placed** | The patch panel, power distribution, shelf, and cable-management accessories are part of the current build. |
+| Rack structure | **Completed** | The 12U open-frame rack is built and used as the central structure for the HomeLab. |
+| Rack components | **Installed** | The patch panel, power distribution, shelf, and cable-management accessories are installed in the current build. |
 | Proxmox host | **Installed and accessible** | The virtualization host is connected through the HomeLab network path, and access to Proxmox VE has been verified. |
 | Firewall appliance | **Installed and operational** | OPNsense `26.7.2_2` is installed, VLAN gateway operation is verified, and connectivity through the appliance has been tested. |
 | Managed switch | **Installed, managed, and segmented** | Firmware `3.30.6`, private administration, traffic forwarding, and three role-based VLANs have been verified. |
-| Network cabling | **Operational segmented path; organization in progress** | The firewall-to-switch and selected device connections work after segmentation. Final routing, labeling, and strain-relief checks remain pending. |
+| Network cabling | **Completed and verified** | The required connections, final routing, private labeling, organization, and strain-relief checks are complete. |
 | Local console | **Available** | A portable display, compact keyboard, and HDMI KVM are available for local maintenance and diagnostics. |
-| Power protection | **Available** | A UPS is available for selected HomeLab and network equipment. Formal load and runtime testing has not yet been documented. |
+| Power protection | **Installed and reviewed** | The UPS protects selected HomeLab equipment; power distribution and the connected load have been reviewed. Battery-runtime measurement and automated shutdown remain separate resilience work. |
 
 ## Current Rack Components
 
@@ -76,18 +76,21 @@ The completed base work includes:
 7. Save an initial OPNsense configuration backup privately.
 8. Configure stable private switch management and verify local administrative access.
 9. Review switch firmware compatibility without publishing live device details.
+10. Complete the final cable routing and organization.
+11. Apply private labeling and verify strain relief.
+12. Review ventilation, physical stability, power distribution, and the connected load.
 
-The remaining physical work is to organize and secure the final cabling, complete safe labeling, review ventilation and strain relief, and document the finished layout without exposing the home environment.
+The physical foundation is complete. Future changes will be treated as maintenance or expansion work and documented without exposing the home environment.
 
 ## Power and Local Administration
 
-The rack includes power distribution and access to UPS-backed power for selected equipment. The final power allocation, measured load, expected runtime, and controlled-shutdown procedure have not yet been formally tested and therefore are not presented as completed.
+The rack includes reviewed power distribution and UPS-backed power for selected equipment. The connected load has been reviewed as part of the completed physical foundation. Battery-runtime measurement and a controlled or automated shutdown procedure remain future resilience tasks and do not block physical completion.
 
 Local maintenance can be performed with the portable display, keyboard, and KVM. This provides direct console access for installation and troubleshooting without relying entirely on remote management.
 
 ## Cable-Management Principles
 
-The final physical layout will follow these principles:
+The completed physical layout follows these principles and should continue to do so during maintenance:
 
 - Keep power and network cables organized and easy to trace.
 - Avoid unnecessary cable tension and tight bends.
@@ -113,13 +116,14 @@ If an image cannot be sanitized confidently, it should not be published.
 
 ## Completion Criteria
 
-The physical setup will be marked as complete only when:
+The physical setup is marked as complete because:
 
-- The firewall and switch are installed in their intended positions.
-- Network and power connections are finalized.
-- The new network path has been tested successfully.
-- Cable routing and strain relief are complete.
-- Ventilation and physical stability have been checked.
-- A sanitized cabling overview can be documented without exposing the live environment.
+- [x] The firewall and switch are installed in their intended positions.
+- [x] Network and power connections are finalized.
+- [x] The new network path has been tested successfully.
+- [x] Cable routing, organization, private labeling, and strain relief are complete.
+- [x] Ventilation and physical stability have been checked.
+- [x] Power distribution and the connected load have been reviewed.
+- [x] The completed state can be documented without exposing the live environment.
 
-Until those checks are complete, the correct public status remains **physical assembly completed; segmented network cabling operational; final organization in progress**.
+The correct public status is **physical foundation completed and verified**. Public photographs remain optional and must pass the privacy checklist before publication.
