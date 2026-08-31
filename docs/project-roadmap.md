@@ -2,7 +2,7 @@
 
 > **Last verified:** August 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Complete policy review, recovery testing, and the first virtual machine
+> **Current focus:** Guest recovery, secure remote access, assistant memory, and monitoring
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -23,11 +23,11 @@ No fixed completion dates are published at this stage. The project is developed 
 | Phase | Objective | Current status |
 | --- | --- | --- |
 | 1. Physical foundation | Assemble the rack and complete safe equipment placement, cabling, labeling, ventilation, and power review | **Completed** |
-| 2. Virtualization foundation | Install Proxmox VE and deploy the first validated guest workload | **In progress** |
+| 2. Virtualization foundation | Install Proxmox VE and deploy the first validated guest workload | **Completed** |
 | 3. Network foundation | Deploy OPNsense and the managed switch as a tested segmented network path | **Completed** |
-| 4. Core service platform | Create Linux workloads and a controlled container-hosting environment | **Planned** |
+| 4. Core service platform | Create Linux workloads and a controlled container-hosting environment | **In progress** |
 | 5. Automation and observability | Deploy Home Assistant, local voice integration, n8n, Prometheus, and Grafana | **Planned** |
-| 6. Assistant platform | Deploy and integrate Hermes Agent as a persistent HomeLab assistant | **Planned** |
+| 6. Assistant platform | Deploy and integrate Hermes Agent as a persistent HomeLab assistant | **In progress** |
 | 7. Security and resilience | Maintain segmentation and add controlled remote access, recovery tests, and further hardening | **In progress** |
 | 8. Advanced labs | Build isolated cybersecurity, development, and optional AI-compute experiments | **Under evaluation** |
 
@@ -57,28 +57,30 @@ The physical-foundation objective is complete. Public rack photographs remain op
 
 ## Phase 2 — Virtualization Foundation
 
-**Status: In progress**
+**Status: Completed**
 
 ### Verified progress
 
 - [x] Install Proxmox VE on the GMKtec virtualization host.
 - [x] Verify access to the Proxmox web interface.
 - [x] Upload an operating system ISO to local storage.
-- [x] Apply the available host updates and configure the package source for the non-subscribed lab environment.
+- [x] Update the host to Proxmox VE `9.2.11` and configure the package source for the non-subscribed lab environment.
 - [x] Configure stable private management connectivity and local name resolution.
 - [x] Migrate and verify the Proxmox management path within the segmented network.
 - [x] Verify Proxmox administration from an approved client segment.
-- [x] Prepare and verify the network-policy and private name-resolution foundation for the first planned service workload.
+- [x] Prepare and verify the network-policy and private name-resolution foundation for the first service workload.
 - [x] Create a separate administrative account and protect it with multi-factor authentication.
-- [ ] Complete, boot, and validate the first virtual machine.
-- [ ] Document guest resource allocation and installation decisions.
-- [ ] Define an initial backup and restoration procedure.
+- [x] Complete, boot, update, restart, and validate the first Ubuntu Server virtual machine.
+- [x] Verify key-based administration through a dedicated non-root account.
+- [x] Disable password-based SSH authentication and direct root login.
+- [x] Document the guest deployment without publishing live resource or network identifiers.
 
 ### Completion criteria
 
 - At least one guest has been created, booted, updated, and reached through an approved management method.
-- CPU, memory, storage, and network choices are documented without exposing live identifiers.
-- A basic backup has been created and a restoration method has been reviewed or tested.
+- Guest purpose, operating system, administration, and network choices are documented without exposing live identifiers.
+
+Guest backup rotation and controlled restoration remain tracked in Phase 7 and are not blockers for the completed virtualization-foundation objective.
 
 ## Phase 3 — Network Foundation
 
@@ -107,7 +109,7 @@ OPNsense `26.7.2_2` is installed on the dedicated firewall appliance, and the se
 - [x] Apply and verify required DNS access for selected network roles.
 - [x] Verify approved access to the Proxmox administration path.
 - [x] Apply and verify isolation between selected management and service-oriented roles.
-- [x] Prepare private name resolution for the first planned service workload.
+- [x] Prepare private name resolution for the first service workload.
 - [x] Document the final high-level topology using sanitized labels.
 
 ### Operational follow-up
@@ -124,23 +126,26 @@ The foundation objective is complete, and an initial DNS and cross-segment polic
 
 ## Phase 4 — Core Service Platform
 
-**Status: Planned**
+**Status: In progress**
+
+### Verified progress
+
+- [x] Deploy a maintained Ubuntu Server guest for selected infrastructure workloads.
+- [x] Install and validate Docker Engine `29.7.2` and Docker Compose `5.5.0`.
+- [x] Verify the Docker service, container runtime, and a disposable test container.
+- [x] Use sanitized documentation and keep live secrets outside Git.
 
 ### Planned work
 
-- [ ] Deploy a maintained Linux server guest for selected infrastructure workloads.
 - [ ] Decide which workloads require separate VMs and which may use containers.
-- [ ] Install a container runtime only after the host role and security boundaries are defined.
-- [ ] Use sanitized example configuration files and keep live secrets outside Git.
 - [ ] Document update, health-check, backup, and recovery procedures for each service.
+- [ ] Add monitoring and alerting for the Linux guest and critical services.
 
-The final VM and container layout has not been selected. Docker or another container platform must not be described as deployed until installation and validation are complete.
-
-The network-policy and private name-resolution foundation for the first planned service workload is prepared. This preparation does not mean that the Linux guest, container platform, or any service is deployed.
+The first Linux and Docker foundation is operational. The final multi-workload layout, recurring maintenance, monitoring, backup rotation, and recovery procedures remain in progress.
 
 ## Phase 5 — Automation and Observability
 
-**Status: Planned**
+**Status: In progress**
 
 ### Planned work
 
@@ -161,20 +166,27 @@ No home-automation, voice, n8n, Prometheus, or Grafana service is currently depl
 The target architecture combines two different roles:
 
 - **ChatGPT Work** supports interactive studies, programming, research, file analysis, and production of complex deliverables.
-- **Hermes Agent** is planned as the persistent HomeLab assistant for local automation, recurring tasks, monitoring, and approved messaging or voice interfaces.
+- **Hermes Agent** is the operational initial HomeLab assistant and is intended to expand into local automation, recurring tasks, monitoring, and approved messaging or voice interfaces.
+
+### Verified progress
+
+- [x] Deploy Hermes Agent on the first hardened Linux guest.
+- [x] Validate the initial text-based assistant workflow.
+- [x] Create the initial persistent user profile.
+- [x] Confirm automatic memory loading in a new session.
+- [x] Keep live credentials, configuration, and memory content outside the public repository.
 
 ### Planned work
 
-- [ ] Define Hermes Agent's workload placement and resource limits.
-- [ ] Design its memory, skills, and secret-management boundaries.
+- [ ] Expand the memory design with a reviewed knowledge-base and retrieval layer.
+- [ ] Define isolated administrator, personal, and restricted-user profiles.
 - [ ] Integrate approved Home Assistant, monitoring, and automation functions gradually.
 - [ ] Restrict commands to authorised identities and require confirmation for sensitive actions.
 - [ ] Record operational costs and decide when tasks should use local or paid AI services.
 - [ ] Test failure handling before granting control of important infrastructure.
+- [ ] Add secure remote text access and validate it from an external network.
 
-Hermes Agent is not currently installed or connected to the HomeLab.
-
-Private network preparation for the first planned service workload has been verified, but this does not change the assistant platform from **Planned** until Hermes itself is installed, secured, and tested.
+Hermes Agent and its initial persistent-memory workflow are operational. The phase remains **In progress** until secure remote access, expanded memory, user isolation, monitoring, and selected Home Assistant integrations are implemented and tested.
 
 ## Phase 7 — Security and Resilience
 
@@ -194,7 +206,9 @@ Private network preparation for the first planned service workload has been veri
 - [x] Apply and verify required DNS access for selected network roles.
 - [x] Verify Proxmox administration from an approved client segment.
 - [x] Block and test a selected management-to-service path.
-- [x] Prepare private name resolution for the first planned service workload.
+- [x] Operate private name resolution for the first service workload.
+- [x] Harden the first Linux guest with non-root, key-based remote administration.
+- [x] Disable password-based SSH authentication and direct root login on the first guest.
 - [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
@@ -230,9 +244,11 @@ The next verified updates should follow this order:
 1. Perform and document a controlled restoration test for the private network backups.
 2. Confirm required DHCP reservations and remaining essential client connectivity.
 3. Complete the inter-VLAN policy review using least-privilege principles.
-4. Complete, update, and validate the first Proxmox virtual machine.
-5. Create and verify the first VM backup before deploying important services.
-6. Design controlled remote access through a reviewed VPN solution.
+4. Define recurring guest, Hermes configuration, and memory backups outside the public repository.
+5. Perform a controlled guest and service restoration test.
+6. Design controlled remote access through a reviewed VPN solution and validate it from an external network.
+7. Expand Hermes memory with a reviewed knowledge-base and retrieval layer.
+8. Add monitoring and actionable alerts for the host, guest, and assistant service.
 
 This order may be adjusted if testing identifies a safer dependency sequence. Any change will be documented rather than silently presented as part of the original plan.
 

@@ -21,7 +21,7 @@ The inventory is intentionally limited to information that is useful for a techn
 
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
-| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE is installed, updated, accessible from an approved client segment through its segmented management path, and protected with a separate administrative account and multi-factor authentication. The network and private name-resolution foundation for the first planned service workload is prepared, but no complete service workload is presented as operational. |
+| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE `9.2.11` is installed, updated, accessible from an approved client segment, and protected with a separate administrative account and multi-factor authentication. The host runs the first validated Ubuntu Server guest, Docker platform, and Hermes Agent workload. |
 | Desktop workstation | NVIDIA GeForce RTX 5070 Ti, 32 GB RAM | Primary personal workstation and future on-demand compute node for heavy local-AI workloads | **In use independently:** it is not dedicated to the HomeLab and is not yet integrated with Hermes or automation. Future Wake-on-LAN and workload controls are planned. |
 
 ## Network and Security
@@ -33,7 +33,7 @@ The inventory is intentionally limited to information that is useful for a techn
 | 24-port Cat6 patch panel | 1U rack-mount patch panel | Structured Ethernet termination and cable organization | **In use:** installed as part of the completed physical cabling and organization foundation. |
 | Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **In use:** required connections, final routing, private labeling, and organization have been completed and verified. |
 
-The segmented path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Three role-based VLANs, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. Private name resolution is prepared for the first planned service workload, and final network-configuration backups are stored privately. VPN access and comprehensive firewall-policy review remain pending.
+The segmented path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Three role-based VLANs, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. Private name resolution is operational for the first service workload, and final network-configuration backups are stored privately. VPN access and comprehensive firewall-policy review remain pending.
 
 ## Rack, Power, and Local Administration
 
@@ -52,7 +52,7 @@ The segmented path from the ISP equipment through OPNsense and the switch to sel
 
 | Hardware | Quantity | Intended role | Current status |
 | --- | ---: | --- | --- |
-| Home Assistant Voice Preview Edition | 2 | Future local voice interfaces for Home Assistant and the planned assistant platform | **Available:** not yet integrated or configured. |
+| Home Assistant Voice Preview Edition | 2 | Future local voice interfaces for Home Assistant and the Hermes assistant platform | **Available:** not yet integrated or configured. |
 | SONOFF CAM Pan-Tilt 2 (CAM-PT2) | 1 | Indoor physical monitoring of the HomeLab area | **In use independently:** HomeLab or Home Assistant integration has not yet been verified. No camera feeds, credentials, or access details will be published. |
 
 ## Client and Supporting Devices

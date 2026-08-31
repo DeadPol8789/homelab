@@ -24,9 +24,10 @@ After installation, the removable media was disconnected and the appliance was c
 | WAN role | **Operational** | The upstream interface obtains connectivity from the existing ISP equipment. |
 | Internal network role | **Operational and segmented** | OPNsense provides the internal routing and gateway layer for three role-based VLANs. |
 | DHCP service | **Operational base** | Kea DHCPv4 is enabled for the LAN and provides addresses to connected clients. Final documentation of individual reservations remains pending. |
-| DNS resolution | **Verified by role** | Required DNS access was retested successfully from selected segments, and private name resolution was prepared for the first planned service workload. |
+| DNS resolution | **Verified by role and workload** | Required DNS access was retested successfully from selected segments, and private name resolution is operational for the first service workload. |
 | Internet connectivity | **Verified** | Internet access was retested through OPNsense and the managed switch after segmentation. |
 | Proxmox reachability | **Verified from an approved segment** | The virtualization host remains accessible through its migrated administration path from an authorized client role. |
+| First service workload | **Operational through approved path** | The Linux guest and Hermes Agent use the intended service path and private name resolution. |
 | Cross-segment isolation | **Initially enforced and tested** | A selected management-to-service path was blocked and its isolation result was verified. |
 | Local administration | **Verified** | The web administration interface is reachable from the approved local network. |
 | Multi-factor authentication | **Enabled** | Time-based one-time-password authentication protects administrative access. |
@@ -42,7 +43,7 @@ flowchart TD
     FW --> SW["Managed PoE switch<br/>Tagged distribution"]
     SW --> ZONE_A["Approved client segment<br/>Administration verified"]
     SW --> ZONE_B["Management segment<br/>Isolation verified"]
-    SW --> ZONE_C["Service segment<br/>Private DNS prepared"]
+    SW --> ZONE_C["Service segment<br/>First workload operational"]
 ```
 
 This diagram represents the verified high-level path only. It does not disclose physical port numbers, interface identifiers, addresses, device names, or the exact domestic layout.
@@ -69,7 +70,8 @@ The following checks were completed across the initial deployment and the later 
 14. Apply and verify required DNS access for selected network roles.
 15. Confirm Proxmox administration from an approved client segment.
 16. Apply and verify isolation between selected management and service-oriented roles.
-17. Prepare and verify private name resolution for the first planned service workload.
+17. Prepare and verify private name resolution for the first service workload.
+18. Deploy the Linux guest and confirm that its network, DNS, Docker, and Hermes Agent paths operate as intended.
 
 These checks validate the segmented network foundation and an initial least-privilege policy baseline. They do not mean that comprehensive inter-VLAN policy review, remote access, restoration testing, monitoring, or workload-level isolation has been completed.
 
@@ -85,7 +87,7 @@ The current deployment includes the following verified controls:
 - Required DNS access is explicitly permitted for selected network roles.
 - Administration of the virtualization host is limited to an approved client path that has been tested.
 - A selected management-to-service path is explicitly blocked and has been tested.
-- Private name resolution is ready for the first planned service workload without publishing the live record.
+- Private name resolution and the approved service path are operational for the first Linux and Hermes Agent workload without publishing live values.
 - Public documentation uses descriptive labels instead of live infrastructure values.
 - Changes are applied and tested incrementally before additional network features are introduced.
 
