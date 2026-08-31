@@ -1,19 +1,19 @@
 # Proxmox VE Installation
 
 > **Last verified:** August 2026  
-> **Project status:** Proxmox VE installed, updated, segmented, and hardened; first-workload network foundation prepared
+> **Project status:** Proxmox VE `9.2.11` operational with the first validated Linux service VM
 
 This document records the verified progress of the Proxmox VE deployment used as the virtualization foundation of the HomeLab. It intentionally separates completed work from unfinished tasks and excludes sensitive information about the live environment.
 
 ## Deployment Summary
 
-Proxmox VE has been installed on the GMKtec NucBox M6 Ultra designated as the main virtualization host. The host has been updated, the package source appropriate for a non-subscribed lab environment has been enabled, and access to the web interface has been verified through the operational segmented OPNsense and managed-switch path.
+Proxmox VE has been installed on the GMKtec NucBox M6 Ultra designated as the main virtualization host. The host has been updated to Proxmox VE `9.2.11` with kernel `7.0.14-14-pve`, the package source appropriate for a non-subscribed lab environment has been enabled, and access to the web interface has been verified through the operational segmented OPNsense and managed-switch path. A private configuration copy was preserved before the host update.
 
 Stable local management addressing and name resolution are configured privately. The host has been migrated to its intended segmented management path and remained reachable from an approved client segment after VLAN, firewall, switch-firmware, internet, and DNS validation. A separate administrative account with multi-factor authentication is available for normal web administration. An operating system ISO has also been uploaded to Proxmox storage.
 
-The network-policy and private name-resolution foundation for the first planned service workload has been prepared and tested without publishing its live values. This preparation does not by itself prove that the guest operating system or Hermes Agent is installed and operational.
+The first service VM is now operational. Ubuntu Server `24.04.4 LTS` was installed, updated, connected through its approved segmented service path, and verified with private name resolution. Remote administration uses a dedicated non-root account and an encrypted ED25519 key. Password-based SSH authentication and direct root login are disabled.
 
-Initial virtual-machine creation was started, but no virtual machine has been fully created, booted, configured, or validated. The current deployment must therefore not be described as hosting operational workloads.
+Docker Engine `29.7.2` and Docker Compose `5.5.0` were installed from the maintained upstream repository. The Docker service, container runtime, and a test container were validated before Hermes Agent was deployed. Hermes is operational, and automatic loading of its persistent user memory has been confirmed in a new session.
 
 ## Verified Progress
 
@@ -21,45 +21,51 @@ Initial virtual-machine creation was started, but no virtual machine has been fu
 | --- | --- | --- |
 | Physical host prepared | **Completed** | The designated mini PC is available and used as the Proxmox host. |
 | Proxmox VE installation | **Completed** | Proxmox VE has been installed successfully. |
-| System updates | **Completed** | Available host updates were applied after installation. |
+| System updates | **Completed** | Proxmox VE `9.2.11` and kernel `7.0.14-14-pve` are installed. |
 | Package source | **Configured** | The repository appropriate for a non-subscribed HomeLab environment is enabled. |
 | Management networking | **Segmented and verified** | Stable private management connectivity and local name resolution were migrated to the intended segmented path. |
 | Management interface access | **Verified after migration** | The web administration interface remains reachable through the segmented OPNsense and managed-switch path from an approved client segment. |
 | Administrative account | **Configured** | A separate account is used for normal administrative access. |
 | Multi-factor authentication | **Enabled** | Time-based one-time-password authentication protects the administrative account. |
 | Installation media upload | **Completed** | An operating system ISO has been uploaded to Proxmox storage. |
-| First-workload network foundation | **Prepared and verified** | Required network policy and private name resolution are ready for the first planned service workload without publishing live values. |
-| Initial VM creation | **Started, not completed** | The creation workflow was opened, but no complete VM has been deployed or booted. |
-| Guest operating system installation | **Not started** | No guest operating system installation has been completed. |
-| Production workloads | **Not deployed** | No HomeLab service currently depends on a Proxmox guest. |
-| Backup and restore testing | **Not configured** | No verified VM backup or restore procedure has been documented yet. |
+| First-workload network foundation | **Operational and verified** | Required network policy and private name resolution support the first service workload without publishing live values. |
+| Initial VM creation | **Completed** | The first service VM was created, booted, restarted, and validated. |
+| Guest operating system installation | **Completed** | Ubuntu Server `24.04.4 LTS` is installed, updated, and reachable through its approved path. |
+| Guest administration | **Hardened and verified** | Key-based access through a dedicated non-root account is operational; password authentication and direct root login are disabled. |
+| Container platform | **Operational** | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and a test container were validated. |
+| First service workload | **Operational** | Hermes Agent is deployed, and persistent memory loading has been verified across sessions. |
+| Backup and restore testing | **Partially prepared** | A private pre-update host-configuration copy exists. Recurring guest backups and a controlled restoration test remain pending. |
 | Monitoring and alerting | **Planned** | Prometheus, Grafana, and related monitoring remain future work. |
 
 ## Current Role in the HomeLab
 
-At this stage, the Proxmox host provides the base platform for future isolated workloads. Its planned responsibilities include:
+The Proxmox host now provides the active virtualization layer for the first isolated service workload. Its verified responsibilities include:
 
-- Linux virtual machines for infrastructure services
-- Container-hosting environments
+- Running the first maintained Linux server VM
+- Hosting the validated Docker and Hermes Agent platform
+- Providing approved, segmented administration and service connectivity
+
+Future responsibilities include:
+
+- Additional Linux virtual machines and container-hosting environments
 - Home Assistant and local automation services
 - Monitoring and observability services
-- Supporting services for the planned local AI-assistant architecture
 - Controlled cybersecurity and systems-administration practice environments
 
-These are target uses only. They must not be interpreted as currently deployed services.
+Only the first Linux VM, Docker platform, and Hermes Agent service are currently deployed. The other uses remain planned.
 
 ## Current Logical State
 
 ```mermaid
 flowchart TD
     NET["Segmented OPNsense and switch path<br/>Initial policy verified"] --> PVE["Proxmox VE<br/>Approved access verified"]
-    PVE --> ISO["Operating system ISO<br/>Uploaded"]
-    NET --> DNS["Private name resolution<br/>First workload prepared"]
-    PVE -. "creation started" .-> VM["First virtual machine<br/>Not completed"]
-    VM -. "future" .-> SVC["HomeLab services<br/>Not deployed"]
+    PVE --> VM["Ubuntu Server VM<br/>Installed and hardened"]
+    NET --> DNS["Private name resolution<br/>First workload operational"]
+    VM --> DOCKER["Docker platform<br/>Validated"]
+    DOCKER --> HERMES["Hermes Agent<br/>Memory loading verified"]
 ```
 
-The host is connected through the operational segmented OPNsense and managed-switch path. Its approved administration path, internet access, and DNS resolution were checked after migration. Selected cross-segment isolation was also verified, and private name resolution is prepared for the first planned service workload. Live addressing, VLAN membership, bridge values, DNS records, and interface details remain private. Guest and service deployment will be documented only after the workload is completed and verified.
+The host is connected through the operational segmented OPNsense and managed-switch path. Its approved administration path, internet access, and DNS resolution were checked after migration. Selected cross-segment isolation was also verified, and private name resolution is operational for the first service workload. Live addressing, VLAN membership, VM identifiers, bridge values, DNS records, and interface details remain private.
 
 ## Information Intentionally Omitted
 
@@ -81,34 +87,31 @@ The following evidence may be added after it has been carefully sanitized:
 
 - A cropped view confirming that the Proxmox interface is reachable
 - A storage view showing that installation media is available
-- A future VM summary showing only non-sensitive demonstration names and states
+- A VM summary showing only sanitized names and states
 - A short explanation of decisions such as resource allocation and network isolation
 - Troubleshooting notes that do not disclose real addresses, identifiers, or access details
 
 Before publication, screenshots must be checked at full resolution. Hostnames, addresses, usernames, browser tabs, task logs, storage names, timestamps that reveal routines, and unrelated personal information must be removed or obscured.
 
-## Next Milestone: First Linux Virtual Machine
+## Next Milestone: Guest Backup and Recovery
 
-The next verified milestone will be the creation of the first Linux VM. It will only be marked as completed after all of the following have been confirmed:
+The first Linux VM and service workload are complete. The next reliability milestone is a repeatable backup and recovery procedure. It will only be marked as completed after all of the following have been confirmed:
 
-1. Define an appropriate and documented purpose for the VM.
-2. Select CPU, memory, storage, and firmware settings based on that purpose.
-3. Complete the guest operating system installation.
-4. Boot the VM successfully after installation.
-5. Confirm local management access without publishing real connection details.
-6. Apply the prepared network identity and confirm the intended DNS and access behavior.
-7. Apply operating system updates and basic security settings.
-8. Record the sanitized configuration and the reasoning behind the resource choices.
-9. Test a safe shutdown and restart.
-10. Create and verify an initial backup before the VM hosts important services.
+1. Define which guest and application data must be protected.
+2. Establish a recurring backup schedule and retention policy.
+3. Store protected copies outside the primary virtualization host.
+4. Verify backup integrity without publishing filenames, paths, or hashes.
+5. Perform a controlled restoration test in an isolated context.
+6. Confirm the restored guest and Hermes memory behave as expected.
+7. Document the sanitized recovery procedure and its limitations.
 
-Until these checks are complete, the public project status remains **Proxmox VE installed, updated, segmented, and hardened; first-workload network foundation prepared**.
+Until these checks are complete, the public project status remains **first validated workload operational; recurring backup and controlled restoration pending**.
 
 ## Future Documentation
 
 As the environment develops, this section may be expanded with separate documents covering:
 
-- First Linux VM deployment
+- Hermes Agent deployment
 - Proxmox storage decisions
 - Sanitized network-bridge design
 - Backup and recovery procedures

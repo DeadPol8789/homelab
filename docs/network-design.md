@@ -1,7 +1,7 @@
 # HomeLab Network Design
 
 > **Last verified:** August 2026  
-> **Implementation status:** Operational segmented-network foundation with initial policy enforcement — further hardening and remote access remain in progress
+> **Implementation status:** Operational segmented-network foundation and first service workload — further hardening and remote access remain in progress
 
 This document records both the verified segmented network foundation and the next planned stages for the HomeLab. It describes the operational path, completed validation work, remaining policy and recovery tasks, and public-documentation boundaries without exposing the live home network.
 
@@ -18,6 +18,7 @@ The existing ISP equipment provides the upstream connection to the dedicated OPN
 | DHCP service | Kea DHCPv4 is active for the HomeLab LAN; final verification and documentation of individual reservations remain pending. |
 | Managed PoE switch | Firmware `3.30.6` is installed; private management, traffic forwarding, and three role-based VLANs have been verified. |
 | Proxmox VE host | Installed, updated, migrated to its segmented management path, and reachable from an approved client segment after validation. |
+| First service workload | The hardened Linux guest, private name resolution, and Hermes Agent service path are operational and verified. |
 | Selected wired clients | Address assignment, segment-specific DNS access, internet connectivity, approved administration, and selected isolation paths have been verified through OPNsense and the switch. |
 | Dedicated firewall-to-switch path | Operational and carrying the segmented HomeLab network. |
 | VLANs and network segmentation | Three role-based VLANs are deployed. Required DNS access and selected allow-and-block paths between network roles have been verified; live identifiers, mappings, and rules remain private. |
@@ -31,7 +32,8 @@ flowchart TD
     FW --> SW["Managed PoE switch<br/>Tagged distribution"]
     SW --> ZONE_A["Approved client segment<br/>Administration verified"]
     SW --> ZONE_B["Management segment<br/>Isolation verified"]
-    SW --> ZONE_C["Service segment<br/>Private DNS prepared"]
+    SW --> ZONE_C["Service segment<br/>First workload operational"]
+    ZONE_C --> VM["Linux service VM<br/>Hermes Agent"]
 ```
 
 This diagram uses generic labels deliberately. The operating mode of the ISP equipment, physical port assignments, addressing plan, and management details are documented privately and represented publicly only in sanitized form.
@@ -43,7 +45,7 @@ This diagram uses generic labels deliberately. The operating mode of the ISP equ
 | ISP equipment | Maintain the external service handoff required by the connection | In use as the upstream connection. |
 | OPNsense appliance | Routing, firewall policy, VLAN gateways, DHCP/DNS services, and later controlled remote access | Operational segmented foundation with initial DNS and isolation policies verified; comprehensive policy review and remote access remain pending. |
 | Managed switch | Wired distribution, VLAN transport, and PoE delivery where required | Firmware, private management, traffic forwarding, and three VLANs are operational. |
-| Proxmox VE host | Run isolated guest workloads for future HomeLab services | Hypervisor installed and approved administration verified; network and private name resolution are prepared for the first service workload. |
+| Proxmox VE host | Run isolated guest workloads for HomeLab services | Hypervisor and approved administration verified; the first Linux guest and Hermes Agent workload are operational through the intended service path. |
 | Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected allow, DNS, and isolation paths have been verified; comprehensive policy review remains in progress. |
 
 ## Design Principles
@@ -79,8 +81,10 @@ The base path was introduced in the following order:
 17. Apply and verify required DNS access for selected network roles.
 18. Confirm approved access to the Proxmox administration path.
 19. Apply and verify isolation between selected management and service-oriented roles.
-20. Prepare private name resolution for the first planned service workload.
-21. Record the verified result using only sanitized public information.
+20. Prepare private name resolution for the first service workload.
+21. Deploy the first Linux guest and verify its intended network and DNS behavior.
+22. Validate the Docker platform and Hermes Agent through the approved service path.
+23. Record the verified result using only sanitized public information.
 
 Restoration testing, comprehensive policy review, remote access, and wider household dependencies remain separate follow-up work.
 
@@ -103,7 +107,8 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [x] Required DNS access has been verified for selected network roles.
 - [x] Proxmox administration has been verified from an approved client segment.
 - [x] A selected management-to-service path has been blocked and tested.
-- [x] Private name resolution has been prepared and verified for the first planned service workload.
+- [x] Private name resolution is operational and verified for the first service workload.
+- [x] The first Linux guest and Hermes Agent are reachable through their approved service path.
 - [ ] Essential household connectivity has been checked.
 - [ ] Disconnecting or reverting the new path has been reviewed or tested.
 - [x] An initial private OPNsense configuration backup has been exported.
@@ -115,7 +120,7 @@ These checks verify the segmented network foundation and its initial policy base
 
 ## Initial Policy Baseline and Future Refinement
 
-The current deployment uses three role-based VLANs. The verified baseline permits required DNS access, allows approved administration of the virtualization host, and blocks a tested path from a management-oriented role toward a service-oriented role. Private name resolution is prepared for the first planned service workload. Live identifiers, addressing, device membership, port mappings, aliases, and policy values are intentionally documented only in private operational records.
+The current deployment uses three role-based VLANs. The verified baseline permits required DNS access, allows approved administration of the virtualization host, and blocks a tested path from a management-oriented role toward a service-oriented role. Private name resolution and the approved network path are operational for the first Linux and Hermes Agent workload. Live identifiers, addressing, device membership, port mappings, aliases, and policy values are intentionally documented only in private operational records.
 
 Future policy refinement may consider trust groups such as:
 
@@ -160,6 +165,7 @@ Available implementation records:
 
 - [OPNsense deployment](opnsense-deployment.md)
 - [Managed-switch deployment](managed-switch-deployment.md)
+- [Hermes Agent deployment](hermes-agent-deployment.md)
 
 Future documentation will cover:
 

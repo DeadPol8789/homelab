@@ -50,6 +50,7 @@ The following content may be technically useful, but it must be cleaned before p
 - VLAN identifiers and firewall aliases connected to the live environment
 - Firewall-rule names, ordering, directions, source and destination mappings, ports, and logging details tied to the live environment
 - Usernames and paths containing personal or account names
+- Assistant memory files, user profiles, prompts, conversation exports, and tool histories
 - Timestamps that reveal personal routines when they are not technically relevant
 - Logs containing addresses, identifiers, query strings, tokens, or unrelated events
 - Browser tabs, bookmarks, account avatars, notifications, and task-history panels
@@ -109,6 +110,8 @@ backups/
 
 This is an initial defensive list, not a complete policy for every future tool. Each new service must be reviewed for its own secret, state, database, and backup files, and the `.gitignore` must be updated before that service's files are added to Git.
 
+Hermes Agent configuration, provider credentials, persistent memory, user profiles, conversation data, and tool state are private operational data. Public documentation may describe their purpose and sanitized validation results, but it must not contain their live contents or storage locations.
+
 ## Screenshot and Photograph Review
 
 Before publishing an image, inspect the original file at full resolution and verify all of the following:
@@ -119,6 +122,7 @@ Before publishing an image, inspect the original file at full resolution and ver
 - [ ] Proxmox task logs, node names, storage names, and network details are sanitized.
 - [ ] OPNsense interfaces, aliases, rules, DNS records, certificates, gateways, and remote-access details are sanitized.
 - [ ] Switch management addresses, device names, MAC tables, LLDP neighbors, and port labels are sanitized.
+- [ ] Hermes configuration, provider details, memory content, prompts, user profiles, tool output, and session history are hidden or sanitized.
 - [ ] Hardware serial numbers, asset labels, barcodes, and shipping labels are not readable.
 - [ ] The background, reflections, and visible documents do not reveal personal or location information.
 - [ ] Image metadata is removed when it is not required.
@@ -136,7 +140,7 @@ Run this review before every commit intended for the public repository:
 4. Review new configuration files against the relevant service's secret-file conventions.
 5. Inspect every image at full resolution.
 6. Confirm that no backup, database, log, export, or temporary file has been included.
-7. Verify that planned services are labelled **planned**, **pending**, or **not deployed**.
+7. Verify that every service is labelled accurately as **operational**, **in progress**, **planned**, **pending**, or **not deployed**.
 8. Check that example values are obviously fictional or use reserved documentation ranges.
 9. Review the final diff for unexpected or unrelated content.
 10. Publish only after all checks pass.
@@ -174,15 +178,18 @@ Credential rotation is the priority; rewriting repository history does not make 
 At the time of this review, the public documentation may state that:
 
 - The physical foundation is completed, including equipment placement, cabling, private labeling, ventilation checks, power distribution, and connected-load review.
-- Proxmox VE is installed, updated, hardened, and reachable through its segmented administration path from an approved client role.
+- Proxmox VE `9.2.11` is installed, updated, hardened, and reachable through its segmented administration path from an approved client role.
 - An operating system ISO has been uploaded to Proxmox storage.
 - OPNsense `26.7.2_2` is operational on the dedicated firewall appliance and provides routing, DHCP, DNS, VLAN gateways, and initial policy enforcement.
 - The managed switch is running firmware `3.30.6`; private administration, traffic forwarding, and three role-based VLANs are operational.
 - Required DNS access, approved Proxmox administration, and a selected cross-segment isolation path have been verified using sanitized role descriptions.
-- Private name resolution is prepared for the first planned service workload, while its live record remains private.
+- The first Ubuntu Server `24.04.4 LTS` guest is installed, updated, and hardened for key-based administration.
+- Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed and validated on the first guest.
+- Private name resolution and the approved network path are operational for the first service workload, while all live values remain private.
 - Initial and final network-configuration copies are stored privately and are not part of the repository.
-- No complete service workload is presented as operational, and Hermes Agent is not installed or connected to the HomeLab.
-- Container hosting, Home Assistant, monitoring, automation, VPN access, and AI services remain pending or planned.
+- Hermes Agent is operational through its initial text workflow, and persistent user-memory loading has been verified across sessions.
+- Hermes credentials, live configuration, persistent-memory contents, user identities, session data, and backup material remain private.
+- Home Assistant, voice integration, n8n, monitoring, VPN access, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain pending or planned.
 
 No document should imply that unfinished services are operational.
 

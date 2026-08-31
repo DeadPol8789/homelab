@@ -10,21 +10,22 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 
 - Added a sanitized OPNsense deployment record covering installation, base network roles, validation, security controls, private backup handling, and remaining work.
 - Added a sanitized managed-switch deployment record covering traffic forwarding, local administration, stable private management, firmware compatibility review, validation, and remaining work.
+- Added a sanitized Hermes Agent deployment record covering the first Linux guest, hardened administration, Docker validation, the initial text workflow, persistent memory, and remaining work.
 - Added the planned on-demand GPU-compute role and Wake-on-LAN concept to the target architecture.
 
 ### Changed
 
-- Updated the README to show the operational segmented foundation, initial policy enforcement, and first-workload network preparation.
-- Updated the architecture from future segmentation to a verified three-VLAN network path with approved administration, role-specific DNS access, and selected isolation testing.
-- Updated the hardware inventory with the verified OPNsense and managed-switch versions, segmented roles, policy enforcement, and first-workload network preparation.
-- Updated the network design with the completed VLAN deployment, Proxmox migration, initial DNS and isolation policy baseline, connectivity tests, and remaining comprehensive policy work.
-- Updated the OPNsense deployment record with version `26.7.2_2`, VLAN gateway operation, initial policy enforcement, post-change validation, and private backups.
+- Updated the README to show the operational segmented foundation, first validated Linux guest, Docker platform, and Hermes Agent deployment.
+- Updated the architecture with the operational Proxmox-to-Linux-to-Hermes workload path while preserving planned services separately.
+- Updated the hardware inventory with Proxmox VE `9.2.11` and the first operational guest and assistant workload.
+- Updated the network design with the operational private DNS and approved service path for the first Linux and Hermes workload.
+- Updated the OPNsense deployment record with the verified DNS and network path used by the first service workload.
 - Updated the managed-switch deployment record with firmware `3.30.6`, three verified VLANs, and a final private configuration copy.
 - Updated the physical setup to record the completed rack, cabling, private labeling, ventilation, strain-relief, and power-distribution foundation.
-- Updated the Proxmox record with its verified migration, approved administration path, and prepared private name resolution for the first planned service workload.
-- Updated the roadmap to mark the network-foundation phase as completed, record the initial policy baseline, and reorder recovery, policy, and virtualization work.
-- Corrected the security-and-privacy boundary so it no longer presents OPNsense, the managed switch, or segmentation as undeployed.
-- Expanded the public-sanitization rules for firewall aliases, rule order, traffic direction, live DNS records, ports, and logging details.
+- Updated the Proxmox record with version `9.2.11`, the first Ubuntu Server guest, SSH hardening, Docker validation, and Hermes Agent deployment.
+- Updated the roadmap to complete the virtualization-foundation phase and move the core-service and assistant phases to in progress.
+- Corrected the security-and-privacy boundary so it accurately presents the first guest, Docker, and Hermes as operational.
+- Expanded the public-sanitization rules for assistant memory, profiles, prompts, session data, configuration, tool output, and backups.
 
 ### Verified infrastructure progress
 
@@ -42,15 +43,21 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Internet access and DNS resolution remain operational after the update and segmentation cycle.
 - Final private network-configuration copies have been saved and checked outside the repository.
 - The project roadmap's network-foundation phase now meets its completion criteria.
-- Proxmox has been updated and normal administration uses a separate account protected by multi-factor authentication.
+- Proxmox has been updated to `9.2.11`, and normal administration uses a separate account protected by multi-factor authentication.
 - Multi-factor authentication protects OPNsense administration.
 - An initial OPNsense configuration backup has been exported and kept outside the public repository.
 - Required DNS access has been verified for selected network roles.
 - Proxmox administration has been verified from an approved client segment.
 - A selected management-to-service path has been blocked and tested.
-- Private name resolution has been prepared and verified for the first planned service workload.
+- Private name resolution is operational and verified for the first service workload.
 - The physical foundation is complete, including equipment placement, cable organization, private labeling, ventilation and stability checks, power distribution, and connected-load review.
 - The project roadmap's physical-foundation phase now meets its completion criteria.
+- The first Ubuntu Server `24.04.4 LTS` VM has been installed, updated, restarted, and validated through its approved segmented path.
+- The guest uses a dedicated non-root account and encrypted key for remote administration; password-based SSH authentication and direct root login are disabled.
+- Docker Engine `29.7.2`, Docker Compose `5.5.0`, the Docker service, container runtime, and a disposable test container have been validated.
+- Hermes Agent is operational through its initial text workflow.
+- Hermes persistent user-memory loading has been verified in a new session.
+- The project roadmap's virtualization-foundation phase now meets its completion criteria.
 
 ### Still in progress or planned
 
@@ -58,9 +65,11 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Performing controlled network-configuration restoration tests.
 - Completing the inter-VLAN policy review using least-privilege principles.
 - Measuring UPS battery runtime and defining controlled shutdown behavior as separate resilience work.
-- Completing and validating the first Proxmox virtual machine and backup.
+- Defining recurring guest, Hermes configuration, and persistent-memory backups.
+- Performing controlled guest, service, and network-configuration restoration tests.
 - VPN access, advanced firewall policy, monitoring, and automated backup rotation.
-- Container-hosted services, Home Assistant, n8n, monitoring, and Hermes Agent.
+- Expanded memory/RAG, isolated user profiles, secure remote text access, Home Assistant, voice integration, and n8n.
+- Additional container-hosted services and assistant integrations.
 - Wake-on-LAN and controlled use of the GPU workstation for approved heavy tasks.
 
 ## [0.1.0] - 2026-08-05
