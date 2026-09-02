@@ -2,7 +2,7 @@
 
 > **Last verified:** August 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Guest recovery, secure remote access, assistant memory, and monitoring
+> **Current focus:** Controlled restoration, backup automation, secure remote access, assistant memory, and monitoring
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -209,18 +209,24 @@ Hermes Agent and its initial persistent-memory workflow are operational. The pha
 - [x] Operate private name resolution for the first service workload.
 - [x] Harden the first Linux guest with non-root, key-based remote administration.
 - [x] Disable password-based SSH authentication and direct root login on the first guest.
+- [x] Create initial compressed backups of the current VM and container workloads.
+- [x] Encrypt the initial workload backups before secondary storage.
+- [x] Copy the encrypted archives away from the primary virtualization host.
+- [x] Verify matching SHA-256 checksums between encrypted source and secondary copies.
 - [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
 
 - [ ] Complete the inter-VLAN policy review using least-privilege principles.
 - [ ] Add controlled remote access through a reviewed VPN design.
+- [ ] Finalize cleanup or retention handling for unencrypted working archives.
 - [ ] Define recurring configuration and service backups outside the public repository.
+- [ ] Add retention, capacity, and backup-failure monitoring.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
 
-Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, and a selected cross-segment isolation path are deployed and verified. VPN access, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
+Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, a selected cross-segment isolation path, and encrypted initial VM and container backups are deployed and verified. The workload copies passed SHA-256 comparison after transfer to separate storage. VPN access, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
 
 ## Phase 8 — Advanced Labs
 
@@ -244,8 +250,8 @@ The next verified updates should follow this order:
 1. Perform and document a controlled restoration test for the private network backups.
 2. Confirm required DHCP reservations and remaining essential client connectivity.
 3. Complete the inter-VLAN policy review using least-privilege principles.
-4. Define recurring guest, Hermes configuration, and memory backups outside the public repository.
-5. Perform a controlled guest and service restoration test.
+4. Finalize local working-archive cleanup and define recurring guest, Hermes configuration, and memory backups.
+5. Perform controlled VM and container restoration tests.
 6. Design controlled remote access through a reviewed VPN solution and validate it from an external network.
 7. Expand Hermes memory with a reviewed knowledge-base and retrieval layer.
 8. Add monitoring and actionable alerts for the host, guest, and assistant service.

@@ -15,6 +15,10 @@ Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed on the guest. Th
 
 Persistent user memory was also validated: a new Hermes session loaded the stored user profile automatically. This confirms the initial continuity mechanism, but it does not imply that the planned knowledge base, vector retrieval, multi-user profiles, voice interfaces, or external messaging channels are complete.
 
+The assistant workload is now covered by the first encrypted virtual-machine backup. The protected archive was copied to separate storage and passed SHA-256 comparison. This provides an initial recovery source, but application-level export, decryption, restoration, service start-up, and persistent-memory recovery have not yet been tested.
+
+The sanitized backup workflow and its recovery boundary are documented in [Backup and recovery](backup-and-recovery.md).
+
 ## Verified Components
 
 | Component | Status | Verified result |
@@ -27,6 +31,7 @@ Persistent user memory was also validated: a new Hermes session loaded the store
 | Container validation | **Completed** | A disposable test container completed successfully. |
 | Hermes Agent | **Operational initial deployment** | The assistant is installed and usable through its initial text workflow. |
 | Persistent user memory | **Verified** | A fresh session loaded the stored user profile automatically. |
+| Initial workload backup | **Encrypted and integrity-verified** | The assistant VM is covered by an encrypted backup stored separately from the host; controlled restoration remains pending. |
 
 ## Current Logical Path
 
@@ -69,7 +74,7 @@ The test confirms basic continuity across sessions. It does not yet validate:
 
 - A complete personal knowledge base or RAG system.
 - Multiple isolated user profiles.
-- Long-term memory backup and restoration.
+- Application-level memory export and controlled restoration; the initial full-VM backup has passed integrity validation only.
 - Conflict resolution or deletion workflows.
 - Voice, mobile, or external messaging access.
 
@@ -88,7 +93,8 @@ The public repository does not include:
 
 The next assistant-platform milestones are:
 
-- Define and test recurring backups for the guest, Hermes configuration, and persistent memory.
+- Define recurring backups and retention for the guest, Hermes configuration, and persistent memory.
+- Perform a controlled restoration and confirm Hermes and its memory behave as expected.
 - Perform a controlled restoration test.
 - Add a reviewed knowledge-base and retrieval layer.
 - Define isolated personal and restricted-user profiles.
