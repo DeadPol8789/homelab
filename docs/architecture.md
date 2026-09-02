@@ -14,7 +14,7 @@ The diagrams intentionally omit real addresses, internal hostnames, wireless net
 
 The dedicated OPNsense appliance provides the firewall, routing, and VLAN gateway layer for the HomeLab. Its upstream connection remains behind the existing ISP equipment, while its internal connection feeds the managed PoE switch. OPNsense has been updated to `26.7.2_2`, and internet and DNS connectivity have been verified after the network changes.
 
-The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host is running Proxmox VE `9.2.11`, remains reachable from an approved client segment, and hosts the first validated Linux service VM. Initial DNS-access and cross-segment isolation policies have been applied and tested. The guest uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, and its persistent memory loading has been verified across sessions. Final private network-configuration backups have been saved and verified.
+The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host is running Proxmox VE `9.2.11`, remains reachable from an approved client segment, and hosts the first validated Linux service VM. Initial DNS-access and cross-segment isolation policies have been applied and tested. The guest uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, and its persistent memory loading has been verified across sessions. Final private network-configuration backups have been saved and verified. Initial encrypted backups of the current VM and container workloads have also been copied to separate storage and verified with matching SHA-256 checksums.
 
 ```mermaid
 flowchart TD
@@ -83,7 +83,7 @@ The GPU-equipped primary workstation is not intended to be permanently dedicated
 | Observability | Metrics and dashboards with Prometheus and Grafana | Planned. |
 | Assistant platform | Persistent local assistant using Hermes Agent | Operational initial deployment with cross-session memory loading verified. |
 | AI compute | Heavy local inference on the GPU-equipped workstation | Planned as an on-demand node; Wake-on-LAN and workload controls are not yet integrated. |
-| Storage and backups | Network configuration, future NAS, service backups, and recovery procedures | Final private network-configuration backups are verified; recurring guest and service backup rotation and controlled restoration remain pending. |
+| Storage and backups | Network configuration, workload backups, future NAS, and recovery procedures | Network-configuration copies and initial encrypted VM and container backups are verified. Secondary-copy integrity has been checked; recurring rotation and controlled restoration remain pending. |
 
 ## Architecture Principles
 
@@ -95,7 +95,7 @@ The project will follow these principles as it evolves:
 - **Safe changes:** major network changes should be tested before becoming the primary network path.
 - **Reproducibility:** relevant deployment steps and sanitized example configurations should be documented.
 - **Observability:** important services should eventually expose health and performance information without publishing sensitive operational data.
-- **Recoverability:** private network-configuration backups are retained, while restoration procedures must continue to be reviewed and tested before services are treated as dependable.
+- **Recoverability:** private network-configuration and encrypted workload backups are retained and integrity-checked, while restoration procedures must still be tested before recovery is treated as dependable.
 - **Privacy by design:** public documentation must not reveal details that could identify or weaken the live environment.
 
 ## Future Documentation
@@ -105,7 +105,7 @@ The existing physical-setup, Proxmox, network-design, roadmap, and changelog doc
 - Hermes Agent deployment notes
 - Segmentation policy refinement and recovery-validation notes
 - Service deployment records
-- Monitoring, backup, and recovery procedures
+- Backup rotation, controlled restoration, and recovery procedures
 
 ## Public Documentation Boundaries
 

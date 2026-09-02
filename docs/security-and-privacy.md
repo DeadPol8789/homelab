@@ -55,6 +55,7 @@ The following content may be technically useful, but it must be cleaned before p
 - Logs containing addresses, identifiers, query strings, tokens, or unrelated events
 - Browser tabs, bookmarks, account avatars, notifications, and task-history panels
 - File names or storage names that reveal private projects or personal information
+- Backup identifiers, filenames, timestamps, sizes, paths, destinations, checksums, encryption recipients, and recovery metadata
 - Photographs showing labels, screens, documents, reflections, windows, or identifying household details
 
 Redaction must be permanent. Covering text with a movable shape in an editable document is not sufficient.
@@ -140,10 +141,11 @@ Run this review before every commit intended for the public repository:
 4. Review new configuration files against the relevant service's secret-file conventions.
 5. Inspect every image at full resolution.
 6. Confirm that no backup, database, log, export, or temporary file has been included.
-7. Verify that every service is labelled accurately as **operational**, **in progress**, **planned**, **pending**, or **not deployed**.
-8. Check that example values are obviously fictional or use reserved documentation ranges.
-9. Review the final diff for unexpected or unrelated content.
-10. Publish only after all checks pass.
+7. Confirm that backup names, paths, sizes, timestamps, hashes, encryption metadata, and storage destinations have not been disclosed.
+8. Verify that every service is labelled accurately as **operational**, **in progress**, **planned**, **pending**, or **not deployed**.
+9. Check that example values are obviously fictional or use reserved documentation ranges.
+10. Review the final diff for unexpected or unrelated content.
+11. Publish only after all checks pass.
 
 ## Repository Practices
 
@@ -189,6 +191,9 @@ At the time of this review, the public documentation may state that:
 - Initial and final network-configuration copies are stored privately and are not part of the repository.
 - Hermes Agent is operational through its initial text workflow, and persistent user-memory loading has been verified across sessions.
 - Hermes credentials, live configuration, persistent-memory contents, user identities, session data, and backup material remain private.
+- Initial encrypted VM and container backups have been copied to separate storage and verified through private SHA-256 comparison.
+- Real backup IDs, filenames, paths, timestamps, sizes, hashes, encryption details, destinations, and local working archives remain private.
+- Backup integrity is verified, while controlled restoration and recurring rotation remain pending.
 - Home Assistant, voice integration, n8n, monitoring, VPN access, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain pending or planned.
 
 No document should imply that unfinished services are operational.

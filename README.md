@@ -1,6 +1,6 @@
 # Personal HomeLab
 
-> **Status:** Work in progress — operational segmented-network foundation and first validated assistant workload.
+> **Status:** Work in progress — operational segmented-network foundation, first assistant workload, and verified initial guest backups.
 
 This repository documents the design, deployment, and evolution of my personal HomeLab. The project is being built to develop practical skills in virtualization, Linux systems administration, networking, cybersecurity, monitoring, automation, and self-hosted services.
 
@@ -18,6 +18,7 @@ The documentation reflects only work that has actually been completed. Planned c
 | Managed switch | Operational segmented foundation | The switch is running firmware `3.30.6`, its private administration path is operational, and three role-based VLANs are active and verified. |
 | HomeLab network path | Operational, segmented, and policy-tested | The path from the ISP equipment through OPNsense and the managed switch has been tested successfully. Approved management access, segment-specific DNS access, and isolation between selected network roles have also been verified. |
 | Self-hosted services | Initial platform operational | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and Hermes Agent are deployed on the first Linux guest. Hermes persistent memory loading has been verified across sessions. |
+| Backup and recovery | Initial backups verified | Encrypted backups of the current virtual machine and container workloads have been copied to separate storage and verified with matching SHA-256 checksums. Controlled restoration and automated rotation remain pending. |
 
 ## Hardware Overview
 
@@ -77,8 +78,11 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Complete, update, and harden the first Linux virtual machine
 - [x] Install and validate Docker Engine and Docker Compose
 - [x] Deploy Hermes Agent and verify persistent memory loading across sessions
+- [x] Create encrypted initial backups of the current VM and container workloads
+- [x] Copy the protected backups to separate storage and verify matching SHA-256 checksums
 - [ ] Add controlled remote access through a reviewed VPN design
-- [ ] Define recurring guest and service backup rotation and test restoration
+- [ ] Define recurring guest and service backup rotation
+- [ ] Perform controlled guest and service restoration tests
 - [ ] Deploy additional container-based services
 - [ ] Add monitoring with Prometheus and Grafana
 - [ ] Add Home Assistant and local automation services
@@ -104,6 +108,7 @@ This repository follows four rules:
 | [Physical setup](docs/physical-setup.md) | Completed rack and cabling foundation, maintenance principles, and photo-review guidance. |
 | [Proxmox installation](docs/proxmox-installation.md) | Verified Proxmox VE installation progress and current limitations. |
 | [Hermes Agent deployment](docs/hermes-agent-deployment.md) | Sanitized first-guest, container-platform, Hermes Agent, and persistent-memory deployment record. |
+| [Backup and recovery](docs/backup-and-recovery.md) | Sanitized backup scope, encryption, integrity validation, and remaining restoration work. |
 | [OPNsense deployment](docs/opnsense-deployment.md) | Sanitized installation, initial network roles, security controls, and connectivity validation. |
 | [Managed-switch deployment](docs/managed-switch-deployment.md) | Sanitized management setup, firmware state, VLAN deployment, validation, and recovery notes. |
 | [Network design](docs/network-design.md) | Verified segmented topology and planned security improvements. |
@@ -134,7 +139,7 @@ Examples and future configuration templates will use placeholders and documentat
 Additional implementation notes will be added only after the corresponding work has been completed and verified. Planned topics include:
 
 - Further segmentation-policy refinement and recovery testing
-- Guest and service backup and restoration procedures
+- Backup rotation and controlled restoration procedures
 - Secure remote access
 - Additional container-hosted services
 - Monitoring and automation services

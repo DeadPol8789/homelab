@@ -15,6 +15,8 @@ The first service VM is now operational. Ubuntu Server `24.04.4 LTS` was install
 
 Docker Engine `29.7.2` and Docker Compose `5.5.0` were installed from the maintained upstream repository. The Docker service, container runtime, and a test container were validated before Hermes Agent was deployed. Hermes is operational, and automatic loading of its persistent user memory has been confirmed in a new session.
 
+Initial compressed backups of the current virtual machine and container workloads have now been created. Encrypted copies were transferred to separate storage, and matching SHA-256 checksums verified the integrity of each transfer. Unencrypted working archives remain protected temporarily on the host while cleanup and retention handling are finalized. A controlled restoration test has not yet been completed.
+
 ## Verified Progress
 
 | Stage | Status | Verified result |
@@ -34,7 +36,7 @@ Docker Engine `29.7.2` and Docker Compose `5.5.0` were installed from the mainta
 | Guest administration | **Hardened and verified** | Key-based access through a dedicated non-root account is operational; password authentication and direct root login are disabled. |
 | Container platform | **Operational** | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and a test container were validated. |
 | First service workload | **Operational** | Hermes Agent is deployed, and persistent memory loading has been verified across sessions. |
-| Backup and restore testing | **Partially prepared** | A private pre-update host-configuration copy exists. Recurring guest backups and a controlled restoration test remain pending. |
+| Backup and restore testing | **Initial backups verified; restoration pending** | A private pre-update host-configuration copy and encrypted initial VM and container backups exist. Secondary copies passed SHA-256 comparison. Recurring rotation and controlled restoration remain pending. |
 | Monitoring and alerting | **Planned** | Prometheus, Grafana, and related monitoring remain future work. |
 
 ## Current Role in the HomeLab
@@ -93,28 +95,28 @@ The following evidence may be added after it has been carefully sanitized:
 
 Before publication, screenshots must be checked at full resolution. Hostnames, addresses, usernames, browser tabs, task logs, storage names, timestamps that reveal routines, and unrelated personal information must be removed or obscured.
 
-## Next Milestone: Guest Backup and Recovery
+## Next Milestone: Repeatable Recovery
 
-The first Linux VM and service workload are complete. The next reliability milestone is a repeatable backup and recovery procedure. It will only be marked as completed after all of the following have been confirmed:
+The first Linux VM and service workload are complete. Initial encrypted VM and container backups have also been copied to separate storage and integrity-verified. The next reliability milestone is a repeatable recovery procedure. It will only be marked as completed after all of the following have been confirmed:
 
-1. Define which guest and application data must be protected.
+1. Finalize cleanup or retention handling for unencrypted working archives.
 2. Establish a recurring backup schedule and retention policy.
-3. Store protected copies outside the primary virtualization host.
-4. Verify backup integrity without publishing filenames, paths, or hashes.
-5. Perform a controlled restoration test in an isolated context.
-6. Confirm the restored guest and Hermes memory behave as expected.
+3. Add capacity and backup-failure monitoring.
+4. Perform a controlled restoration test in an isolated context.
+5. Confirm that a restored guest or container starts and behaves as expected.
+6. Confirm restored Hermes Agent availability and persistent-memory behavior where applicable.
 7. Document the sanitized recovery procedure and its limitations.
 
-Until these checks are complete, the public project status remains **first validated workload operational; recurring backup and controlled restoration pending**.
+Until these checks are complete, the public project status remains **initial encrypted workload backups verified; recurring rotation and controlled restoration pending**.
 
 ## Future Documentation
 
 As the environment develops, this section may be expanded with separate documents covering:
 
 - Hermes Agent deployment
+- [Backup and recovery](backup-and-recovery.md)
 - Proxmox storage decisions
 - Sanitized network-bridge design
-- Backup and recovery procedures
 - Update and maintenance routines
 - Resource monitoring and capacity planning
 - Service placement across VMs and containers

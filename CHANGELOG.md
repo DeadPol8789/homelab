@@ -11,6 +11,7 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Added a sanitized OPNsense deployment record covering installation, base network roles, validation, security controls, private backup handling, and remaining work.
 - Added a sanitized managed-switch deployment record covering traffic forwarding, local administration, stable private management, firmware compatibility review, validation, and remaining work.
 - Added a sanitized Hermes Agent deployment record covering the first Linux guest, hardened administration, Docker validation, the initial text workflow, persistent memory, and remaining work.
+- Added a sanitized backup-and-recovery record covering workload scope, encryption, secondary copies, integrity validation, and the controlled-restoration boundary.
 - Added the planned on-demand GPU-compute role and Wake-on-LAN concept to the target architecture.
 
 ### Changed
@@ -26,6 +27,8 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Updated the roadmap to complete the virtualization-foundation phase and move the core-service and assistant phases to in progress.
 - Corrected the security-and-privacy boundary so it accurately presents the first guest, Docker, and Hermes as operational.
 - Expanded the public-sanitization rules for assistant memory, profiles, prompts, session data, configuration, tool output, and backups.
+- Updated the README, architecture, hardware inventory, Proxmox record, Hermes deployment, roadmap, and security policy with the verified initial workload-backup milestone.
+- Expanded the public-sanitization rules for backup identifiers, filenames, paths, timestamps, sizes, checksums, encryption metadata, and storage destinations.
 
 ### Verified infrastructure progress
 
@@ -58,6 +61,9 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Hermes Agent is operational through its initial text workflow.
 - Hermes persistent user-memory loading has been verified in a new session.
 - The project roadmap's virtualization-foundation phase now meets its completion criteria.
+- Initial compressed backups of the current virtual machine and container workloads have been created.
+- Encrypted copies of both workload backups have been stored separately from the primary virtualization host.
+- Matching SHA-256 checksums have verified the integrity of the encrypted source and secondary copies.
 
 ### Still in progress or planned
 
@@ -65,7 +71,9 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Performing controlled network-configuration restoration tests.
 - Completing the inter-VLAN policy review using least-privilege principles.
 - Measuring UPS battery runtime and defining controlled shutdown behavior as separate resilience work.
-- Defining recurring guest, Hermes configuration, and persistent-memory backups.
+- Finalizing cleanup or retention handling for unencrypted local working archives.
+- Defining recurring guest, container, Hermes configuration, and persistent-memory backups.
+- Adding retention, capacity, and backup-failure monitoring.
 - Performing controlled guest, service, and network-configuration restoration tests.
 - VPN access, advanced firewall policy, monitoring, and automated backup rotation.
 - Expanded memory/RAG, isolated user profiles, secure remote text access, Home Assistant, voice integration, and n8n.

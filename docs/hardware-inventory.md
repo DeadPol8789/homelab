@@ -21,7 +21,7 @@ The inventory is intentionally limited to information that is useful for a techn
 
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
-| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE `9.2.11` is installed, updated, accessible from an approved client segment, and protected with a separate administrative account and multi-factor authentication. The host runs the first validated Ubuntu Server guest, Docker platform, and Hermes Agent workload. |
+| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE `9.2.11` is installed, updated, accessible from an approved client segment, and protected with a separate administrative account and multi-factor authentication. The host runs the first validated Ubuntu Server guest, Docker platform, and Hermes Agent workload. Initial encrypted VM and container backups have been copied to separate storage and integrity-checked. |
 | Desktop workstation | NVIDIA GeForce RTX 5070 Ti, 32 GB RAM | Primary personal workstation and future on-demand compute node for heavy local-AI workloads | **In use independently:** it is not dedicated to the HomeLab and is not yet integrated with Hermes or automation. Future Wake-on-LAN and workload controls are planned. |
 
 ## Network and Security
@@ -63,6 +63,7 @@ The HomeLab will eventually serve several wired and wireless client devices. The
 | --- | --- | --- |
 | Main desktop workstation | Administration, development, testing, and future on-demand GPU workloads | Connected as a client; automated heavy-compute integration is planned but not deployed. |
 | Laptops | Administration and client testing | At least one wired client has been used to validate connectivity through OPNsense and the switch. |
+| Secondary backup storage | Hold protected copies away from the primary virtualization host | **In use:** encrypted initial VM and container backups are stored separately and have passed checksum comparison. Exact hardware, capacity, connection, and location remain private. |
 | Smart-home and camera devices | Future isolated or controlled network clients | Deployment and integration will be documented individually after verification. |
 
 ## Planned Hardware
