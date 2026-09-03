@@ -12,6 +12,7 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Added a sanitized managed-switch deployment record covering traffic forwarding, local administration, stable private management, firmware compatibility review, validation, and remaining work.
 - Added a sanitized Hermes Agent deployment record covering the first Linux guest, hardened administration, Docker validation, the initial text workflow, persistent memory, and remaining work.
 - Added a sanitized backup-and-recovery record covering workload scope, encryption, secondary copies, integrity validation, and the controlled-restoration boundary.
+- Added a sanitized Tailscale remote-access record covering the initial host-and-client scope, external validation, security boundary, and remaining rollout work.
 - Added the planned on-demand GPU-compute role and Wake-on-LAN concept to the target architecture.
 
 ### Changed
@@ -29,6 +30,8 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Expanded the public-sanitization rules for assistant memory, profiles, prompts, session data, configuration, tool output, and backups.
 - Updated the README, architecture, hardware inventory, Proxmox record, Hermes deployment, roadmap, and security policy with the verified initial workload-backup milestone.
 - Expanded the public-sanitization rules for backup identifiers, filenames, paths, timestamps, sizes, checksums, encryption metadata, and storage destinations.
+- Updated the README, architecture, network design, OPNsense record, Hermes deployment, roadmap, and security policy with the tested private host-access milestone.
+- Expanded the public-sanitization rules for Tailscale addresses, tailnet and device identifiers, account data, authentication material, and live access-policy configuration.
 
 ### Verified infrastructure progress
 
@@ -64,6 +67,9 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Initial compressed backups of the current virtual machine and container workloads have been created.
 - Encrypted copies of both workload backups have been stored separately from the primary virtualization host.
 - Matching SHA-256 checksums have verified the integrity of the encrypted source and secondary copies.
+- Tailscale is operational on the Hermes host and one approved client.
+- Key-based SSH through Tailscale has been verified from outside the home network.
+- The tested remote path requires no direct public inbound service or router port forwarding.
 
 ### Still in progress or planned
 
@@ -75,8 +81,12 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Defining recurring guest, container, Hermes configuration, and persistent-memory backups.
 - Adding retention, capacity, and backup-failure monitoring.
 - Performing controlled guest, service, and network-configuration restoration tests.
-- VPN access, advanced firewall policy, monitoring, and automated backup rotation.
-- Expanded memory/RAG, isolated user profiles, secure remote text access, Home Assistant, voice integration, and n8n.
+- Enrolling and externally testing the selected travel and backup clients.
+- Reviewing Tailscale access policy, device lifecycle, authorization, and recovery procedures.
+- Deciding whether subnet routing or Exit Node operation is required before deploying either capability.
+- Defining restricted access for any future additional users without exposing infrastructure administration.
+- Network-wide remote administration, advanced firewall policy, monitoring, and automated backup rotation.
+- Expanded memory/RAG, isolated user profiles, a remote Hermes conversation interface, Home Assistant, voice integration, and n8n.
 - Additional container-hosted services and assistant integrations.
 - Wake-on-LAN and controlled use of the GPU workstation for approved heavy tasks.
 

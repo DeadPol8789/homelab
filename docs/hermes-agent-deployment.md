@@ -1,7 +1,7 @@
 # Hermes Agent Deployment
 
-> **Last verified:** August 2026  
-> **Project status:** Initial text-based assistant deployment operational
+> **Last verified:** September 2026  
+> **Project status:** Initial text-based assistant deployment operational with tested private host access
 
 This document records the first verified Hermes Agent deployment in the HomeLab. It covers the sanitized guest foundation, administration controls, container tooling, assistant validation, and persistent-memory test. Live network values, identities, credentials, configuration files, and private memory content are intentionally excluded.
 
@@ -9,7 +9,7 @@ This document records the first verified Hermes Agent deployment in the HomeLab.
 
 Hermes Agent is deployed on the first Ubuntu Server virtual machine hosted by Proxmox VE. The guest runs Ubuntu Server `24.04.4 LTS`, is connected through the approved service-network path, and uses private name resolution. System packages were updated before the assistant platform was installed.
 
-Remote administration is restricted to a dedicated non-root account using an encrypted ED25519 key. Password-based SSH authentication and direct root login are disabled. These controls reduce exposure while preserving a maintainable administration path.
+Remote administration is restricted to a dedicated non-root account using an encrypted ED25519 key. Password-based SSH authentication and direct root login are disabled. These controls reduce exposure while preserving a maintainable administration path. Tailscale is now operational on the host and one approved client, and the same key-based SSH path has been tested successfully from outside the home network without exposing a public inbound service.
 
 Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed on the guest. The Docker service, container runtime, and a test container were validated. Hermes Agent was then deployed and tested through its initial text interface.
 
@@ -19,13 +19,15 @@ The assistant workload is now covered by the first encrypted virtual-machine bac
 
 The sanitized backup workflow and its recovery boundary are documented in [Backup and recovery](backup-and-recovery.md).
 
+The sanitized remote-access path and its current limitations are documented in [Tailscale remote access](tailscale-remote-access.md).
+
 ## Verified Components
 
 | Component | Status | Verified result |
 | --- | --- | --- |
 | Proxmox host | **Operational** | Proxmox VE `9.2.11` provides the segmented virtualization platform. |
 | Linux guest | **Operational** | Ubuntu Server `24.04.4 LTS` is installed, updated, and reachable through its approved path. |
-| Remote administration | **Hardened** | A dedicated non-root account and encrypted key are used; password authentication and direct root login are disabled. |
+| Remote administration | **Hardened and externally tested** | A dedicated non-root account and encrypted key are used; password authentication and direct root login are disabled, and SSH through Tailscale has been verified from one approved external client. |
 | Docker Engine | **Operational** | Version `29.7.2` is installed and its service and runtime have been verified. |
 | Docker Compose | **Operational** | Version `5.5.0` is installed and available. |
 | Container validation | **Completed** | A disposable test container completed successfully. |
@@ -42,6 +44,7 @@ flowchart TD
     PVE --> VM["Hardened Ubuntu Server VM"]
     VM --> PLATFORM["Docker tooling and Hermes Agent"]
     PLATFORM --> MEMORY["Persistent user memory<br/>Cross-session loading verified"]
+    REMOTE["Approved external client"] -. "Tailscale and key-based SSH" .-> VM
 ```
 
 The diagram uses generic public labels. The real client identity, network segment, addressing, DNS record, VM identifier, account name, storage path, and memory contents remain private.
@@ -55,6 +58,8 @@ The verified baseline includes:
 - Key-based SSH authentication with an encrypted private key.
 - Password-based SSH authentication disabled.
 - Direct SSH login as root disabled.
+- Private Tailscale access limited to enrolled devices, with the initial external path verified.
+- No direct public inbound service required for the tested remote-administration path.
 - Current guest operating-system packages at the time of validation.
 - Maintained Docker packages installed from the upstream repository.
 - No secrets or live assistant configuration committed to the public repository.
@@ -76,7 +81,7 @@ The test confirms basic continuity across sessions. It does not yet validate:
 - Multiple isolated user profiles.
 - Application-level memory export and controlled restoration; the initial full-VM backup has passed integrity validation only.
 - Conflict resolution or deletion workflows.
-- Voice, mobile, or external messaging access.
+- Voice, mobile assistant interfaces, or external messaging access; the verified Tailscale path currently provides host administration only.
 
 ## Information Intentionally Omitted
 
@@ -95,11 +100,12 @@ The next assistant-platform milestones are:
 
 - Define recurring backups and retention for the guest, Hermes configuration, and persistent memory.
 - Perform a controlled restoration and confirm Hermes and its memory behave as expected.
-- Perform a controlled restoration test.
 - Add a reviewed knowledge-base and retrieval layer.
 - Define isolated personal and restricted-user profiles.
 - Add monitoring and actionable alerts.
-- Add secure remote text access and test it from an external mobile network.
+- Enroll and externally test the selected travel and backup clients.
+- Review Tailscale access policy, device lifecycle, and recovery procedures.
+- Provide an approved remote Hermes conversation interface; the current verified route is an administrative SSH path to the host.
 - Integrate Home Assistant and the available local voice hardware.
 - Evaluate approved on-demand GPU workloads without interfering with interactive workstation use.
 

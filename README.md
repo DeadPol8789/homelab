@@ -1,6 +1,6 @@
 # Personal HomeLab
 
-> **Status:** Work in progress — operational segmented-network foundation, first assistant workload, and verified initial guest backups.
+> **Status:** Work in progress — operational segmented-network foundation, first assistant workload, verified backups, and tested private remote access.
 
 This repository documents the design, deployment, and evolution of my personal HomeLab. The project is being built to develop practical skills in virtualization, Linux systems administration, networking, cybersecurity, monitoring, automation, and self-hosted services.
 
@@ -19,6 +19,7 @@ The documentation reflects only work that has actually been completed. Planned c
 | HomeLab network path | Operational, segmented, and policy-tested | The path from the ISP equipment through OPNsense and the managed switch has been tested successfully. Approved management access, segment-specific DNS access, and isolation between selected network roles have also been verified. |
 | Self-hosted services | Initial platform operational | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and Hermes Agent are deployed on the first Linux guest. Hermes persistent memory loading has been verified across sessions. |
 | Backup and recovery | Initial backups verified | Encrypted backups of the current virtual machine and container workloads have been copied to separate storage and verified with matching SHA-256 checksums. Controlled restoration and automated rotation remain pending. |
+| Remote access | Initial path operational | Tailscale provides private remote access to the Hermes host from an approved client. Key-based SSH access has been verified from outside the home network without exposing a public inbound service. |
 
 ## Hardware Overview
 
@@ -50,7 +51,7 @@ Three role-based network segments
 Proxmox host and selected devices
 ```
 
-This segmented path is operational for selected wired devices, and the switch can be administered through a stable private management configuration. The Proxmox host remains reachable from an approved client segment after its network migration. Initial DNS-access and cross-segment isolation rules have been tested, and the first Linux guest is operating through its approved service path with private name resolution. VPN access is not yet deployed.
+This segmented path is operational for selected wired devices, and the switch can be administered through a stable private management configuration. The Proxmox host remains reachable from an approved client segment after its network migration. Initial DNS-access and cross-segment isolation rules have been tested, and the first Linux guest is operating through its approved service path with private name resolution. Tailscale now provides a tested private path to the Hermes host from an approved external client; broader remote administration remains limited and under review.
 
 ## Project Roadmap
 
@@ -80,7 +81,10 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Deploy Hermes Agent and verify persistent memory loading across sessions
 - [x] Create encrypted initial backups of the current VM and container workloads
 - [x] Copy the protected backups to separate storage and verify matching SHA-256 checksums
-- [ ] Add controlled remote access through a reviewed VPN design
+- [x] Deploy Tailscale for private remote access to the Hermes host
+- [x] Verify key-based SSH access from outside the home network
+- [ ] Add and test the travel laptop and selected backup client devices
+- [ ] Review Tailscale access controls, device lifecycle, and recovery procedures
 - [ ] Define recurring guest and service backup rotation
 - [ ] Perform controlled guest and service restoration tests
 - [ ] Deploy additional container-based services
@@ -109,6 +113,7 @@ This repository follows four rules:
 | [Proxmox installation](docs/proxmox-installation.md) | Verified Proxmox VE installation progress and current limitations. |
 | [Hermes Agent deployment](docs/hermes-agent-deployment.md) | Sanitized first-guest, container-platform, Hermes Agent, and persistent-memory deployment record. |
 | [Backup and recovery](docs/backup-and-recovery.md) | Sanitized backup scope, encryption, integrity validation, and remaining restoration work. |
+| [Tailscale remote access](docs/tailscale-remote-access.md) | Sanitized private-access design, external validation, security boundary, and remaining client rollout. |
 | [OPNsense deployment](docs/opnsense-deployment.md) | Sanitized installation, initial network roles, security controls, and connectivity validation. |
 | [Managed-switch deployment](docs/managed-switch-deployment.md) | Sanitized management setup, firmware state, VLAN deployment, validation, and recovery notes. |
 | [Network design](docs/network-design.md) | Verified segmented topology and planned security improvements. |
@@ -140,7 +145,7 @@ Additional implementation notes will be added only after the corresponding work 
 
 - Further segmentation-policy refinement and recovery testing
 - Backup rotation and controlled restoration procedures
-- Secure remote access
+- Additional remote-access clients, policy refinement, and recovery testing
 - Additional container-hosted services
 - Monitoring and automation services
 - Sanitized troubleshooting notes and lessons learned
