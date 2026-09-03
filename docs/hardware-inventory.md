@@ -33,7 +33,7 @@ The inventory is intentionally limited to information that is useful for a techn
 | 24-port Cat6 patch panel | 1U rack-mount patch panel | Structured Ethernet termination and cable organization | **In use:** installed as part of the completed physical cabling and organization foundation. |
 | Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **In use:** required connections, final routing, private labeling, and organization have been completed and verified. |
 
-The segmented path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Three role-based VLANs, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. Private name resolution is operational for the first service workload, and final network-configuration backups are stored privately. VPN access and comprehensive firewall-policy review remain pending.
+The segmented path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Three role-based VLANs, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. Private name resolution is operational for the first service workload, final network-configuration backups are stored privately, and one Tailscale host-access path has been externally tested. Wider client enrollment, network-wide remote administration, and comprehensive firewall-policy review remain pending.
 
 ## Rack, Power, and Local Administration
 

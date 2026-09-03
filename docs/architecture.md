@@ -14,7 +14,7 @@ The diagrams intentionally omit real addresses, internal hostnames, wireless net
 
 The dedicated OPNsense appliance provides the firewall, routing, and VLAN gateway layer for the HomeLab. Its upstream connection remains behind the existing ISP equipment, while its internal connection feeds the managed PoE switch. OPNsense has been updated to `26.7.2_2`, and internet and DNS connectivity have been verified after the network changes.
 
-The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host is running Proxmox VE `9.2.11`, remains reachable from an approved client segment, and hosts the first validated Linux service VM. Initial DNS-access and cross-segment isolation policies have been applied and tested. The guest uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, and its persistent memory loading has been verified across sessions. Final private network-configuration backups have been saved and verified. Initial encrypted backups of the current VM and container workloads have also been copied to separate storage and verified with matching SHA-256 checksums.
+The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host is running Proxmox VE `9.2.11`, remains reachable from an approved client segment, and hosts the first validated Linux service VM. Initial DNS-access and cross-segment isolation policies have been applied and tested. The guest uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, and its persistent memory loading has been verified across sessions. Tailscale provides a private remote path from one approved external client to the Hermes host, and key-based SSH was verified outside the home network. Final private network-configuration backups have been saved and verified. Initial encrypted backups of the current VM and container workloads have also been copied to separate storage and verified with matching SHA-256 checksums.
 
 ```mermaid
 flowchart TD
@@ -25,6 +25,7 @@ flowchart TD
     SW --> SEG_C["Role-based segment C<br/>Isolation verified"]
     SEG_C --> PVE["Proxmox VE<br/>First Linux guest"]
     PVE --> HERMES["Docker platform<br/>Hermes Agent"]
+    REMOTE["Approved external client"] -. "Tailscale and key-based SSH" .-> HERMES
 ```
 
 ### Verified Components
@@ -39,6 +40,7 @@ flowchart TD
 | Switching | TP-Link managed PoE switch | Firmware `3.30.6` is installed; private management, traffic forwarding, and three role-based VLANs are operational. |
 | Containers | Docker Engine and Docker Compose | Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed and validated on the first Linux guest. |
 | Assistant | Hermes Agent | Deployed on the first guest; persistent memory loading has been verified in a new session. |
+| Remote access | Tailscale private overlay | One approved external client can reach the Hermes host through a tested private path using the existing hardened SSH authentication. |
 | Future services | Home automation, monitoring, and additional automation | Not deployed. |
 
 ## Verified Network Segmentation
@@ -53,7 +55,7 @@ flowchart TD
     SW --> ZONE_C["Service segment<br/>First workload operational"]
 ```
 
-VLAN transport, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. These tests establish an initial least-privilege policy baseline; a complete policy review, VPN access, and workload-level isolation remain future work.
+VLAN transport, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. A separate Tailscale overlay now provides tested remote access to the Hermes host from one approved client. These tests establish an initial least-privilege baseline; comprehensive policy review, broader remote administration, and workload-level isolation remain future work.
 
 ## Target Logical Architecture
 
@@ -75,7 +77,8 @@ The GPU-equipped primary workstation is not intended to be permanently dedicated
 
 | Layer | Planned role | Current status |
 | --- | --- | --- |
-| Edge and routing | OPNsense routing, firewalling, VLAN gateways, and controlled remote access | Operational segmented foundation with initial DNS and isolation policies verified; comprehensive policy review and remote access remain pending. |
+| Edge and routing | OPNsense routing, firewalling, VLAN gateways, and controlled remote access | Operational segmented foundation with initial DNS and isolation policies verified; comprehensive policy review and network-wide remote administration remain pending. |
+| Remote access | Private access to selected services from approved external devices | Tailscale access to the Hermes host is operational and externally tested for one approved client; additional clients and policy refinement remain pending. |
 | Network distribution | Managed switching and role-based segmentation | Traffic forwarding, private management, firmware, and three VLANs are operational. |
 | Virtualization | Linux virtual machines and isolated service workloads | Proxmox VE `9.2.11` and the first hardened Ubuntu Server guest are operational. |
 | Containers | Reproducible deployment of selected services | Docker Engine `29.7.2` and Docker Compose `5.5.0` are operational on the first guest. |

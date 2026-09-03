@@ -1,11 +1,11 @@
 # HomeLab Network Design
 
-> **Last verified:** August 2026  
-> **Implementation status:** Operational segmented-network foundation and first service workload — further hardening and remote access remain in progress
+> **Last verified:** September 2026  
+> **Implementation status:** Operational segmented-network foundation, first service workload, and tested private host access — further hardening and wider remote-access rollout remain in progress
 
 This document records both the verified segmented network foundation and the next planned stages for the HomeLab. It describes the operational path, completed validation work, remaining policy and recovery tasks, and public-documentation boundaries without exposing the live home network.
 
-OPNsense `26.7.2_2` is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is running firmware `3.30.6`, its private management path is operational, and three role-based VLANs have been deployed and verified. Initial DNS-access, approved-administration, and cross-segment isolation policies have also been tested. VPN access has not been deployed.
+OPNsense `26.7.2_2` is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is running firmware `3.30.6`, its private management path is operational, and three role-based VLANs have been deployed and verified. Initial DNS-access, approved-administration, and cross-segment isolation policies have also been tested. A private Tailscale path to the Hermes host has been externally validated from one approved client using the existing key-based SSH controls. Network-wide remote administration, subnet routing, and Exit Node operation have not been deployed.
 
 ## Current Verified State
 
@@ -22,7 +22,8 @@ The existing ISP equipment provides the upstream connection to the dedicated OPN
 | Selected wired clients | Address assignment, segment-specific DNS access, internet connectivity, approved administration, and selected isolation paths have been verified through OPNsense and the switch. |
 | Dedicated firewall-to-switch path | Operational and carrying the segmented HomeLab network. |
 | VLANs and network segmentation | Three role-based VLANs are deployed. Required DNS access and selected allow-and-block paths between network roles have been verified; live identifiers, mappings, and rules remain private. |
-| Remote-access VPN | Not deployed. |
+| Private remote access | Tailscale access to the Hermes host has been tested from one approved external client using key-based SSH; no direct public inbound service is required. |
+| Wider remote-access functions | Additional clients, network-wide administration, subnet routing, Exit Node operation, and final access-policy review remain pending. |
 
 ## Operational Segmented Network Path
 
@@ -34,6 +35,7 @@ flowchart TD
     SW --> ZONE_B["Management segment<br/>Isolation verified"]
     SW --> ZONE_C["Service segment<br/>First workload operational"]
     ZONE_C --> VM["Linux service VM<br/>Hermes Agent"]
+    REMOTE["Approved external client"] -. "Tailscale and key-based SSH" .-> VM
 ```
 
 This diagram uses generic labels deliberately. The operating mode of the ISP equipment, physical port assignments, addressing plan, and management details are documented privately and represented publicly only in sanitized form.
@@ -43,9 +45,10 @@ This diagram uses generic labels deliberately. The operating mode of the ISP equ
 | Component | Intended responsibility | Current status |
 | --- | --- | --- |
 | ISP equipment | Maintain the external service handoff required by the connection | In use as the upstream connection. |
-| OPNsense appliance | Routing, firewall policy, VLAN gateways, DHCP/DNS services, and later controlled remote access | Operational segmented foundation with initial DNS and isolation policies verified; comprehensive policy review and remote access remain pending. |
+| OPNsense appliance | Routing, firewall policy, VLAN gateways, DHCP/DNS services, and later controlled network-wide remote access | Operational segmented foundation with initial DNS and isolation policies verified; comprehensive policy review and network-wide remote administration remain pending. |
 | Managed switch | Wired distribution, VLAN transport, and PoE delivery where required | Firmware, private management, traffic forwarding, and three VLANs are operational. |
 | Proxmox VE host | Run isolated guest workloads for HomeLab services | Hypervisor and approved administration verified; the first Linux guest and Hermes Agent workload are operational through the intended service path. |
+| Tailscale overlay | Provide private, device-authorized access without exposing a public inbound service | Operational and externally tested between one approved client and the Hermes host; wider client enrollment and advanced routing are pending. |
 | Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected allow, DNS, and isolation paths have been verified; comprehensive policy review remains in progress. |
 
 ## Design Principles
@@ -84,9 +87,12 @@ The base path was introduced in the following order:
 20. Prepare private name resolution for the first service workload.
 21. Deploy the first Linux guest and verify its intended network and DNS behavior.
 22. Validate the Docker platform and Hermes Agent through the approved service path.
-23. Record the verified result using only sanitized public information.
+23. Enroll the Hermes host and one approved client in the private Tailscale overlay.
+24. Verify key-based SSH to the host from outside the home network.
+25. Confirm that the tested path does not require a direct public inbound service.
+26. Record the verified result using only sanitized public information.
 
-Restoration testing, comprehensive policy review, remote access, and wider household dependencies remain separate follow-up work.
+Restoration testing, comprehensive policy review, wider remote-access rollout, and household dependencies remain separate follow-up work.
 
 ## Initial Validation Checklist
 
@@ -109,6 +115,12 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [x] A selected management-to-service path has been blocked and tested.
 - [x] Private name resolution is operational and verified for the first service workload.
 - [x] The first Linux guest and Hermes Agent are reachable through their approved service path.
+- [x] Tailscale is operational on the Hermes host and one approved client.
+- [x] Key-based SSH has been verified through Tailscale from an external network.
+- [x] The tested remote path requires no direct public inbound service.
+- [ ] Additional travel and backup clients have been enrolled and externally tested.
+- [ ] Remote-access policy, device lifecycle, and recovery procedures have been reviewed.
+- [ ] Subnet routing and Exit Node requirements have been decided and, if required, tested.
 - [ ] Essential household connectivity has been checked.
 - [ ] Disconnecting or reverting the new path has been reviewed or tested.
 - [x] An initial private OPNsense configuration backup has been exported.
@@ -116,7 +128,7 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [ ] A controlled restoration procedure has been tested.
 - [x] Public documentation has been sanitized before publication.
 
-These checks verify the segmented network foundation and its initial policy baseline. They do not mean that VPN access, comprehensive least-privilege review, monitoring, restoration testing, or high availability have been completed.
+These checks verify the segmented network foundation, its initial policy baseline, and one private host-access path. They do not mean that network-wide VPN access, comprehensive least-privilege review, monitoring, restoration testing, or high availability have been completed.
 
 ## Initial Policy Baseline and Future Refinement
 
@@ -166,12 +178,14 @@ Available implementation records:
 - [OPNsense deployment](opnsense-deployment.md)
 - [Managed-switch deployment](managed-switch-deployment.md)
 - [Hermes Agent deployment](hermes-agent-deployment.md)
+- [Tailscale remote access](tailscale-remote-access.md)
 
 Future documentation will cover:
 
 - A sanitized as-built network diagram
 - Further segmentation-policy review and restoration-test documentation
-- VPN design and remote-access validation
+- Additional-client rollout, remote-access policy, and recovery validation
+- A decision record for subnet routing or Exit Node operation if either is required
 - Backup and recovery procedures for network configurations
 - Troubleshooting records and lessons learned
 

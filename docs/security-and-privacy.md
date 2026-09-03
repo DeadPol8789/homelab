@@ -1,6 +1,6 @@
 # Security and Privacy Policy
 
-> **Last reviewed:** August 2026  
+> **Last reviewed:** September 2026  
 > **Scope:** Public documentation for this personal HomeLab repository
 
 This document defines the security and privacy rules used when publishing HomeLab documentation. Its purpose is to make the project useful as a technical portfolio without exposing credentials, personal information, access paths, or unnecessary details about the live environment.
@@ -56,6 +56,8 @@ The following content may be technically useful, but it must be cleaned before p
 - Browser tabs, bookmarks, account avatars, notifications, and task-history panels
 - File names or storage names that reveal private projects or personal information
 - Backup identifiers, filenames, timestamps, sizes, paths, destinations, checksums, encryption recipients, and recovery metadata
+- Tailscale addresses, tailnet names, device names, node identifiers, tags, account details, and live access-policy values
+- Tailscale authentication keys, node keys, API tokens, recovery material, and unredacted ACL or grants configuration
 - Photographs showing labels, screens, documents, reflections, windows, or identifying household details
 
 Redaction must be permanent. Covering text with a movable shape in an editable document is not sufficient.
@@ -74,6 +76,7 @@ Examples should use clearly fictional placeholders rather than values copied fro
 | MAC address | `<MAC_ADDRESS>` |
 | Public endpoint | `<REMOTE_ACCESS_ENDPOINT>` |
 | Network name | `<NETWORK_NAME>` |
+| Tailscale device or tailnet | `<PRIVATE_OVERLAY_DEVICE>` or `<PRIVATE_OVERLAY_NETWORK>` |
 
 Documentation-only values must not be presented as recommended live credentials or copied into production without review.
 
@@ -123,6 +126,7 @@ Before publishing an image, inspect the original file at full resolution and ver
 - [ ] Proxmox task logs, node names, storage names, and network details are sanitized.
 - [ ] OPNsense interfaces, aliases, rules, DNS records, certificates, gateways, and remote-access details are sanitized.
 - [ ] Switch management addresses, device names, MAC tables, LLDP neighbors, and port labels are sanitized.
+- [ ] Tailscale addresses, tailnet or device names, node details, account identity, authentication material, and access-policy configuration are hidden or sanitized.
 - [ ] Hermes configuration, provider details, memory content, prompts, user profiles, tool output, and session history are hidden or sanitized.
 - [ ] Hardware serial numbers, asset labels, barcodes, and shipping labels are not readable.
 - [ ] The background, reflections, and visible documents do not reveal personal or location information.
@@ -142,10 +146,11 @@ Run this review before every commit intended for the public repository:
 5. Inspect every image at full resolution.
 6. Confirm that no backup, database, log, export, or temporary file has been included.
 7. Confirm that backup names, paths, sizes, timestamps, hashes, encryption metadata, and storage destinations have not been disclosed.
-8. Verify that every service is labelled accurately as **operational**, **in progress**, **planned**, **pending**, or **not deployed**.
-9. Check that example values are obviously fictional or use reserved documentation ranges.
-10. Review the final diff for unexpected or unrelated content.
-11. Publish only after all checks pass.
+8. Confirm that Tailscale addresses, device and tailnet identifiers, account data, authentication material, and live access-policy details have not been disclosed.
+9. Verify that every service is labelled accurately as **operational**, **in progress**, **planned**, **pending**, or **not deployed**.
+10. Check that example values are obviously fictional or use reserved documentation ranges.
+11. Review the final diff for unexpected or unrelated content.
+12. Publish only after all checks pass.
 
 ## Repository Practices
 
@@ -190,11 +195,13 @@ At the time of this review, the public documentation may state that:
 - Private name resolution and the approved network path are operational for the first service workload, while all live values remain private.
 - Initial and final network-configuration copies are stored privately and are not part of the repository.
 - Hermes Agent is operational through its initial text workflow, and persistent user-memory loading has been verified across sessions.
+- Tailscale is operational on the Hermes host and one approved client; key-based SSH has been verified from an external network without a direct public inbound service.
+- The verified Tailscale path provides private host administration only. Additional clients, network-wide administration, subnet routing, Exit Node operation, and final access governance remain pending.
 - Hermes credentials, live configuration, persistent-memory contents, user identities, session data, and backup material remain private.
 - Initial encrypted VM and container backups have been copied to separate storage and verified through private SHA-256 comparison.
 - Real backup IDs, filenames, paths, timestamps, sizes, hashes, encryption details, destinations, and local working archives remain private.
 - Backup integrity is verified, while controlled restoration and recurring rotation remain pending.
-- Home Assistant, voice integration, n8n, monitoring, VPN access, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain pending or planned.
+- Home Assistant, voice integration, n8n, monitoring, wider remote-access rollout, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain pending or planned.
 
 No document should imply that unfinished services are operational.
 

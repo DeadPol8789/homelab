@@ -1,8 +1,8 @@
 # HomeLab Project Roadmap
 
-> **Last verified:** August 2026  
+> **Last verified:** September 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Controlled restoration, backup automation, secure remote access, assistant memory, and monitoring
+> **Current focus:** Travel-client remote access, access governance, controlled restoration, backup automation, assistant memory, and monitoring
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -114,7 +114,7 @@ OPNsense `26.7.2_2` is installed on the dedicated firewall appliance, and the se
 
 ### Operational follow-up
 
-The foundation objective is complete, and an initial DNS and cross-segment policy baseline has also been verified. DHCP-reservation review, broader client migration, controlled restoration testing, comprehensive policy review, VPN access, and monitoring remain tracked as operational or security-resilience work rather than blockers for this phase.
+The foundation objective is complete, and an initial DNS and cross-segment policy baseline has also been verified. A private Tailscale path to the Hermes host has since been externally tested. DHCP-reservation review, broader client migration, controlled restoration testing, comprehensive policy review, network-wide remote administration, and monitoring remain tracked as operational or security-resilience work rather than blockers for this phase.
 
 ### Completion criteria
 
@@ -161,7 +161,7 @@ No home-automation, voice, n8n, Prometheus, or Grafana service is currently depl
 
 ## Phase 6 — Assistant Platform
 
-**Status: Planned**
+**Status: In progress**
 
 The target architecture combines two different roles:
 
@@ -175,6 +175,8 @@ The target architecture combines two different roles:
 - [x] Create the initial persistent user profile.
 - [x] Confirm automatic memory loading in a new session.
 - [x] Keep live credentials, configuration, and memory content outside the public repository.
+- [x] Deploy Tailscale on the Hermes host and one approved client.
+- [x] Verify key-based SSH to the host from an external network without public port forwarding.
 
 ### Planned work
 
@@ -184,9 +186,10 @@ The target architecture combines two different roles:
 - [ ] Restrict commands to authorised identities and require confirmation for sensitive actions.
 - [ ] Record operational costs and decide when tasks should use local or paid AI services.
 - [ ] Test failure handling before granting control of important infrastructure.
-- [ ] Add secure remote text access and validate it from an external network.
+- [ ] Enroll and externally test the selected travel and backup clients.
+- [ ] Add an approved remote Hermes conversation interface; the current remote path provides host administration only.
 
-Hermes Agent and its initial persistent-memory workflow are operational. The phase remains **In progress** until secure remote access, expanded memory, user isolation, monitoring, and selected Home Assistant integrations are implemented and tested.
+Hermes Agent, its initial persistent-memory workflow, and private remote administration of its host are operational. The phase remains **In progress** until the wider client rollout, a remote assistant interface, expanded memory, user isolation, monitoring, and selected Home Assistant integrations are implemented and tested.
 
 ## Phase 7 — Security and Resilience
 
@@ -213,12 +216,18 @@ Hermes Agent and its initial persistent-memory workflow are operational. The pha
 - [x] Encrypt the initial workload backups before secondary storage.
 - [x] Copy the encrypted archives away from the primary virtualization host.
 - [x] Verify matching SHA-256 checksums between encrypted source and secondary copies.
+- [x] Establish private Tailscale access between the Hermes host and one approved client.
+- [x] Verify key-based SSH through Tailscale from outside the home network.
+- [x] Confirm that the tested remote path requires no direct public inbound service.
 - [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
 
 - [ ] Complete the inter-VLAN policy review using least-privilege principles.
-- [ ] Add controlled remote access through a reviewed VPN design.
+- [ ] Enroll and externally test the selected travel and backup clients.
+- [ ] Review remote-access policy, device lifecycle, authorization, and recovery procedures.
+- [ ] Decide whether subnet routing or Exit Node operation is required before deploying either capability.
+- [ ] Define restricted access for any future additional users without exposing infrastructure administration.
 - [ ] Finalize cleanup or retention handling for unencrypted working archives.
 - [ ] Define recurring configuration and service backups outside the public repository.
 - [ ] Add retention, capacity, and backup-failure monitoring.
@@ -226,7 +235,7 @@ Hermes Agent and its initial persistent-memory workflow are operational. The pha
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
 
-Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, a selected cross-segment isolation path, and encrypted initial VM and container backups are deployed and verified. The workload copies passed SHA-256 comparison after transfer to separate storage. VPN access, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
+Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, a selected cross-segment isolation path, encrypted initial VM and container backups, and one private Tailscale host-access path are deployed and verified. The workload copies passed SHA-256 comparison after transfer to separate storage, and key-based SSH through Tailscale was tested from an external network. Wider client enrollment, network-wide remote administration, subnet routing, Exit Node operation, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
 
 ## Phase 8 — Advanced Labs
 
@@ -247,14 +256,16 @@ The GPU-equipped workstation has been selected as a future on-demand compute nod
 
 The next verified updates should follow this order:
 
-1. Perform and document a controlled restoration test for the private network backups.
-2. Confirm required DHCP reservations and remaining essential client connectivity.
-3. Complete the inter-VLAN policy review using least-privilege principles.
-4. Finalize local working-archive cleanup and define recurring guest, Hermes configuration, and memory backups.
-5. Perform controlled VM and container restoration tests.
-6. Design controlled remote access through a reviewed VPN solution and validate it from an external network.
-7. Expand Hermes memory with a reviewed knowledge-base and retrieval layer.
-8. Add monitoring and actionable alerts for the host, guest, and assistant service.
+1. Enroll the selected travel laptop in Tailscale and repeat the external-network access test.
+2. Prepare and test selected backup clients where required.
+3. Review Tailscale authorization, device lifecycle, and recovery procedures.
+4. Perform and document a controlled restoration test for the private network backups.
+5. Confirm required DHCP reservations and remaining essential client connectivity.
+6. Complete the inter-VLAN policy review using least-privilege principles.
+7. Finalize local working-archive cleanup and define recurring guest, Hermes configuration, and memory backups.
+8. Perform controlled VM and container restoration tests.
+9. Expand Hermes memory with a reviewed knowledge-base and retrieval layer.
+10. Add monitoring and actionable alerts for the host, guest, and assistant service.
 
 This order may be adjusted if testing identifies a safer dependency sequence. Any change will be documented rather than silently presented as part of the original plan.
 
