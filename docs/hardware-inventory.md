@@ -1,6 +1,6 @@
 # Hardware Inventory
 
-> **Last verified:** August 2026  
+> **Last verified:** September 2026  
 > **Project status:** Work in progress
 
 This document lists the hardware that is relevant to the HomeLab project. It distinguishes between equipment that is already in use, equipment that is available but still awaiting deployment, and hardware that is only being considered for a future phase.
@@ -21,7 +21,7 @@ The inventory is intentionally limited to information that is useful for a techn
 
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
-| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE `9.2.11` is installed, updated, accessible from an approved client segment, and protected with a separate administrative account and multi-factor authentication. The host runs the first validated Ubuntu Server guest, Docker platform, and Hermes Agent workload. Initial encrypted VM and container backups have been copied to separate storage and integrity-checked. |
+| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE `9.2.11` is installed, updated, accessible from an approved client segment, and protected with a separate administrative account and multi-factor authentication. The host runs the first validated Ubuntu Server guest, Docker platform, and Hermes Agent workload. Initial encrypted VM and container backups have been copied to separate storage and integrity-checked, and the manual virtual-machine workflow was later repeated successfully after further configuration changes. |
 | Desktop workstation | NVIDIA GeForce RTX 5070 Ti, 32 GB RAM | Primary personal workstation and future on-demand compute node for heavy local-AI workloads | **In use independently:** it is not dedicated to the HomeLab and is not yet integrated with Hermes or automation. Future Wake-on-LAN and workload controls are planned. |
 
 ## Network and Security
