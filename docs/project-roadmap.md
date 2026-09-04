@@ -216,6 +216,7 @@ Hermes Agent, its initial persistent-memory workflow, and private remote adminis
 - [x] Encrypt the initial workload backups before secondary storage.
 - [x] Copy the encrypted archives away from the primary virtualization host.
 - [x] Verify matching SHA-256 checksums between encrypted source and secondary copies.
+- [x] Repeat the manual virtual-machine backup, encryption, secondary-copy, and integrity-validation workflow after further configuration changes.
 - [x] Establish private Tailscale access between the Hermes host and one approved client.
 - [x] Verify key-based SSH through Tailscale from outside the home network.
 - [x] Confirm that the tested remote path requires no direct public inbound service.
@@ -235,7 +236,7 @@ Hermes Agent, its initial persistent-memory workflow, and private remote adminis
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
 
-Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, a selected cross-segment isolation path, encrypted initial VM and container backups, and one private Tailscale host-access path are deployed and verified. The workload copies passed SHA-256 comparison after transfer to separate storage, and key-based SSH through Tailscale was tested from an external network. Wider client enrollment, network-wide remote administration, subnet routing, Exit Node operation, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
+Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, a selected cross-segment isolation path, encrypted initial VM and container backups, and one private Tailscale host-access path are deployed and verified. The workload copies passed SHA-256 comparison after transfer to separate storage, and the manual virtual-machine workflow was later repeated successfully after further configuration changes. Key-based SSH through Tailscale was also tested from an external network. Wider client enrollment, network-wide remote administration, subnet routing, Exit Node operation, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
 
 ## Phase 8 — Advanced Labs
 

@@ -1,13 +1,15 @@
 # Backup and Recovery
 
 > **Last verified:** September 2026  
-> **Project status:** Initial encrypted workload backups verified; controlled restoration pending
+> **Project status:** Initial encrypted workload baseline and follow-up virtual-machine backup verified; controlled restoration pending
 
-This document records the first verified backup milestone for the HomeLab virtualization workloads. It describes backup scope, encryption, secondary storage, integrity validation, and remaining recovery work without exposing live identifiers, filenames, paths, hashes, credentials, or storage details.
+This document records the verified backup milestones for the HomeLab virtualization workloads. It describes the initial protected baseline, a later manual virtual-machine backup cycle, encryption, secondary storage, integrity validation, and remaining recovery work without exposing live identifiers, filenames, paths, hashes, credentials, or storage details.
 
 ## Verified Backup Scope
 
 Initial backups have been created for the current Proxmox virtual machine and container workloads. Together, these copies establish the first protected workload baseline beyond the existing private network-configuration and pre-update host-configuration backups.
+
+After further configuration changes, the virtual-machine workflow was performed again. A new compressed archive was created, encrypted, transferred to separate storage, and checked against its encrypted source. The matching SHA-256 result confirms that a newer protected copy reached the secondary location without detected transfer corruption.
 
 The public documentation deliberately identifies the workloads only by virtualization type. Their numeric identifiers, names, service roles, storage volumes, resource configuration, and backup filenames remain private.
 
@@ -21,13 +23,14 @@ The public documentation deliberately identifies the workloads only by virtualiz
 | Secondary copy | **Completed** | The encrypted workload backups were copied away from the primary virtualization host. |
 | Source checksum | **Recorded privately** | A SHA-256 checksum was calculated for each encrypted source backup. |
 | Destination checksum | **Verified** | Each secondary copy produced the same SHA-256 checksum as its encrypted source. |
+| Follow-up virtual-machine cycle | **Completed and integrity-verified** | The manual create, encrypt, transfer, and SHA-256 comparison workflow was repeated successfully after later configuration changes. |
 | Local working archives | **Temporarily retained** | Unencrypted working archives remain protected on the virtualization host while cleanup and retention handling are finalized. |
 | Controlled restoration | **Pending** | Integrity verification confirms that the copied bytes match; it does not prove that either workload can be restored and started successfully. |
 | Automated schedule and retention | **Pending** | Recurring jobs, retention periods, rotation, and capacity alerts have not yet been finalized. |
 
 ## Backup Workflow
 
-The verified initial workflow was:
+The following workflow was verified during the initial baseline and later repeated for the virtual-machine backup:
 
 1. Create a compressed Proxmox backup for the selected workload.
 2. Produce an encrypted copy using private encryption material.
@@ -49,6 +52,12 @@ flowchart TD
 ```
 
 This diagram represents the verification sequence only. It is not a disclosure of the live storage topology or operational commands.
+
+## Follow-up Backup Validation
+
+The later virtual-machine cycle provides evidence that the documented manual procedure can be executed again after the workload changes. It produced a new encrypted recovery source on storage separate from the virtualization host and confirmed byte-for-byte consistency between the encrypted source and its transferred copy.
+
+This repetition does not establish automated scheduling, retention rotation, or recovery readiness. It also does not show that every future execution will succeed without validation. Each protected copy must continue to be checked, and a controlled restoration remains necessary.
 
 ## What the Integrity Check Proves
 
@@ -81,7 +90,7 @@ The verified baseline follows these controls:
 
 ## Recovery Boundary
 
-The current milestone is correctly described as **initial encrypted backups created, copied, and integrity-verified**. It must not be described as complete disaster recovery.
+The current milestone is correctly described as **an initial encrypted workload baseline plus a follow-up manual virtual-machine backup, copied and integrity-verified**. It must not be described as automated backup rotation or complete disaster recovery.
 
 A future controlled restoration test should verify:
 
@@ -99,6 +108,7 @@ A future controlled restoration test should verify:
 - Decide when protected local working archives should be removed.
 - Define recurring backup jobs for virtual machines, containers, service configuration, and persistent data.
 - Define retention periods, rotation, capacity thresholds, and failure notifications.
+- Convert the validated manual procedure into a reviewed schedule without weakening encryption or secondary-copy controls.
 - Keep at least one protected copy separate from the primary virtualization host.
 - Perform and document controlled restoration tests.
 - Review whether an additional offline or off-site copy is appropriate.

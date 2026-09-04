@@ -198,9 +198,9 @@ At the time of this review, the public documentation may state that:
 - Tailscale is operational on the Hermes host and one approved client; key-based SSH has been verified from an external network without a direct public inbound service.
 - The verified Tailscale path provides private host administration only. Additional clients, network-wide administration, subnet routing, Exit Node operation, and final access governance remain pending.
 - Hermes credentials, live configuration, persistent-memory contents, user identities, session data, and backup material remain private.
-- Initial encrypted VM and container backups have been copied to separate storage and verified through private SHA-256 comparison.
+- Initial encrypted VM and container backups have been copied to separate storage and verified through private SHA-256 comparison. The manual virtual-machine workflow was later repeated after further configuration changes, and the follow-up encrypted copy also passed private source-to-destination integrity comparison.
 - Real backup IDs, filenames, paths, timestamps, sizes, hashes, encryption details, destinations, and local working archives remain private.
-- Backup integrity is verified, while controlled restoration and recurring rotation remain pending.
+- Initial and follow-up backup integrity is verified, while decryption testing, controlled restoration, and recurring rotation remain pending.
 - Home Assistant, voice integration, n8n, monitoring, wider remote-access rollout, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain pending or planned.
 
 No document should imply that unfinished services are operational.

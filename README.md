@@ -18,7 +18,7 @@ The documentation reflects only work that has actually been completed. Planned c
 | Managed switch | Operational segmented foundation | The switch is running firmware `3.30.6`, its private administration path is operational, and three role-based VLANs are active and verified. |
 | HomeLab network path | Operational, segmented, and policy-tested | The path from the ISP equipment through OPNsense and the managed switch has been tested successfully. Approved management access, segment-specific DNS access, and isolation between selected network roles have also been verified. |
 | Self-hosted services | Initial platform operational | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and Hermes Agent are deployed on the first Linux guest. Hermes persistent memory loading has been verified across sessions. |
-| Backup and recovery | Initial backups verified | Encrypted backups of the current virtual machine and container workloads have been copied to separate storage and verified with matching SHA-256 checksums. Controlled restoration and automated rotation remain pending. |
+| Backup and recovery | Initial baseline and follow-up VM backup verified | Encrypted backups of the current virtual machine and container workloads have been copied to separate storage and verified with matching SHA-256 checksums. The virtual-machine procedure was later repeated successfully after further configuration changes. Controlled restoration and automated rotation remain pending. |
 | Remote access | Initial path operational | Tailscale provides private remote access to the Hermes host from an approved client. Key-based SSH access has been verified from outside the home network without exposing a public inbound service. |
 
 ## Hardware Overview
@@ -81,6 +81,7 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Deploy Hermes Agent and verify persistent memory loading across sessions
 - [x] Create encrypted initial backups of the current VM and container workloads
 - [x] Copy the protected backups to separate storage and verify matching SHA-256 checksums
+- [x] Repeat the encrypted virtual-machine backup, secondary-copy, and integrity-check workflow after later configuration changes
 - [x] Deploy Tailscale for private remote access to the Hermes host
 - [x] Verify key-based SSH access from outside the home network
 - [ ] Add and test the travel laptop and selected backup client devices

@@ -1,6 +1,6 @@
 # Proxmox VE Installation
 
-> **Last verified:** August 2026  
+> **Last verified:** September 2026  
 > **Project status:** Proxmox VE `9.2.11` operational with the first validated Linux service VM
 
 This document records the verified progress of the Proxmox VE deployment used as the virtualization foundation of the HomeLab. It intentionally separates completed work from unfinished tasks and excludes sensitive information about the live environment.
@@ -15,7 +15,7 @@ The first service VM is now operational. Ubuntu Server `24.04.4 LTS` was install
 
 Docker Engine `29.7.2` and Docker Compose `5.5.0` were installed from the maintained upstream repository. The Docker service, container runtime, and a test container were validated before Hermes Agent was deployed. Hermes is operational, and automatic loading of its persistent user memory has been confirmed in a new session.
 
-Initial compressed backups of the current virtual machine and container workloads have now been created. Encrypted copies were transferred to separate storage, and matching SHA-256 checksums verified the integrity of each transfer. Unencrypted working archives remain protected temporarily on the host while cleanup and retention handling are finalized. A controlled restoration test has not yet been completed.
+Initial compressed backups of the current virtual machine and container workloads have now been created. Encrypted copies were transferred to separate storage, and matching SHA-256 checksums verified the integrity of each transfer. After further configuration changes, the virtual-machine procedure was executed again: a new archive was created, encrypted, transferred away from the virtualization host, and verified against its encrypted source. Unencrypted working archives remain protected temporarily on the host while cleanup and retention handling are finalized. A controlled restoration test has not yet been completed.
 
 ## Verified Progress
 
@@ -36,7 +36,7 @@ Initial compressed backups of the current virtual machine and container workload
 | Guest administration | **Hardened and verified** | Key-based access through a dedicated non-root account is operational; password authentication and direct root login are disabled. |
 | Container platform | **Operational** | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and a test container were validated. |
 | First service workload | **Operational** | Hermes Agent is deployed, and persistent memory loading has been verified across sessions. |
-| Backup and restore testing | **Initial backups verified; restoration pending** | A private pre-update host-configuration copy and encrypted initial VM and container backups exist. Secondary copies passed SHA-256 comparison. Recurring rotation and controlled restoration remain pending. |
+| Backup and restore testing | **Initial baseline and follow-up VM backup verified; restoration pending** | A private pre-update host-configuration copy and encrypted initial VM and container backups exist. The manual virtual-machine workflow was later repeated after further changes, and its secondary copy passed SHA-256 comparison. Recurring rotation and controlled restoration remain pending. |
 | Monitoring and alerting | **Planned** | Prometheus, Grafana, and related monitoring remain future work. |
 
 ## Current Role in the HomeLab
@@ -97,7 +97,7 @@ Before publication, screenshots must be checked at full resolution. Hostnames, a
 
 ## Next Milestone: Repeatable Recovery
 
-The first Linux VM and service workload are complete. Initial encrypted VM and container backups have also been copied to separate storage and integrity-verified. The next reliability milestone is a repeatable recovery procedure. It will only be marked as completed after all of the following have been confirmed:
+The first Linux VM and service workload are complete. Initial encrypted VM and container backups have been copied to separate storage and integrity-verified, and the protected virtual-machine workflow has since been repeated manually. The next reliability milestone is an automated and recoverable procedure. It will only be marked as completed after all of the following have been confirmed:
 
 1. Finalize cleanup or retention handling for unencrypted working archives.
 2. Establish a recurring backup schedule and retention policy.
@@ -107,7 +107,7 @@ The first Linux VM and service workload are complete. Initial encrypted VM and c
 6. Confirm restored Hermes Agent availability and persistent-memory behavior where applicable.
 7. Document the sanitized recovery procedure and its limitations.
 
-Until these checks are complete, the public project status remains **initial encrypted workload backups verified; recurring rotation and controlled restoration pending**.
+Until these checks are complete, the public project status remains **initial encrypted workload baseline and follow-up manual virtual-machine backup verified; recurring rotation and controlled restoration pending**.
 
 ## Future Documentation
 

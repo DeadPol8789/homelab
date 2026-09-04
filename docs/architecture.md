@@ -1,6 +1,6 @@
 # HomeLab Architecture
 
-> **Last verified:** August 2026  
+> **Last verified:** September 2026  
 > **Project status:** Work in progress
 
 This document describes the HomeLab at two different levels:
@@ -14,7 +14,7 @@ The diagrams intentionally omit real addresses, internal hostnames, wireless net
 
 The dedicated OPNsense appliance provides the firewall, routing, and VLAN gateway layer for the HomeLab. Its upstream connection remains behind the existing ISP equipment, while its internal connection feeds the managed PoE switch. OPNsense has been updated to `26.7.2_2`, and internet and DNS connectivity have been verified after the network changes.
 
-The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host is running Proxmox VE `9.2.11`, remains reachable from an approved client segment, and hosts the first validated Linux service VM. Initial DNS-access and cross-segment isolation policies have been applied and tested. The guest uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, and its persistent memory loading has been verified across sessions. Tailscale provides a private remote path from one approved external client to the Hermes host, and key-based SSH was verified outside the home network. Final private network-configuration backups have been saved and verified. Initial encrypted backups of the current VM and container workloads have also been copied to separate storage and verified with matching SHA-256 checksums.
+The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host is running Proxmox VE `9.2.11`, remains reachable from an approved client segment, and hosts the first validated Linux service VM. Initial DNS-access and cross-segment isolation policies have been applied and tested. The guest uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, and its persistent memory loading has been verified across sessions. Tailscale provides a private remote path from one approved external client to the Hermes host, and key-based SSH was verified outside the home network. Final private network-configuration backups have been saved and verified. Initial encrypted backups of the current VM and container workloads were copied to separate storage and verified with matching SHA-256 checksums. The encrypted virtual-machine workflow was later repeated successfully after further configuration changes, providing a newer integrity-verified recovery source while controlled restoration remains pending.
 
 ```mermaid
 flowchart TD
@@ -86,7 +86,7 @@ The GPU-equipped primary workstation is not intended to be permanently dedicated
 | Observability | Metrics and dashboards with Prometheus and Grafana | Planned. |
 | Assistant platform | Persistent local assistant using Hermes Agent | Operational initial deployment with cross-session memory loading verified. |
 | AI compute | Heavy local inference on the GPU-equipped workstation | Planned as an on-demand node; Wake-on-LAN and workload controls are not yet integrated. |
-| Storage and backups | Network configuration, workload backups, future NAS, and recovery procedures | Network-configuration copies and initial encrypted VM and container backups are verified. Secondary-copy integrity has been checked; recurring rotation and controlled restoration remain pending. |
+| Storage and backups | Network configuration, workload backups, future NAS, and recovery procedures | Network-configuration copies and initial encrypted VM and container backups are verified. A later manual virtual-machine backup cycle also passed secondary-copy integrity validation; recurring rotation and controlled restoration remain pending. |
 
 ## Architecture Principles
 
@@ -105,7 +105,7 @@ The project will follow these principles as it evolves:
 
 The existing physical-setup, Proxmox, network-design, roadmap, and changelog documents will be updated as milestones are verified. New implementation records will be added only after the corresponding work is completed. Planned topics include:
 
-- Hermes Agent deployment notes
+- Hermes Agent expansion and integration notes
 - Segmentation policy refinement and recovery-validation notes
 - Service deployment records
 - Backup rotation, controlled restoration, and recovery procedures

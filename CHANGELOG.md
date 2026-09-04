@@ -32,6 +32,7 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Expanded the public-sanitization rules for backup identifiers, filenames, paths, timestamps, sizes, checksums, encryption metadata, and storage destinations.
 - Updated the README, architecture, network design, OPNsense record, Hermes deployment, roadmap, and security policy with the tested private host-access milestone.
 - Expanded the public-sanitization rules for Tailscale addresses, tailnet and device identifiers, account data, authentication material, and live access-policy configuration.
+- Updated the README, architecture, backup-and-recovery record, Proxmox record, Hermes deployment, and roadmap with the verified follow-up virtual-machine backup cycle.
 
 ### Verified infrastructure progress
 
@@ -67,6 +68,9 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Initial compressed backups of the current virtual machine and container workloads have been created.
 - Encrypted copies of both workload backups have been stored separately from the primary virtualization host.
 - Matching SHA-256 checksums have verified the integrity of the encrypted source and secondary copies.
+- The manual virtual-machine backup workflow was repeated after further configuration changes.
+- The follow-up virtual-machine archive was encrypted, copied away from the virtualization host, and verified against its encrypted source with matching SHA-256 results.
+- The follow-up integrity check is recorded separately from the still-pending decryption and controlled-restoration tests.
 - Tailscale is operational on the Hermes host and one approved client.
 - Key-based SSH through Tailscale has been verified from outside the home network.
 - The tested remote path requires no direct public inbound service or router port forwarding.
