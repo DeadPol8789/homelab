@@ -13,6 +13,8 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Added a sanitized Hermes Agent deployment record covering the first Linux guest, hardened administration, Docker validation, the initial text workflow, persistent memory, and remaining work.
 - Added a sanitized backup-and-recovery record covering workload scope, encryption, secondary copies, integrity validation, and the controlled-restoration boundary.
 - Added a sanitized Tailscale remote-access record covering the initial host-and-client scope, external validation, security boundary, and remaining rollout work.
+- Added a sanitized Home Assistant deployment record covering workload placement, private name resolution, companion-app connectivity, the application export, voice-configuration status, and remaining recovery work.
+- Added a sanitized Uptime Kuma deployment record covering service placement, initial alerting, the Home Assistant availability result, shared-host limitations, and remaining validation.
 - Added the planned on-demand GPU-compute role and Wake-on-LAN concept to the target architecture.
 
 ### Changed
@@ -33,6 +35,11 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Updated the README, architecture, network design, OPNsense record, Hermes deployment, roadmap, and security policy with the tested private host-access milestone.
 - Expanded the public-sanitization rules for Tailscale addresses, tailnet and device identifiers, account data, authentication material, and live access-policy configuration.
 - Updated the README, architecture, backup-and-recovery record, Proxmox record, Hermes deployment, and roadmap with the verified follow-up virtual-machine backup cycle.
+- Updated the README, architecture, hardware inventory, Proxmox record, roadmap, network design, OPNsense record, and security policy for the operational Home Assistant and Uptime Kuma workloads.
+- Updated the Tailscale and Hermes records with the travel-laptop mobile-hotspot test, selected-tablet host access, and the in-progress state of further client validation.
+- Updated the backup and recovery record with the separate Home Assistant application export, archive inspection, external copy, and remaining protection, integrity, and restoration checks.
+- Corrected the Hermes backup statement: the public evidence does not identify the follow-up VM archive as the Hermes VM, so current assistant coverage must be mapped explicitly.
+- Expanded public-sanitization rules for Home Assistant household and voice data, Uptime Kuma targets and notifications, and mobile SSH-client profiles and keys.
 
 ### Verified infrastructure progress
 
@@ -65,7 +72,7 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Hermes Agent is operational through its initial text workflow.
 - Hermes persistent user-memory loading has been verified in a new session.
 - The project roadmap's virtualization-foundation phase now meets its completion criteria.
-- Initial compressed backups of the current virtual machine and container workloads have been created.
+- Initial compressed backups of the selected virtual-machine and container workloads have been created.
 - Encrypted copies of both workload backups have been stored separately from the primary virtualization host.
 - Matching SHA-256 checksums have verified the integrity of the encrypted source and secondary copies.
 - The manual virtual-machine backup workflow was repeated after further configuration changes.
@@ -74,6 +81,13 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Tailscale is operational on the Hermes host and one approved client.
 - Key-based SSH through Tailscale has been verified from outside the home network.
 - The tested remote path requires no direct public inbound service or router port forwarding.
+- Home Assistant is operational in a separate VM with private name resolution and connected companion apps on selected mobile devices.
+- A Home Assistant application backup has been exported, its archive listing inspected, and a copy placed on external storage.
+- Uptime Kuma is operational in a separate container with initial alerting configured.
+- The saved Home Assistant monitor reported **Up**.
+- The selected travel laptop passed a real Hermes host-access test through a mobile hotspot.
+- A selected tablet confirmed Termius access to the Hermes host through a phone hotspot.
+- A further tablet has joined Tailscale and received an SSH key; its completed external SSH validation is not yet documented.
 
 ### Still in progress or planned
 
@@ -84,13 +98,18 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Finalizing cleanup or retention handling for unencrypted local working archives.
 - Defining recurring guest, container, Hermes configuration, and persistent-memory backups.
 - Adding retention, capacity, and backup-failure monitoring.
+- Mapping every current workload to its actual backup coverage.
+- Documenting protection and source-to-copy integrity checks for the Home Assistant application export.
+- Testing Home Assistant application restoration and recovered integration behavior.
 - Performing controlled guest, service, and network-configuration restoration tests.
-- Enrolling and externally testing the selected travel and backup clients.
+- Completing external validation for the remaining selected clients.
 - Reviewing Tailscale access policy, device lifecycle, authorization, and recovery procedures.
 - Deciding whether subnet routing or Exit Node operation is required before deploying either capability.
 - Defining restricted access for any future additional users without exposing infrastructure administration.
-- Network-wide remote administration, advanced firewall policy, monitoring, and automated backup rotation.
-- Expanded memory/RAG, isolated user profiles, a remote Hermes conversation interface, Home Assistant, voice integration, and n8n.
+- Network-wide remote administration, advanced firewall policy, complete monitoring coverage, and automated backup rotation.
+- Validating Uptime Kuma failure, recovery, and notification delivery for each required monitor.
+- Resolving the Home Assistant voice-configuration issues and validating reliable end-to-end voice operation.
+- Expanded memory/RAG, isolated user profiles, a remote Hermes conversation interface, Home Assistant integration with Hermes, and n8n.
 - Additional container-hosted services and assistant integrations.
 - Wake-on-LAN and controlled use of the GPU workstation for approved heavy tasks.
 

@@ -1,15 +1,19 @@
 # Tailscale Remote Access
 
 > **Last verified:** September 2026  
-> **Project status:** Initial private remote-access path operational and externally tested
+> **Project status:** Private host access externally tested on the travel laptop; mobile-client rollout in progress
 
-This document records the first verified remote-access deployment for the HomeLab. Tailscale provides a private encrypted path between an approved client and the Linux host running Hermes Agent. The deployment was tested from outside the home network without publishing a public inbound service.
+This document records the initial remote-access deployment and subsequent client rollout for the HomeLab. Tailscale provides a private encrypted path to the Linux host running Hermes Agent. The selected travel laptop has passed a real external-network test through a mobile hotspot, and selected mobile clients are being prepared and validated.
 
 The document intentionally omits device names, account identities, addresses, DNS names, authentication data, keys, access-policy details, and screenshots of the live tailnet.
 
 ## Deployment Summary
 
-Tailscale is installed and connected on the Hermes Linux host and an approved client device. The client can reach the host through the private overlay while away from the local HomeLab network.
+Tailscale is installed and connected on the Hermes Linux host and approved client devices. The original external host-access test has been followed by a successful mobile-hotspot test from the selected travel laptop.
+
+A tablet client has also been used to access the Hermes host through Termius while connected through a phone hotspot. A further tablet has been connected to Tailscale and an ED25519 SSH key prepared. A completed external SSH test for that further tablet is not established in this record.
+
+A dedicated Tailscale container is present on the Proxmox host. Its presence does not establish that advertised routes, subnet access, or Exit Node operation are configured and verified. Those capabilities require separate evidence.
 
 Remote administration continues to use the guest's existing hardened OpenSSH configuration. Tailscale provides the network path; SSH still requires the approved encrypted key. Password-based SSH authentication and direct root login remain disabled.
 
@@ -20,33 +24,35 @@ The external test confirmed that the approved client could establish the private
 | Stage | Status | Verified result |
 | --- | --- | --- |
 | Hermes host enrollment | **Completed** | The Linux service host is connected to the private Tailscale network. |
-| Approved client enrollment | **Completed** | One authorized client is connected and can use the private path. |
+| Initial client enrollment | **Completed** | The original approved client is connected and can use the private path. |
 | Device identification | **Reviewed** | The participating device entry was given a recognizable private label and checked in the administration view. |
 | Private reachability | **Verified** | The approved client can reach the Hermes host through Tailscale. |
 | SSH authentication | **Verified** | The existing encrypted SSH key works through the private overlay; password login and direct root login remain disabled. |
 | External-network test | **Completed** | Access was tested successfully while the client was outside the local home network. |
 | Public port exposure | **Not required** | The verified path does not depend on publishing the SSH service through router port forwarding. |
-| Additional travel devices | **Pending** | The travel laptop and selected backup client devices have not yet completed the same validation. |
-| Exit Node and subnet routing | **Not deployed** | General internet egress through the HomeLab and broad access to internal subnets are outside the current verified scope. |
+| Travel laptop | **Externally tested** | The selected laptop successfully accessed the Hermes host through a mobile hotspot. |
+| Selected mobile tablet | **Host access confirmed** | Termius access to the Hermes host was confirmed while the tablet used a phone hotspot. |
+| Further tablet enrollment | **In progress** | Tailscale connection and SSH-key preparation are recorded; final external SSH validation is not established here. |
+| Dedicated Tailscale container | **Present** | A separate container appears in the workload inventory. Its routing functions are not established by that fact alone. |
+| Exit Node and subnet routing | **Outside verified scope** | General internet egress through the HomeLab and broad access to internal subnets are not verified in this record. |
 | Access-policy refinement | **Pending** | Device lifecycle, least-privilege policy, recovery, and future user separation still require review. |
 
 ## Current Access Path
 
-```mermaid
-flowchart LR
-    CLIENT["Approved external client"] --> TS["Private Tailscale overlay"]
-    TS --> HOST["Hardened Linux host"]
-    HOST --> SSH["Key-based SSH"]
-    HOST --> HERMES["Hermes Agent"]
-```
+| Layer | Recorded role |
+| --- | --- |
+| Approved client | Starts the private connection from an external network. |
+| Tailscale overlay | Provides network reachability to the Hermes host. |
+| OpenSSH on the host | Authenticates the approved key for the permitted account. |
+| Host session | Provides terminal administration; a dedicated remote assistant interface remains separate work. |
 
-This diagram shows only the verified high-level path. It does not disclose the client's identity, the host's public or private addressing, the tailnet name, or any live access-control values.
+Client enrollment, successful network reachability, and successful SSH authentication are separate milestones. Each intended client requires its own validation.
 
 ## Security Boundary
 
-The current design applies these controls:
+The tested host-access path uses these controls:
 
-- Remote access is limited to explicitly enrolled devices.
+- Participating clients are explicitly enrolled; the complete authorization policy still requires review.
 - Tailscale provides an encrypted private overlay rather than a directly exposed inbound router port.
 - SSH retains independent key-based authentication.
 - The SSH private key remains encrypted and outside the public repository.
@@ -54,7 +60,7 @@ The current design applies these controls:
 - Direct root login is disabled.
 - Live device identities, addresses, account information, and policy details remain private.
 
-This deployment proves access to one service host. It does not grant or document unrestricted remote access to Proxmox, OPNsense, the managed switch, every VLAN, or other household devices.
+The tests establish access to the Hermes host. They do not establish that every other destination is blocked, nor do they verify remote administration of Proxmox, OPNsense, the managed switch, or all internal networks. Home Assistant companion-app connectivity is documented separately and must not be treated as proof of external Home Assistant access.
 
 ## External Validation
 
@@ -71,11 +77,17 @@ The initial validation followed this sequence:
 
 Passing this test establishes a working external path. It does not replace periodic device review, recovery testing, monitoring, or testing from every device intended for travel.
 
+### Subsequent Client Results
+
+The travel laptop completed a real access test through a mobile hotspot. A selected tablet also reached the Hermes host in Termius through a phone hotspot. These results extend the recorded client coverage beyond the original test.
+
+The further tablet's Tailscale connection and SSH-key preparation are recorded as setup progress. Final external SSH access remains to be documented. Private keys, public keys, fingerprints, account names, device labels, and session output are excluded.
+
 ## Remaining Work
 
-- Install and validate Tailscale on the travel laptop before the Japan trip.
-- Test access again through an independent external network or mobile hotspot.
-- Prepare selected phone, tablet, or secondary-computer access only where useful.
+- Complete and document external SSH validation for the remaining selected clients.
+- Recheck the validated travel-laptop path after material client or access-policy changes.
+- Record which clients have passed enrollment, external reachability, and SSH authentication checks.
 - Review least-privilege access controls and device approval rules.
 - Define device removal, key rotation, lost-device, and account-recovery procedures.
 - Add monitoring for unexpected disconnection or loss of remote reachability.

@@ -1,11 +1,11 @@
 # HomeLab Network Design
 
 > **Last verified:** September 2026  
-> **Implementation status:** Operational segmented-network foundation, first service workload, and tested private host access — further hardening and wider remote-access rollout remain in progress
+> **Implementation status:** Operational segmented network, assistant and home-automation services, initial availability monitoring, and tested private host access; broader policy and client validation remain in progress
 
 This document records both the verified segmented network foundation and the next planned stages for the HomeLab. It describes the operational path, completed validation work, remaining policy and recovery tasks, and public-documentation boundaries without exposing the live home network.
 
-OPNsense `26.7.2_2` is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is running firmware `3.30.6`, its private management path is operational, and three role-based VLANs have been deployed and verified. Initial DNS-access, approved-administration, and cross-segment isolation policies have also been tested. A private Tailscale path to the Hermes host has been externally validated from one approved client using the existing key-based SSH controls. Network-wide remote administration, subnet routing, and Exit Node operation have not been deployed.
+OPNsense `26.7.2_2` is installed and selected wired devices use the firewall-to-switch path successfully. The managed switch is running firmware `3.30.6`, its private management path is operational, and three role-based VLANs have been deployed and verified. Initial DNS-access, approved-administration, and cross-segment isolation policies have also been tested. Tailscale access to the Hermes host has been externally validated, including from the travel laptop and a selected tablet through mobile hotspots. Network-wide remote administration, subnet routing, and Exit Node operation are outside the verified scope.
 
 ## Current Verified State
 
@@ -19,26 +19,30 @@ The existing ISP equipment provides the upstream connection to the dedicated OPN
 | Managed PoE switch | Firmware `3.30.6` is installed; private management, traffic forwarding, and three role-based VLANs have been verified. |
 | Proxmox VE host | Installed, updated, migrated to its segmented management path, and reachable from an approved client segment after validation. |
 | First service workload | The hardened Linux guest, private name resolution, and Hermes Agent service path are operational and verified. |
+| Home Assistant | Runs in a separate VM with verified private name resolution and connected mobile companion apps. External application access is not established by these local connectivity results. |
+| Uptime Kuma | Runs as a separate container with initial alerting configured. The saved Home Assistant monitor reported **Up**. |
 | Selected wired clients | Address assignment, segment-specific DNS access, internet connectivity, approved administration, and selected isolation paths have been verified through OPNsense and the switch. |
 | Dedicated firewall-to-switch path | Operational and carrying the segmented HomeLab network. |
 | VLANs and network segmentation | Three role-based VLANs are deployed. Required DNS access and selected allow-and-block paths between network roles have been verified; live identifiers, mappings, and rules remain private. |
-| Private remote access | Tailscale access to the Hermes host has been tested from one approved external client using key-based SSH; no direct public inbound service is required. |
-| Wider remote-access functions | Additional clients, network-wide administration, subnet routing, Exit Node operation, and final access-policy review remain pending. |
+| Private remote access | Tailscale provides tested private administration of the Hermes host; travel-laptop and selected-tablet hotspot access are confirmed. No direct public inbound service is required for the tested path. |
+| Dedicated Tailscale container | Present in the workload inventory; its presence alone does not prove configured or verified routing functions. |
+| Wider remote-access functions | Remaining client tests, broader administration, routing requirements, and final access-policy review remain in progress or pending. |
 
 ## Operational Segmented Network Path
 
 ```mermaid
 flowchart TD
-    ISP["ISP equipment"] --> FW["Dedicated OPNsense firewall<br/>Routing, DNS, and policy enforcement"]
-    FW --> SW["Managed PoE switch<br/>Tagged distribution"]
-    SW --> ZONE_A["Approved client segment<br/>Administration verified"]
-    SW --> ZONE_B["Management segment<br/>Isolation verified"]
-    SW --> ZONE_C["Service segment<br/>First workload operational"]
-    ZONE_C --> VM["Linux service VM<br/>Hermes Agent"]
-    REMOTE["Approved external client"] -. "Tailscale and key-based SSH" .-> VM
+    ISP["ISP equipment"] --> FW["OPNsense routing and policy"]
+    FW --> SW["Managed switch and role-based segments"]
+    SW --> PVE["Proxmox service workloads"]
+    PVE --> VM["Hermes Linux VM"]
+    PVE --> HA["Home Assistant VM"]
+    PVE --> KUMA["Uptime Kuma container"]
+    KUMA -. "availability check: Up" .-> HA
+    REMOTE["Validated external clients"] -. "Tailscale and key-based SSH" .-> VM
 ```
 
-This diagram uses generic labels deliberately. The operating mode of the ISP equipment, physical port assignments, addressing plan, and management details are documented privately and represented publicly only in sanitized form.
+This diagram combines high-level network connectivity, workload placement, and the recorded access and monitoring relationships. It is not a map of permitted traffic or a complete workload inventory. The ISP operating mode, physical ports, addressing, segment membership, and management details remain private.
 
 ## Component Responsibilities
 
@@ -47,8 +51,9 @@ This diagram uses generic labels deliberately. The operating mode of the ISP equ
 | ISP equipment | Maintain the external service handoff required by the connection | In use as the upstream connection. |
 | OPNsense appliance | Routing, firewall policy, VLAN gateways, DHCP/DNS services, and later controlled network-wide remote access | Operational segmented foundation with initial DNS and isolation policies verified; comprehensive policy review and network-wide remote administration remain pending. |
 | Managed switch | Wired distribution, VLAN transport, and PoE delivery where required | Firmware, private management, traffic forwarding, and three VLANs are operational. |
-| Proxmox VE host | Run isolated guest workloads for HomeLab services | Hypervisor and approved administration verified; the first Linux guest and Hermes Agent workload are operational through the intended service path. |
-| Tailscale overlay | Provide private, device-authorized access without exposing a public inbound service | Operational and externally tested between one approved client and the Hermes host; wider client enrollment and advanced routing are pending. |
+| Proxmox VE host | Run separate guest workloads for HomeLab services | Hosts the assistant and Home Assistant VMs and separate monitoring and remote-access containers. Placement alone does not establish network isolation. |
+| Tailscale overlay | Provide private access from approved clients without exposing a public inbound service | Externally tested to the Hermes host, including travel-laptop and selected-tablet access. Remaining client tests, authorization review, and routing validation are separate work. |
+| Uptime Kuma | Check selected service availability and provide actionable notifications | Initial deployment operational; Home Assistant reported **Up**. Coverage and per-monitor notification validation remain in progress. |
 | Client and infrastructure devices | Consume only the connectivity required for their approved roles | Selected allow, DNS, and isolation paths have been verified; comprehensive policy review remains in progress. |
 
 ## Design Principles
@@ -94,9 +99,20 @@ The base path was introduced in the following order:
 
 Restoration testing, comprehensive policy review, wider remote-access rollout, and household dependencies remain separate follow-up work.
 
+### Subsequent Service and Client Validation
+
+- Home Assistant was deployed in a separate VM and its private name resolution verified.
+- Companion apps on selected mobile devices connected to Home Assistant.
+- Uptime Kuma was deployed with initial alerting; the saved Home Assistant monitor reported **Up**.
+- The selected travel laptop passed an external Hermes host-access test through a mobile hotspot.
+- A selected tablet confirmed Termius access to the Hermes host through a phone hotspot.
+- A further tablet connected to Tailscale and had an SSH key prepared; completed external SSH validation is not established here.
+
+These service and client results do not imply new firewall rules, complete isolation, or unrestricted remote application access.
+
 ## Initial Validation Checklist
 
-The checklist distinguishes passed base-network tests from the work still required before the complete network-foundation phase can be closed:
+The checklist distinguishes completed network-foundation tests from subsequent operational follow-up. The foundation phase remains completed in the project roadmap.
 
 - [x] OPNsense boots reliably after installation and restart.
 - [x] WAN and LAN roles are confirmed locally.
@@ -118,7 +134,12 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [x] Tailscale is operational on the Hermes host and one approved client.
 - [x] Key-based SSH has been verified through Tailscale from an external network.
 - [x] The tested remote path requires no direct public inbound service.
-- [ ] Additional travel and backup clients have been enrolled and externally tested.
+- [x] The selected travel laptop passed a mobile-hotspot host-access test.
+- [x] A selected tablet confirmed host access through a phone hotspot.
+- [x] Home Assistant private name resolution and selected mobile-app connections were verified.
+- [x] The saved Home Assistant availability monitor reported **Up** in Uptime Kuma.
+- [ ] External validation has been completed for the remaining selected clients.
+- [ ] Notification delivery and monitoring coverage have been validated for each required service.
 - [ ] Remote-access policy, device lifecycle, and recovery procedures have been reviewed.
 - [ ] Subnet routing and Exit Node requirements have been decided and, if required, tested.
 - [ ] Essential household connectivity has been checked.
@@ -128,11 +149,11 @@ The checklist distinguishes passed base-network tests from the work still requir
 - [ ] A controlled restoration procedure has been tested.
 - [x] Public documentation has been sanitized before publication.
 
-These checks verify the segmented network foundation, its initial policy baseline, and one private host-access path. They do not mean that network-wide VPN access, comprehensive least-privilege review, monitoring, restoration testing, or high availability have been completed.
+These checks record the segmented foundation, initial policy tests, selected service connectivity, and private host access from tested clients. Network-wide remote access, comprehensive least-privilege review, full monitoring coverage, controlled restoration, and high availability remain outside the completed scope.
 
 ## Initial Policy Baseline and Future Refinement
 
-The current deployment uses three role-based VLANs. The verified baseline permits required DNS access, allows approved administration of the virtualization host, and blocks a tested path from a management-oriented role toward a service-oriented role. Private name resolution and the approved network path are operational for the first Linux and Hermes Agent workload. Live identifiers, addressing, device membership, port mappings, aliases, and policy values are intentionally documented only in private operational records.
+The current deployment uses three role-based VLANs. The verified baseline permits required DNS access, allows approved administration of the virtualization host, and blocks a tested path from a management-oriented role toward a service-oriented role. Private name resolution is operational for the assistant guest and Home Assistant. Adding services and monitoring checks requires continued review of required and unwanted traffic; successful reachability does not prove every unwanted path is blocked. Live identifiers, addressing, device membership, port mappings, aliases, and policy values remain private.
 
 Future policy refinement may consider trust groups such as:
 
@@ -179,10 +200,12 @@ Available implementation records:
 - [Managed-switch deployment](managed-switch-deployment.md)
 - [Hermes Agent deployment](hermes-agent-deployment.md)
 - [Tailscale remote access](tailscale-remote-access.md)
+- [Home Assistant deployment](home-assistant-deployment.md)
+- [Uptime Kuma deployment](uptime-kuma-deployment.md)
 
 Future documentation will cover:
 
-- A sanitized as-built network diagram
+- Further updates to the sanitized network and workload diagrams
 - Further segmentation-policy review and restoration-test documentation
 - Additional-client rollout, remote-access policy, and recovery validation
 - A decision record for subnet routing or Exit Node operation if either is required

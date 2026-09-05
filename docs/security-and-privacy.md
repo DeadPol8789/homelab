@@ -58,6 +58,10 @@ The following content may be technically useful, but it must be cleaned before p
 - Backup identifiers, filenames, timestamps, sizes, paths, destinations, checksums, encryption recipients, and recovery metadata
 - Tailscale addresses, tailnet names, device names, node identifiers, tags, account details, and live access-policy values
 - Tailscale authentication keys, node keys, API tokens, recovery material, and unredacted ACL or grants configuration
+- Home Assistant device and entity identifiers, areas, household routines, presence data, companion-app registrations, integration settings, and voice recordings or transcripts
+- Home Assistant application backups, security material, archive listings, and recovery metadata
+- Uptime Kuma monitor targets, dashboard addresses, notification recipients, webhook URLs, credentials, databases, and exported configuration
+- Mobile SSH-client profiles, synchronized key stores, public keys, fingerprints, connection labels, and session history
 - Photographs showing labels, screens, documents, reflections, windows, or identifying household details
 
 Redaction must be permanent. Covering text with a movable shape in an editable document is not sufficient.
@@ -77,6 +81,8 @@ Examples should use clearly fictional placeholders rather than values copied fro
 | Public endpoint | `<REMOTE_ACCESS_ENDPOINT>` |
 | Network name | `<NETWORK_NAME>` |
 | Tailscale device or tailnet | `<PRIVATE_OVERLAY_DEVICE>` or `<PRIVATE_OVERLAY_NETWORK>` |
+| Home Assistant entity or area | `<EXAMPLE_ENTITY>` or `<EXAMPLE_AREA>` |
+| Monitor target or notification destination | `<MONITORED_SERVICE>` or `<NOTIFICATION_DESTINATION>` |
 
 Documentation-only values must not be presented as recommended live credentials or copied into production without review.
 
@@ -116,6 +122,8 @@ This is an initial defensive list, not a complete policy for every future tool. 
 
 Hermes Agent configuration, provider credentials, persistent memory, user profiles, conversation data, and tool state are private operational data. Public documentation may describe their purpose and sanitized validation results, but it must not contain their live contents or storage locations.
 
+Home Assistant configuration, application backups, integration credentials, security material, and household data are private. Uptime Kuma databases, monitor definitions, notification settings, and backups are also private. This documentation update does not authorize publishing those files or assume that the existing ignore rules cover every service-specific path.
+
 ## Screenshot and Photograph Review
 
 Before publishing an image, inspect the original file at full resolution and verify all of the following:
@@ -128,6 +136,9 @@ Before publishing an image, inspect the original file at full resolution and ver
 - [ ] Switch management addresses, device names, MAC tables, LLDP neighbors, and port labels are sanitized.
 - [ ] Tailscale addresses, tailnet or device names, node details, account identity, authentication material, and access-policy configuration are hidden or sanitized.
 - [ ] Hermes configuration, provider details, memory content, prompts, user profiles, tool output, and session history are hidden or sanitized.
+- [ ] Home Assistant areas, entities, device registrations, household activity, voice data, integration credentials, and backup metadata are hidden or sanitized.
+- [ ] Uptime Kuma targets, notification destinations, webhook URLs, dashboard links, and identifying event history are hidden or sanitized.
+- [ ] Mobile SSH-client profiles, keys, fingerprints, synchronized-account details, and connection history are hidden or sanitized.
 - [ ] Hardware serial numbers, asset labels, barcodes, and shipping labels are not readable.
 - [ ] The background, reflections, and visible documents do not reveal personal or location information.
 - [ ] Image metadata is removed when it is not required.
@@ -151,6 +162,14 @@ Run this review before every commit intended for the public repository:
 10. Check that example values are obviously fictional or use reserved documentation ranges.
 11. Review the final diff for unexpected or unrelated content.
 12. Publish only after all checks pass.
+
+For Home Assistant, Uptime Kuma, and remote-client updates, also verify that:
+
+- Application availability is distinguished from working voice, assistant integration, and notification delivery.
+- The Home Assistant application export is distinguished from earlier Proxmox archives; encryption and checksum results are attributed only to the copies actually checked.
+- Backup coverage is mapped to the relevant service before it is claimed, and an archive inspection or checksum match is not presented as a successful restoration.
+- Client enrollment is distinguished from external reachability and SSH authentication.
+- A dedicated Tailscale container is not presented as proof of subnet routing, Exit Node operation, or complete access-policy validation.
 
 ## Repository Practices
 
@@ -195,13 +214,19 @@ At the time of this review, the public documentation may state that:
 - Private name resolution and the approved network path are operational for the first service workload, while all live values remain private.
 - Initial and final network-configuration copies are stored privately and are not part of the repository.
 - Hermes Agent is operational through its initial text workflow, and persistent user-memory loading has been verified across sessions.
-- Tailscale is operational on the Hermes host and one approved client; key-based SSH has been verified from an external network without a direct public inbound service.
-- The verified Tailscale path provides private host administration only. Additional clients, network-wide administration, subnet routing, Exit Node operation, and final access governance remain pending.
+- Tailscale provides externally tested private administration of the Hermes host without requiring a direct public inbound service. The selected travel laptop passed a mobile-hotspot test, and a selected tablet confirmed Termius host access through a phone hotspot.
+- A further tablet has connected to Tailscale and had an SSH key prepared; its completed external SSH validation is not established in the current record.
+- A dedicated Tailscale container is present in the workload inventory. Network-wide administration, subnet routing, Exit Node operation, and complete access-governance validation are outside the verified scope.
 - Hermes credentials, live configuration, persistent-memory contents, user identities, session data, and backup material remain private.
 - Initial encrypted VM and container backups have been copied to separate storage and verified through private SHA-256 comparison. The manual virtual-machine workflow was later repeated after further configuration changes, and the follow-up encrypted copy also passed private source-to-destination integrity comparison.
+- The exact service scope of those earlier archives must be mapped before claiming coverage of current workloads or attributing the follow-up VM archive specifically to Hermes.
+- Home Assistant runs in a separate VM with verified private name resolution and connected mobile companion apps.
+- A Home Assistant application backup was exported, its archive listing inspected, and a copy placed on external storage. Protection and checksum checks for this export are not established by the earlier VM and container results.
+- Uptime Kuma runs in a separate container with initial alerting configured. The saved Home Assistant monitor reported **Up**; this does not establish every notification path, complete monitoring coverage, or recoverability.
 - Real backup IDs, filenames, paths, timestamps, sizes, hashes, encryption details, destinations, and local working archives remain private.
-- Initial and follow-up backup integrity is verified, while decryption testing, controlled restoration, and recurring rotation remain pending.
-- Home Assistant, voice integration, n8n, monitoring, wider remote-access rollout, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain pending or planned.
+- Earlier initial and follow-up archive integrity checks are verified. Decryption testing, controlled restoration, recurring rotation, and documented protection and integrity checks for the new application export remain pending.
+- Voice configuration has started; resolution of the recorded issues and reliable end-to-end operation are not yet documented. Hermes integration, n8n, Prometheus, Grafana, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain planned.
+- Remaining client tests, assistant-specific monitoring, per-monitor notification validation, and broader access-policy review remain in progress or pending.
 
 No document should imply that unfinished services are operational.
 

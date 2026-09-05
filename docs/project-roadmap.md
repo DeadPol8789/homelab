@@ -2,7 +2,7 @@
 
 > **Last verified:** September 2026  
 > **Project status:** Work in progress  
-> **Current focus:** Travel-client remote access, access governance, controlled restoration, backup automation, assistant memory, and monitoring
+> **Current focus:** Service recovery, voice validation, actionable monitoring, remaining client tests, and access governance
 
 This roadmap describes the planned evolution of the HomeLab and distinguishes verified work from future objectives. A milestone is marked as **Completed** only after it has been implemented, tested, and documented. Purchasing or physically possessing hardware does not by itself mean that the related milestone has been completed.
 
@@ -26,7 +26,7 @@ No fixed completion dates are published at this stage. The project is developed 
 | 2. Virtualization foundation | Install Proxmox VE and deploy the first validated guest workload | **Completed** |
 | 3. Network foundation | Deploy OPNsense and the managed switch as a tested segmented network path | **Completed** |
 | 4. Core service platform | Create Linux workloads and a controlled container-hosting environment | **In progress** |
-| 5. Automation and observability | Deploy Home Assistant, local voice integration, n8n, Prometheus, and Grafana | **Planned** |
+| 5. Automation and observability | Operate Home Assistant and Uptime Kuma; validate voice and add planned automation and metrics | **In progress** |
 | 6. Assistant platform | Deploy and integrate Hermes Agent as a persistent HomeLab assistant | **In progress** |
 | 7. Security and resilience | Maintain segmentation and add controlled remote access, recovery tests, and further hardening | **In progress** |
 | 8. Advanced labs | Build isolated cybersecurity, development, and optional AI-compute experiments | **Under evaluation** |
@@ -114,7 +114,7 @@ OPNsense `26.7.2_2` is installed on the dedicated firewall appliance, and the se
 
 ### Operational follow-up
 
-The foundation objective is complete, and an initial DNS and cross-segment policy baseline has also been verified. A private Tailscale path to the Hermes host has since been externally tested. DHCP-reservation review, broader client migration, controlled restoration testing, comprehensive policy review, network-wide remote administration, and monitoring remain tracked as operational or security-resilience work rather than blockers for this phase.
+The foundation objective is complete, and an initial DNS and cross-segment policy baseline has also been verified. Private Tailscale access to the Hermes host has been externally tested, including from the travel laptop through a mobile hotspot. Uptime Kuma now provides initial service monitoring. DHCP-reservation review, remaining client validation, controlled restoration, comprehensive policy review, broader remote administration, and expanded monitoring coverage remain operational follow-up work.
 
 ### Completion criteria
 
@@ -134,30 +134,45 @@ The foundation objective is complete, and an initial DNS and cross-segment polic
 - [x] Install and validate Docker Engine `29.7.2` and Docker Compose `5.5.0`.
 - [x] Verify the Docker service, container runtime, and a disposable test container.
 - [x] Use sanitized documentation and keep live secrets outside Git.
+- [x] Document the current placement of the assistant and Home Assistant VMs and separate Uptime Kuma and Tailscale containers.
 
 ### Planned work
 
-- [ ] Decide which workloads require separate VMs and which may use containers.
+- [ ] Review placement, resource requirements, and isolation for additional workloads.
 - [ ] Document update, health-check, backup, and recovery procedures for each service.
-- [ ] Add monitoring and alerting for the Linux guest and critical services.
+- [ ] Extend and validate monitoring coverage for the Linux guest and other required services.
 
-The first Linux and Docker foundation is operational. The final multi-workload layout, recurring maintenance, monitoring, backup rotation, and recovery procedures remain in progress.
+The Linux and Docker foundation, Home Assistant VM, and initial monitoring deployment are operational. Recurring maintenance, complete monitoring coverage, backup rotation, and service recovery procedures remain in progress.
 
 ## Phase 5 — Automation and Observability
 
 **Status: In progress**
 
+### Verified progress
+
+- [x] Deploy Home Assistant in a separate virtual machine.
+- [x] Verify private name resolution for Home Assistant.
+- [x] Connect Home Assistant companion apps on selected phone and tablet clients.
+- [x] Export a Home Assistant application backup, inspect its archive listing, and copy it to external storage.
+- [x] Deploy Uptime Kuma as a separate container workload with initial alerting configured.
+- [x] Save the existing Home Assistant monitor and observe its **Up** state.
+
 ### Planned work
 
-- [ ] Deploy Home Assistant in an appropriate isolated workload.
-- [ ] Integrate the available Home Assistant Voice hardware.
+- [ ] Resolve recorded voice-configuration issues and validate the intended workflow on each voice device.
+- [ ] Implement and separately validate approved voice access to Hermes.
 - [ ] Define which local devices may be controlled and what permissions they require.
 - [ ] Deploy n8n for approved workflows after its access and secret-management boundaries are defined.
 - [ ] Deploy Prometheus for selected metrics.
 - [ ] Deploy Grafana dashboards for infrastructure health and capacity.
-- [ ] Configure alerting only after useful thresholds and notification paths are defined.
+- [ ] Validate failure and recovery notification delivery for each required monitor.
+- [ ] Review monitoring coverage, useful thresholds, and shared host or network dependencies.
+- [ ] Document protection and integrity checks for the Home Assistant application-backup copy.
+- [ ] Test application restoration and recovered integration behavior.
 
-No home-automation, voice, n8n, Prometheus, or Grafana service is currently deployed.
+Home Assistant and Uptime Kuma are operational. Voice setup has started, but a verified resolution of the recorded issues and reliable end-to-end operation are not documented. n8n, Prometheus, Grafana, and Hermes integration remain planned. The phase remains **In progress**.
+
+Deployment records: [Home Assistant](home-assistant-deployment.md) and [Uptime Kuma](uptime-kuma-deployment.md).
 
 ## Phase 6 — Assistant Platform
 
@@ -177,6 +192,8 @@ The target architecture combines two different roles:
 - [x] Keep live credentials, configuration, and memory content outside the public repository.
 - [x] Deploy Tailscale on the Hermes host and one approved client.
 - [x] Verify key-based SSH to the host from an external network without public port forwarding.
+- [x] Verify Hermes host access from the selected travel laptop through a mobile hotspot.
+- [x] Confirm Termius host access from a selected tablet through a phone hotspot.
 
 ### Planned work
 
@@ -186,10 +203,10 @@ The target architecture combines two different roles:
 - [ ] Restrict commands to authorised identities and require confirmation for sensitive actions.
 - [ ] Record operational costs and decide when tasks should use local or paid AI services.
 - [ ] Test failure handling before granting control of important infrastructure.
-- [ ] Enroll and externally test the selected travel and backup clients.
+- [ ] Complete and document external host-access tests for the remaining selected clients.
 - [ ] Add an approved remote Hermes conversation interface; the current remote path provides host administration only.
 
-Hermes Agent, its initial persistent-memory workflow, and private remote administration of its host are operational. The phase remains **In progress** until the wider client rollout, a remote assistant interface, expanded memory, user isolation, monitoring, and selected Home Assistant integrations are implemented and tested.
+Hermes Agent, its initial persistent-memory workflow, and private remote administration of its host are operational. Home Assistant and Uptime Kuma now exist as separate services; their deployment does not establish integration with Hermes. The phase remains **In progress** until the remaining client tests, a remote assistant interface, expanded memory, user isolation, assistant-specific monitoring, and selected integrations are implemented and tested.
 
 ## Phase 7 — Security and Resilience
 
@@ -212,31 +229,37 @@ Hermes Agent, its initial persistent-memory workflow, and private remote adminis
 - [x] Operate private name resolution for the first service workload.
 - [x] Harden the first Linux guest with non-root, key-based remote administration.
 - [x] Disable password-based SSH authentication and direct root login on the first guest.
-- [x] Create initial compressed backups of the current VM and container workloads.
+- [x] Create initial compressed backups of the selected VM and container workloads.
 - [x] Encrypt the initial workload backups before secondary storage.
 - [x] Copy the encrypted archives away from the primary virtualization host.
 - [x] Verify matching SHA-256 checksums between encrypted source and secondary copies.
 - [x] Repeat the manual virtual-machine backup, encryption, secondary-copy, and integrity-validation workflow after further configuration changes.
+- [x] Export and inspect a Home Assistant application backup and copy it to external storage.
 - [x] Establish private Tailscale access between the Hermes host and one approved client.
 - [x] Verify key-based SSH through Tailscale from outside the home network.
 - [x] Confirm that the tested remote path requires no direct public inbound service.
+- [x] Complete a mobile-hotspot test from the travel laptop and confirm host access from a selected tablet through a phone hotspot.
 - [x] Apply a security-focused `.gitignore` and public-documentation policy.
 
 ### Planned work
 
 - [ ] Complete the inter-VLAN policy review using least-privilege principles.
-- [ ] Enroll and externally test the selected travel and backup clients.
+- [ ] Finish external validation for the remaining selected clients; enrollment and key preparation alone do not complete this milestone.
 - [ ] Review remote-access policy, device lifecycle, authorization, and recovery procedures.
-- [ ] Decide whether subnet routing or Exit Node operation is required before deploying either capability.
+- [ ] Review the dedicated Tailscale container's intended role and explicitly validate any required subnet routing or Exit Node capability.
 - [ ] Define restricted access for any future additional users without exposing infrastructure administration.
 - [ ] Finalize cleanup or retention handling for unencrypted working archives.
+- [ ] Map every current workload to its actual backup coverage, including Hermes configuration and persistent memory.
+- [ ] Document protection and source-to-copy integrity checks for the Home Assistant application export.
 - [ ] Define recurring configuration and service backups outside the public repository.
 - [ ] Add retention, capacity, and backup-failure monitoring.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
 - [ ] Review logging, patching, account security, and administrative access.
 - [ ] Document security improvements using sanitized evidence.
 
-Three role-based VLANs, private network-configuration backups, required DNS access, approved Proxmox administration, a selected cross-segment isolation path, encrypted initial VM and container backups, and one private Tailscale host-access path are deployed and verified. The workload copies passed SHA-256 comparison after transfer to separate storage, and the manual virtual-machine workflow was later repeated successfully after further configuration changes. Key-based SSH through Tailscale was also tested from an external network. Wider client enrollment, network-wide remote administration, subnet routing, Exit Node operation, comprehensive least-privilege review, automated backup rotation, and controlled restoration testing are not yet deployed or verified.
+The segmented network and initial policy controls remain verified. Earlier encrypted VM and container copies passed SHA-256 comparison after transfer, and the manual VM procedure was repeated. Their exact service scope must be mapped before claiming coverage of every current workload or attributing the follow-up VM archive specifically to Hermes.
+
+The newer Home Assistant application export was inspected and copied externally; the earlier encryption and checksum results do not establish those checks for this export. External Hermes host access is confirmed for the travel laptop and a selected tablet. Remaining client tests, broader remote administration, routing capabilities, comprehensive least-privilege review, automated backup rotation, and controlled restoration still require validation.
 
 ## Phase 8 — Advanced Labs
 
@@ -255,20 +278,18 @@ The GPU-equipped workstation has been selected as a future on-demand compute nod
 
 ## Immediate Next Milestones
 
-The next verified updates should follow this order:
+The travel-laptop external test, initial Home Assistant deployment, application export, and initial Uptime Kuma deployment are already recorded. The next priorities are:
 
-1. Enroll the selected travel laptop in Tailscale and repeat the external-network access test.
-2. Prepare and test selected backup clients where required.
-3. Review Tailscale authorization, device lifecycle, and recovery procedures.
-4. Perform and document a controlled restoration test for the private network backups.
-5. Confirm required DHCP reservations and remaining essential client connectivity.
-6. Complete the inter-VLAN policy review using least-privilege principles.
-7. Finalize local working-archive cleanup and define recurring guest, Hermes configuration, and memory backups.
-8. Perform controlled VM and container restoration tests.
-9. Expand Hermes memory with a reviewed knowledge-base and retrieval layer.
-10. Add monitoring and actionable alerts for the host, guest, and assistant service.
+1. Reconcile current workload backup coverage and document protection and integrity checks for the Home Assistant application copy.
+2. Validate actionable monitor notifications and complete remaining external client tests.
+3. Perform controlled application, VM, container, and network-configuration restoration tests.
+4. Resolve and retest voice configuration, then validate each intended voice workflow before integrating Hermes.
+5. Review Tailscale authorization, device lifecycle, recovery procedures, and any intended routing role.
+6. Confirm remaining DHCP reservations and essential connectivity, and complete the inter-VLAN policy review.
+7. Finalize working-archive handling, recurring backups, retention, and capacity or failure alerts.
+8. Expand Hermes memory and approved service integrations after the required recovery and access boundaries are established.
 
-This order may be adjusted if testing identifies a safer dependency sequence. Any change will be documented rather than silently presented as part of the original plan.
+Implementation should proceed one bounded change at a time, with validation before the next change. Adjust the order when testing reveals a dependency, and record the reason. Optional integrations remain separate from the operational baseline.
 
 ## Documentation Rule
 
