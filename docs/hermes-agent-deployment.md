@@ -9,13 +9,15 @@ This document records the first verified Hermes Agent deployment in the HomeLab.
 
 Hermes Agent is deployed on the first Ubuntu Server virtual machine hosted by Proxmox VE. The guest runs Ubuntu Server `24.04.4 LTS`, is connected through the approved service-network path, and uses private name resolution. System packages were updated before the assistant platform was installed.
 
-Remote administration is restricted to a dedicated non-root account using an encrypted ED25519 key. Password-based SSH authentication and direct root login are disabled. These controls reduce exposure while preserving a maintainable administration path. Tailscale is now operational on the host and one approved client, and the same key-based SSH path has been tested successfully from outside the home network without exposing a public inbound service.
+Remote administration is restricted to a dedicated non-root account using an encrypted ED25519 key. Password-based SSH authentication and direct root login are disabled. Tailscale provides private host access, and the key-based SSH path has been tested outside the home network without publishing a public inbound service. The selected travel laptop passed a mobile-hotspot test. A tablet also accessed the host through Termius while using a phone hotspot; validation of further selected clients remains in progress.
 
 Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed on the guest. The Docker service, container runtime, and a test container were validated. Hermes Agent was then deployed and tested through its initial text interface.
 
 Persistent user memory was also validated: a new Hermes session loaded the stored user profile automatically. This confirms the initial continuity mechanism, but it does not imply that the planned knowledge base, vector retrieval, multi-user profiles, voice interfaces, or external messaging channels are complete.
 
-The assistant workload is covered by the initial encrypted virtual-machine backup, and the protected workflow was later repeated after further configuration changes. The newer archive was encrypted, copied to separate storage, and passed SHA-256 comparison against its encrypted source. This provides a more recent recovery source, but application-level export, decryption, restoration, service start-up, and persistent-memory recovery have not yet been tested.
+The HomeLab backup record includes initial encrypted VM and container copies and a later manual VM cycle, all checked against their encrypted sources after transfer. Their exact service scope is not established in that public record, so the follow-up archive is not attributed specifically to Hermes here. Current Hermes backup coverage and its configuration and memory recovery requirements need an explicit mapping. Application-level export, decryption, restoration, service startup, and persistent-memory recovery are not documented as tested.
+
+Home Assistant and Uptime Kuma are now operational as separate workloads on Proxmox. Home Assistant has connected mobile companion apps and an exported application backup. Uptime Kuma has initial alerting configured, and its Home Assistant monitor reported **Up**. These milestones do not establish Hermes control of Home Assistant, direct monitoring of the assistant workflow, or working voice access to Hermes.
 
 The sanitized backup workflow and its recovery boundary are documented in [Backup and recovery](backup-and-recovery.md).
 
@@ -27,27 +29,28 @@ The sanitized remote-access path and its current limitations are documented in [
 | --- | --- | --- |
 | Proxmox host | **Operational** | Proxmox VE `9.2.11` provides the segmented virtualization platform. |
 | Linux guest | **Operational** | Ubuntu Server `24.04.4 LTS` is installed, updated, and reachable through its approved path. |
-| Remote administration | **Hardened and externally tested** | A dedicated non-root account and encrypted key are used; password authentication and direct root login are disabled, and SSH through Tailscale has been verified from one approved external client. |
+| Remote administration | **Hardened and externally tested** | A dedicated non-root account and encrypted key are used; password authentication and direct root login are disabled. External host access is confirmed for the travel laptop and a selected tablet through mobile hotspots. |
 | Docker Engine | **Operational** | Version `29.7.2` is installed and its service and runtime have been verified. |
 | Docker Compose | **Operational** | Version `5.5.0` is installed and available. |
 | Container validation | **Completed** | A disposable test container completed successfully. |
 | Hermes Agent | **Operational initial deployment** | The assistant is installed and usable through its initial text workflow. |
 | Persistent user memory | **Verified** | A fresh session loaded the stored user profile automatically. |
-| Workload backup | **Initial baseline and follow-up copy integrity-verified** | The assistant VM is covered by encrypted backups stored separately from the host, including a later manually executed cycle after further changes; controlled restoration remains pending. |
+| Workload backup | **Service coverage to be explicitly mapped** | Earlier HomeLab VM and container copies passed integrity checks. This record does not establish that the follow-up VM archive covers Hermes; controlled assistant and memory restoration remain pending. |
+| Home Assistant integration | **Planned** | Home Assistant is operational independently; approved Hermes actions and voice integration are not yet documented as working. |
+| Monitoring integration | **Pending validation** | Uptime Kuma is deployed, but monitoring of Hermes availability and its functional text workflow is not established by the Home Assistant check. |
 
 ## Current Logical Path
 
 ```mermaid
 flowchart TD
-    CLIENT["Approved client"] --> FW["Segmented network policy"]
-    FW --> PVE["Proxmox VE"]
-    PVE --> VM["Hardened Ubuntu Server VM"]
+    PVE["Proxmox VE"] --> VM["Hardened Ubuntu Server VM"]
+    CLIENT["Approved local client"] -. "approved SSH access" .-> VM
+    REMOTE["Validated external clients"] -. "Tailscale and key-based SSH" .-> VM
     VM --> PLATFORM["Docker tooling and Hermes Agent"]
-    PLATFORM --> MEMORY["Persistent user memory<br/>Cross-session loading verified"]
-    REMOTE["Approved external client"] -. "Tailscale and key-based SSH" .-> VM
+    PLATFORM --> MEMORY["Persistent memory: loading verified"]
 ```
 
-The diagram uses generic public labels. The real client identity, network segment, addressing, DNS record, VM identifier, account name, storage path, and memory contents remain private.
+The diagram separates workload placement from client access. Proxmox hosts the VM; the tested SSH session connects to the guest. The real client identity, network segment, addressing, DNS record, VM identifier, account name, storage path, and memory contents remain private.
 
 ## Security Controls
 
@@ -58,7 +61,7 @@ The verified baseline includes:
 - Key-based SSH authentication with an encrypted private key.
 - Password-based SSH authentication disabled.
 - Direct SSH login as root disabled.
-- Private Tailscale access limited to enrolled devices, with the initial external path verified.
+- Explicit enrollment of participating Tailscale clients, with external host access verified; the complete authorization policy remains under review.
 - No direct public inbound service required for the tested remote-administration path.
 - Current guest operating-system packages at the time of validation.
 - Maintained Docker packages installed from the upstream repository.
@@ -79,7 +82,7 @@ The test confirms basic continuity across sessions. It does not yet validate:
 
 - A complete personal knowledge base or RAG system.
 - Multiple isolated user profiles.
-- Application-level memory export and controlled restoration; the initial and follow-up full-VM backups have passed integrity validation only.
+- Application-level memory export and controlled restoration; earlier HomeLab VM checksum results do not establish Hermes memory recovery.
 - Conflict resolution or deletion workflows.
 - Voice, mobile assistant interfaces, or external messaging access; the verified Tailscale path currently provides host administration only.
 
@@ -99,14 +102,16 @@ The public repository does not include:
 The next assistant-platform milestones are:
 
 - Define recurring backups and retention for the guest, Hermes configuration, and persistent memory.
+- Map the assistant's current data and configuration to the actual backup scope before claiming coverage.
 - Perform a controlled restoration and confirm Hermes and its memory behave as expected.
 - Add a reviewed knowledge-base and retrieval layer.
 - Define isolated personal and restricted-user profiles.
-- Add monitoring and actionable alerts.
-- Enroll and externally test the selected travel and backup clients.
+- Add and validate assistant-specific checks and actionable alerts through the existing monitoring platform.
+- Complete external validation for the remaining selected clients; travel-laptop and selected-tablet access is already recorded.
 - Review Tailscale access policy, device lifecycle, and recovery procedures.
 - Provide an approved remote Hermes conversation interface; the current verified route is an administrative SSH path to the host.
-- Integrate Home Assistant and the available local voice hardware.
+- Define approved actions for integration with the operational Home Assistant service.
+- Complete local voice validation and implement and test the voice-to-Hermes path separately.
 - Evaluate approved on-demand GPU workloads without interfering with interactive workstation use.
 
 Each milestone will be documented only after it has been completed and verified.

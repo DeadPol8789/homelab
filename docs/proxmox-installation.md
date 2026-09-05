@@ -1,7 +1,7 @@
 # Proxmox VE Installation
 
 > **Last verified:** September 2026  
-> **Project status:** Proxmox VE `9.2.11` operational with the first validated Linux service VM
+> **Project status:** Proxmox VE `9.2.11` operational with assistant, home-automation, monitoring, and remote-access workloads
 
 This document records the verified progress of the Proxmox VE deployment used as the virtualization foundation of the HomeLab. It intentionally separates completed work from unfinished tasks and excludes sensitive information about the live environment.
 
@@ -15,7 +15,11 @@ The first service VM is now operational. Ubuntu Server `24.04.4 LTS` was install
 
 Docker Engine `29.7.2` and Docker Compose `5.5.0` were installed from the maintained upstream repository. The Docker service, container runtime, and a test container were validated before Hermes Agent was deployed. Hermes is operational, and automatic loading of its persistent user memory has been confirmed in a new session.
 
-Initial compressed backups of the current virtual machine and container workloads have now been created. Encrypted copies were transferred to separate storage, and matching SHA-256 checksums verified the integrity of each transfer. After further configuration changes, the virtual-machine procedure was executed again: a new archive was created, encrypted, transferred away from the virtualization host, and verified against its encrypted source. Unencrypted working archives remain protected temporarily on the host while cleanup and retention handling are finalized. A controlled restoration test has not yet been completed.
+Home Assistant now runs in a separate VM. Private name resolution is verified, and companion apps on selected mobile devices are connected. Uptime Kuma runs as a separate container workload with initial alerting configured; its Home Assistant monitor was saved and reported **Up**. A dedicated Tailscale container is also present in the workload inventory. The selected travel laptop has passed an external access test to the Hermes host through a mobile hotspot; this does not establish unrestricted remote Proxmox administration or verified subnet routing.
+
+Initial compressed VM and container backups were created and encrypted copies transferred to separate storage, with matching SHA-256 checksums verifying transfer integrity. After further configuration changes, the manual VM procedure was repeated with another encrypted and integrity-checked secondary copy. Cleanup and retention handling for unencrypted working archives remain to be finalized. These earlier backup records do not establish coverage of every workload added since then.
+
+A separate Home Assistant application backup has now been exported, its archive contents inspected, and a copy placed on external storage. This application export is distinct from a Proxmox VM backup. The earlier encryption and checksum results do not establish those checks for the new application export. Controlled restoration of the documented backups remains pending.
 
 ## Verified Progress
 
@@ -36,38 +40,45 @@ Initial compressed backups of the current virtual machine and container workload
 | Guest administration | **Hardened and verified** | Key-based access through a dedicated non-root account is operational; password authentication and direct root login are disabled. |
 | Container platform | **Operational** | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and a test container were validated. |
 | First service workload | **Operational** | Hermes Agent is deployed, and persistent memory loading has been verified across sessions. |
-| Backup and restore testing | **Initial baseline and follow-up VM backup verified; restoration pending** | A private pre-update host-configuration copy and encrypted initial VM and container backups exist. The manual virtual-machine workflow was later repeated after further changes, and its secondary copy passed SHA-256 comparison. Recurring rotation and controlled restoration remain pending. |
-| Monitoring and alerting | **Planned** | Prometheus, Grafana, and related monitoring remain future work. |
+| Home Assistant guest | **Operational** | A separate VM hosts Home Assistant with verified private name resolution and connected mobile companion apps. Voice setup and Hermes integration remain unfinished. |
+| Additional container workloads | **Present** | Separate containers host Uptime Kuma and Tailscale. Placement alone does not establish every intended monitoring or remote-routing function. |
+| Backup and restore testing | **Earlier integrity checks verified; restoration pending** | A private pre-update host-configuration copy and encrypted initial VM and container backups exist. The later manual VM backup also passed secondary-copy SHA-256 comparison. Recurring rotation and controlled restoration remain pending. |
+| Home Assistant application backup | **Exported and copied** | Archive contents were inspected and a copy placed on external storage. This is a separate application-level backup; its encryption and checksum checks are not established here. |
+| Monitoring and alerting | **Initial deployment operational** | Uptime Kuma and initial alerting are configured. The Home Assistant availability monitor reported **Up**. Full host and guest coverage, per-monitor notification validation, Prometheus, and Grafana remain future work. |
 
 ## Current Role in the HomeLab
 
-The Proxmox host now provides the active virtualization layer for the first isolated service workload. Its verified responsibilities include:
+The Proxmox host provides the virtualization layer for several workloads. Its current responsibilities include:
 
 - Running the first maintained Linux server VM
 - Hosting the validated Docker and Hermes Agent platform
+- Running Home Assistant in a separate virtual machine
+- Hosting separate Uptime Kuma and Tailscale containers
 - Providing approved, segmented administration and service connectivity
 
 Future responsibilities include:
 
 - Additional Linux virtual machines and container-hosting environments
-- Home Assistant and local automation services
-- Monitoring and observability services
+- Further local automation services and approved assistant integrations
+- Broader monitoring, metrics, and capacity observability
 - Controlled cybersecurity and systems-administration practice environments
 
-Only the first Linux VM, Docker platform, and Hermes Agent service are currently deployed. The other uses remain planned.
+The assistant guest, Home Assistant, and Uptime Kuma are operational. The dedicated Tailscale container is recorded separately from the externally tested host-access path. n8n, Prometheus, Grafana, complete voice operation, and Hermes-to-Home-Assistant integration are not documented as complete. Separate VM and container placement does not by itself prove workload isolation or independent recovery capability.
 
 ## Current Logical State
 
 ```mermaid
 flowchart TD
-    NET["Segmented OPNsense and switch path<br/>Initial policy verified"] --> PVE["Proxmox VE<br/>Approved access verified"]
-    PVE --> VM["Ubuntu Server VM<br/>Installed and hardened"]
-    NET --> DNS["Private name resolution<br/>First workload operational"]
-    VM --> DOCKER["Docker platform<br/>Validated"]
-    DOCKER --> HERMES["Hermes Agent<br/>Memory loading verified"]
+    NET["Segmented OPNsense and switch path"] --> PVE["Proxmox VE"]
+    PVE --> VM["Hardened Ubuntu Server VM"]
+    VM --> DOCKER["Docker and Hermes Agent"]
+    PVE --> HA["Home Assistant VM"]
+    PVE --> KUMA["Uptime Kuma container"]
+    PVE --> TS["Tailscale container"]
+    KUMA -. "availability check: Up" .-> HA
 ```
 
-The host is connected through the operational segmented OPNsense and managed-switch path. Its approved administration path, internet access, and DNS resolution were checked after migration. Selected cross-segment isolation was also verified, and private name resolution is operational for the first service workload. Live addressing, VLAN membership, VM identifiers, bridge values, DNS records, and interface details remain private.
+The diagram shows workload placement and the observed monitoring relationship, rather than firewall permissions. The host is connected through the operational segmented OPNsense and managed-switch path. Its approved administration path, internet access, and DNS resolution were checked after migration. Selected cross-segment isolation was also verified, and private name resolution is operational for the assistant guest and Home Assistant. Live addressing, VLAN membership, guest identifiers, bridge values, DNS records, and interface details remain private.
 
 ## Information Intentionally Omitted
 
@@ -97,23 +108,25 @@ Before publication, screenshots must be checked at full resolution. Hostnames, a
 
 ## Next Milestone: Repeatable Recovery
 
-The first Linux VM and service workload are complete. Initial encrypted VM and container backups have been copied to separate storage and integrity-verified, and the protected virtual-machine workflow has since been repeated manually. The next reliability milestone is an automated and recoverable procedure. It will only be marked as completed after all of the following have been confirmed:
+The host now runs multiple service workloads. Earlier encrypted VM and container backups passed secondary-copy integrity checks, the manual VM workflow was repeated, and a Home Assistant application export has been copied to external storage. The next reliability milestone is a documented, repeatable recovery procedure with recurring backup coverage for the current workload inventory. It will only be marked as completed after all of the following have been confirmed:
 
-1. Finalize cleanup or retention handling for unencrypted working archives.
-2. Establish a recurring backup schedule and retention policy.
-3. Add capacity and backup-failure monitoring.
-4. Perform a controlled restoration test in an isolated context.
-5. Confirm that a restored guest or container starts and behaves as expected.
-6. Confirm restored Hermes Agent availability and persistent-memory behavior where applicable.
-7. Document the sanitized recovery procedure and its limitations.
+1. Map each current VM, container, and application to its required backup scope and recovery dependencies.
+2. Document protection and integrity checks for the new Home Assistant application-backup copy.
+3. Finalize cleanup or retention handling for unencrypted working archives.
+4. Establish a recurring backup schedule and retention policy.
+5. Add capacity and backup-failure monitoring; an **Up** availability check does not validate backup health.
+6. Perform controlled restoration tests in an isolated context.
+7. Confirm that restored guests and containers start and their services behave as expected.
+8. Confirm restored Hermes memory behavior and Home Assistant application recovery where applicable.
+9. Document the sanitized recovery procedure and its limitations.
 
-Until these checks are complete, the public project status remains **initial encrypted workload baseline and follow-up manual virtual-machine backup verified; recurring rotation and controlled restoration pending**.
+Until these checks are complete, the recovery status remains **earlier encrypted backup integrity checks verified and Home Assistant application export copied; recurring rotation and controlled restoration pending**.
 
 ## Future Documentation
 
 As the environment develops, this section may be expanded with separate documents covering:
 
-- Hermes Agent deployment
+- [Hermes Agent deployment](hermes-agent-deployment.md) updates
 - [Backup and recovery](backup-and-recovery.md)
 - Proxmox storage decisions
 - Sanitized network-bridge design

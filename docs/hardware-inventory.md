@@ -13,6 +13,7 @@ The inventory is intentionally limited to information that is useful for a techn
 | --- | --- |
 | In use | The device is currently performing its documented role. |
 | Partially deployed | The device is performing a verified base function, but its intended managed configuration is not complete. |
+| Configuration in progress | Setup has started, but the intended function has not yet been fully validated. |
 | Assembled | The hardware has been physically placed or assembled, but final cabling or configuration may still be in progress. |
 | Available | The device is owned and ready for a future deployment step, but is not yet operating in its intended HomeLab role. |
 | Planned | The item is not currently part of the deployed environment. It may be purchased or integrated later. |
@@ -21,8 +22,21 @@ The inventory is intentionally limited to information that is useful for a techn
 
 | Hardware | Key specifications | Intended role | Current status |
 | --- | --- | --- | --- |
-| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE `9.2.11` is installed, updated, accessible from an approved client segment, and protected with a separate administrative account and multi-factor authentication. The host runs the first validated Ubuntu Server guest, Docker platform, and Hermes Agent workload. Initial encrypted VM and container backups have been copied to separate storage and integrity-checked, and the manual virtual-machine workflow was later repeated successfully after further configuration changes. |
+| GMKtec NucBox M6 Ultra | AMD Ryzen 5 7640HS, 32 GB RAM, 1 TB NVMe SSD | Primary Proxmox VE virtualization host | **In use:** Proxmox VE `9.2.11` is installed, updated, accessible from an approved client segment, and protected with a separate administrative account and multi-factor authentication. It hosts the Ubuntu guest with Docker and Hermes, a separate Home Assistant VM, and container workloads for Tailscale and Uptime Kuma. |
 | Desktop workstation | NVIDIA GeForce RTX 5070 Ti, 32 GB RAM | Primary personal workstation and future on-demand compute node for heavy local-AI workloads | **In use independently:** it is not dedicated to the HomeLab and is not yet integrated with Hermes or automation. Future Wake-on-LAN and workload controls are planned. |
+
+### Current Virtual Workloads
+
+These are workloads on the existing virtualization host, not additional physical computers. Live guest identifiers, hostnames, and network assignments are omitted.
+
+| Workload | Placement | Current state |
+| --- | --- | --- |
+| Hermes Agent and Docker platform | Ubuntu Server VM | Operational text workflow with hardened remote administration and cross-session memory loading verified. |
+| Home Assistant | Separate VM | Operational with private name resolution and connected mobile companion apps. Voice setup and Hermes integration remain unfinished. |
+| Uptime Kuma | Separate container | Operational with initial alerting configured. The Home Assistant monitor was saved and reported **Up**. |
+| Tailscale | Separate container in the workload inventory | Present as a remote-access workload. Private access to the Hermes host is externally tested; subnet routing, Exit Node operation, and network-wide access are not established by this inventory. |
+
+Initial encrypted VM and container backups and a later manual VM backup passed checksum comparison after transfer to separate storage. The newer Home Assistant application backup was exported, inspected, and copied to external storage. These records cover different backup scopes; they do not establish tested restoration or backup coverage for every current workload.
 
 ## Network and Security
 
@@ -33,7 +47,7 @@ The inventory is intentionally limited to information that is useful for a techn
 | 24-port Cat6 patch panel | 1U rack-mount patch panel | Structured Ethernet termination and cable organization | **In use:** installed as part of the completed physical cabling and organization foundation. |
 | Ethernet cabling | Long-run and short patch cables | Connections between network equipment and client devices | **In use:** required connections, final routing, private labeling, and organization have been completed and verified. |
 
-The segmented path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Three role-based VLANs, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. Private name resolution is operational for the first service workload, final network-configuration backups are stored privately, and one Tailscale host-access path has been externally tested. Wider client enrollment, network-wide remote administration, and comprehensive firewall-policy review remain pending.
+The segmented path from the ISP equipment through OPNsense and the switch to selected wired clients is operational. Three role-based VLANs, approved Proxmox reachability, internet access, segment-specific DNS access, and selected isolation paths have been verified. Private name resolution is operational for the assistant guest and Home Assistant, and final network-configuration backups are stored privately. Tailscale access to the Hermes host has been externally tested, including from the selected travel laptop through a mobile hotspot. Wider client validation, network-wide remote administration, and comprehensive firewall-policy review remain in progress or pending.
 
 ## Rack, Power, and Local Administration
 
@@ -52,18 +66,19 @@ The segmented path from the ISP equipment through OPNsense and the switch to sel
 
 | Hardware | Quantity | Intended role | Current status |
 | --- | ---: | --- | --- |
-| Home Assistant Voice Preview Edition | 2 | Future local voice interfaces for Home Assistant and the Hermes assistant platform | **Available:** not yet integrated or configured. |
+| Home Assistant Voice Preview Edition | 2 | Local voice interfaces for Home Assistant and future approved Hermes integration | **Configuration in progress:** hardware is available and voice setup has started. Configuration errors remain under investigation; reliable end-to-end voice operation and Hermes integration are not yet documented as complete. |
 | SONOFF CAM Pan-Tilt 2 (CAM-PT2) | 1 | Indoor physical monitoring of the HomeLab area | **In use independently:** HomeLab or Home Assistant integration has not yet been verified. No camera feeds, credentials, or access details will be published. |
 
 ## Client and Supporting Devices
 
-The HomeLab will eventually serve several wired and wireless client devices. These endpoints are described only by role because their full personal inventory is not relevant to the infrastructure repository.
+The HomeLab serves selected wired and wireless clients, with further client validation in progress. These endpoints are described only by role because their full personal inventory is not relevant to the infrastructure repository.
 
 | Device category | Intended relationship to the HomeLab | Current status |
 | --- | --- | --- |
 | Main desktop workstation | Administration, development, testing, and future on-demand GPU workloads | Connected as a client; automated heavy-compute integration is planned but not deployed. |
-| Laptops | Administration and client testing | At least one wired client has been used to validate connectivity through OPNsense and the switch. |
-| Secondary backup storage | Hold protected copies away from the primary virtualization host | **In use:** encrypted initial VM and container backups are stored separately and have passed checksum comparison. Exact hardware, capacity, connection, and location remain private. |
+| Laptops | Administration and client testing | A wired client has validated connectivity through OPNsense and the switch. The selected travel laptop has also passed a Tailscale access test to the Hermes host through an external mobile hotspot. |
+| Mobile phone and tablet clients | Home Assistant companion apps and selected remote-access clients | Home Assistant companion apps are connected on selected devices. Completion of the wider remote-client rollout is tracked separately from local app connectivity. |
+| Secondary backup storage | Hold backup copies away from the primary virtualization host | **In use:** earlier encrypted VM and container backups passed checksum comparison. An external drive now also holds a copy of the exported Home Assistant application backup; encryption and checksum checks for that new copy are not established here. Exact hardware, capacity, connection, and location remain private. |
 | Smart-home and camera devices | Future isolated or controlled network clients | Deployment and integration will be documented individually after verification. |
 
 ## Planned Hardware

@@ -1,7 +1,7 @@
 # OPNsense Deployment
 
 > **Last verified:** September 2026  
-> **Project status:** Operational segmented firewall foundation with initial policy enforcement and a tested private host-access path; advanced network controls remain in progress
+> **Project status:** Operational segmented firewall foundation with initial policy enforcement and tested private host access; advanced network controls remain in progress
 
 This document records the verified deployment of OPNsense on the dedicated HomeLab firewall appliance. It covers the initial installation, software update, segmented network path, essential connectivity tests, private backup handling, and the security controls that have already been applied.
 
@@ -11,7 +11,9 @@ The document intentionally omits real addresses, interface identifiers, internal
 
 The dedicated Intel N100 appliance originally arrived with another firewall platform preinstalled. It was replaced with OPNsense using removable installation media, and the final system was installed on the appliance's internal storage.
 
-After installation, the removable media was disconnected and the appliance was confirmed to boot independently from its internal drive. The initial WAN and LAN roles were assigned and validated before selected devices were moved behind the new firewall path. OPNsense was later updated to `26.7.2_2`, three role-based VLANs were introduced, and connectivity was retested before final private configuration copies were saved and checked. Initial DNS-access, approved-administration, and cross-segment isolation policies were then applied and tested in controlled stages. A Tailscale overlay was subsequently validated between one approved external client and the Hermes host without adding a direct public inbound service to OPNsense.
+After installation, the removable media was disconnected and the appliance was confirmed to boot independently from its internal drive. The initial WAN and LAN roles were assigned and validated before selected devices were moved behind the new firewall path. OPNsense was later updated to `26.7.2_2`, three role-based VLANs were introduced, and connectivity was retested before final private configuration copies were saved and checked. Initial DNS-access, approved-administration, and cross-segment isolation policies were then applied and tested in controlled stages.
+
+Private name resolution is now verified for the Hermes workload and Home Assistant. Tailscale access to the Hermes host has also been tested from external networks, including the selected travel laptop and a tablet using mobile hotspots. These remote tests did not require a direct public inbound service on OPNsense. They do not establish subnet routing, Exit Node operation, unrestricted access to other HomeLab services, or additional firewall-policy validation.
 
 ## Verified Progress
 
@@ -24,11 +26,12 @@ After installation, the removable media was disconnected and the appliance was c
 | WAN role | **Operational** | The upstream interface obtains connectivity from the existing ISP equipment. |
 | Internal network role | **Operational and segmented** | OPNsense provides the internal routing and gateway layer for three role-based VLANs. |
 | DHCP service | **Operational base** | Kea DHCPv4 is enabled for the LAN and provides addresses to connected clients. Final documentation of individual reservations remains pending. |
-| DNS resolution | **Verified by role and workload** | Required DNS access was retested successfully from selected segments, and private name resolution is operational for the first service workload. |
+| DNS resolution | **Verified by role and workload** | Required DNS access was retested successfully from selected segments, and private name resolution is operational for Hermes and Home Assistant. |
 | Internet connectivity | **Verified** | Internet access was retested through OPNsense and the managed switch after segmentation. |
 | Proxmox reachability | **Verified from an approved segment** | The virtualization host remains accessible through its migrated administration path from an authorized client role. |
-| First service workload | **Operational through approved path** | The Linux guest and Hermes Agent use the intended service path and private name resolution. |
-| Private host access | **Externally tested** | One approved client can reach the Hermes host through Tailscale using key-based SSH without direct public port forwarding. |
+| Service workloads | **Operational on the segmented network** | The Hermes guest and Home Assistant use private name resolution. This does not by itself establish complete workload isolation. |
+| Private host access | **Externally tested** | The travel laptop and a selected tablet reached the Hermes host through Tailscale using key-based SSH from mobile-hotspot connections, without direct public port forwarding. |
+| Initial availability monitoring | **Operational separately** | Uptime Kuma reported the Home Assistant monitor **Up**. This is service-availability evidence, not an additional firewall-policy test. |
 | Cross-segment isolation | **Initially enforced and tested** | A selected management-to-service path was blocked and its isolation result was verified. |
 | Local administration | **Verified** | The web administration interface is reachable from the approved local network. |
 | Multi-factor authentication | **Enabled** | Time-based one-time-password authentication protects administrative access. |
@@ -44,8 +47,8 @@ flowchart TD
     FW --> SW["Managed PoE switch<br/>Tagged distribution"]
     SW --> ZONE_A["Approved client segment<br/>Administration verified"]
     SW --> ZONE_B["Management segment<br/>Isolation verified"]
-    SW --> ZONE_C["Service segment<br/>First workload operational"]
-    REMOTE["Approved external client"] -. "Private Tailscale path" .-> ZONE_C
+    SW --> ZONE_C["Service segment<br/>Hermes and Home Assistant"]
+    REMOTE["Validated external clients"] -. "Private Tailscale path to Hermes" .-> ZONE_C
 ```
 
 This diagram represents the verified high-level path only. It does not disclose physical port numbers, interface identifiers, addresses, device names, or the exact domestic layout.
@@ -76,8 +79,11 @@ The following checks were completed across the initial deployment and the later 
 18. Deploy the Linux guest and confirm that its network, DNS, Docker, and Hermes Agent paths operate as intended.
 19. Validate private Tailscale access to the Hermes host from one approved external client.
 20. Confirm key-based SSH operation away from the home network without adding a direct public inbound rule.
+21. Verify private name resolution for the separate Home Assistant service.
+22. Repeat the external Hermes host-access test from the selected travel laptop through a mobile hotspot.
+23. Confirm Hermes host access from a selected tablet through a phone hotspot.
 
-These checks validate the segmented network foundation, an initial least-privilege policy baseline, and one private host-access path. They do not mean that comprehensive inter-VLAN policy review, network-wide remote administration, restoration testing, monitoring, or workload-level isolation has been completed.
+These checks validate the segmented network foundation, an initial least-privilege policy baseline, private name resolution for selected services, and the tested Hermes host-access path. They do not establish comprehensive inter-VLAN policy review, network-wide remote administration, restoration testing, full monitoring coverage, or workload-level isolation.
 
 ## Security Controls Applied
 
@@ -91,8 +97,8 @@ The current deployment includes the following verified controls:
 - Required DNS access is explicitly permitted for selected network roles.
 - Administration of the virtualization host is limited to an approved client path that has been tested.
 - A selected management-to-service path is explicitly blocked and has been tested.
-- Private name resolution and the approved service path are operational for the first Linux and Hermes Agent workload without publishing live values.
-- The tested Tailscale path reaches only the enrolled host from an approved client and requires no direct public inbound service on OPNsense.
+- Private name resolution is operational for the Hermes workload and Home Assistant without publishing live values.
+- The tested Tailscale path reaches the enrolled Hermes host from validated clients and requires no direct public inbound service on OPNsense. The complete authorization policy still requires review.
 - Public documentation uses descriptive labels instead of live infrastructure values.
 - Changes are applied and tested incrementally before additional network features are introduced.
 
@@ -115,16 +121,16 @@ The following items are not yet considered deployed or fully verified:
 
 - Confirm and document required DHCP reservations privately.
 - Complete the inter-VLAN firewall-policy review using least-privilege principles.
-- Enroll and externally test selected travel or backup clients where required.
+- Complete external validation for the remaining selected clients; the travel laptop and one tablet have confirmed Hermes host access.
 - Review Tailscale access policy, device lifecycle, and recovery procedures.
 - Decide whether subnet routing, Exit Node operation, or network-wide remote administration is actually required.
 - Evaluate stronger administrative authentication options.
 - Define configuration-backup rotation and perform a recovery review.
-- Add monitoring without exposing sensitive firewall or traffic information.
+- Extend monitoring without exposing sensitive firewall or traffic information. The existing Home Assistant availability check does not establish firewall monitoring.
 
 ## Completion Boundary
 
-OPNsense is correctly described as an **operational segmented firewall foundation with initial policy enforcement**. The physical network cabling and private labeling are complete, and private Tailscale access to the Hermes host has been externally tested without public port forwarding. Wider network hardening remains **in progress** until comprehensive policy review, restoration testing, wider remote-access governance, monitoring, and the selected security improvements have been completed and documented.
+OPNsense is correctly described as an **operational segmented firewall foundation with initial policy enforcement**. The physical network cabling and private labeling are complete. Private name resolution supports Hermes and Home Assistant, and Tailscale access to the Hermes host has been externally tested from selected clients without public port forwarding. Wider network hardening remains **in progress** until comprehensive policy review, restoration testing, remote-access governance, firewall monitoring, and the selected security improvements have been completed and documented.
 
 ## Information Intentionally Omitted
 
