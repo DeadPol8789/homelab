@@ -16,13 +16,13 @@ The dedicated OPNsense appliance provides the firewall, routing, and VLAN gatewa
 
 The managed switch is running firmware `3.30.6`, its local administration is accessible, and three role-based VLANs are active. The Proxmox host is running Proxmox VE `9.2.11` and remains reachable from an approved client segment. Initial DNS-access and cross-segment isolation policies have been applied and tested.
 
-The Ubuntu service VM uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, and its persistent memory loading has been verified across sessions. Home Assistant now runs in a separate VM with private name resolution and connected companion apps on selected mobile devices. Local voice configuration is in progress; reliable end-to-end voice operation and integration with Hermes are not yet documented as complete.
+The Ubuntu service VM uses private name resolution, key-based remote administration, and a validated Docker platform. Hermes Agent is deployed, its persistent memory loading has been verified across sessions, and persistent-memory writes now use an explicitly tested approval step. Home Assistant runs in a separate VM with private name resolution and connected companion apps on selected mobile devices. One Voice Preview Edition unit has completed onboarding, and one end-to-end request returned the expected response through the configured Home Assistant-to-Hermes path. This is an initial functional result, not evidence of sustained reliability, acceptable latency, complete device coverage, or home-device control.
 
 Uptime Kuma runs as a separate container workload with initial alerting configured. The Home Assistant monitor was saved and reported **Up**. This confirms the configured availability check at that time; it does not establish complete service coverage, successful notification delivery for every monitor, or recovery capability.
 
 Tailscale provides private remote administration of the Hermes host. The selected travel laptop has passed an external-network access test through a mobile hotspot. A dedicated Tailscale container is also present in the workload inventory; that alone does not establish verified subnet routing, Exit Node operation, or network-wide access. Broader remote-access policy and client validation remain in progress.
 
-Final private network-configuration backups have been saved and verified. Initial encrypted VM and container backups and a later manual VM backup were copied to separate storage and checked with matching SHA-256 checksums. A separate Home Assistant application backup has now been exported, its archive contents inspected, and a copy placed on external storage. The earlier encryption and checksum results apply to the earlier archives, not automatically to this new application backup. Controlled restoration remains pending.
+Final private network-configuration backups have been saved and verified. Initial encrypted VM and container backups and a later manual VM backup were copied to separate storage and checked with matching SHA-256 checksums. A separate encrypted VM-level Home Assistant recovery copy was exported to secondary storage; its source-to-copy integrity and restoration remain pending. A private assistant-configuration safety copy was also created after the initial voice-path configuration, but it has not been recovery-tested.
 
 The following diagram shows workload placement and the tested access and monitoring relationships. It is not a map of firewall permissions.
 
@@ -35,6 +35,8 @@ flowchart TD
     PVE --> HA["Home Assistant VM"]
     PVE --> KUMA["Uptime Kuma container"]
     PVE --> TS["Tailscale container"]
+    VOICE["Voice interface: one unit tested"] --> HA
+    HA -->|"initial request path"| HERMES
     KUMA -. "availability check: Up" .-> HA
     REMOTE["Approved travel laptop"] -. "Tailscale and key-based SSH" .-> HERMES
 ```
@@ -50,11 +52,11 @@ flowchart TD
 | Edge security | Dedicated Intel N100 appliance | OPNsense `26.7.2_2` is installed; routing, DHCP, DNS, internet access, local administration, segmented access, and initial cross-segment policy enforcement have been verified. |
 | Switching | TP-Link managed PoE switch | Firmware `3.30.6` is installed; private management, traffic forwarding, and three role-based VLANs are operational. |
 | Containers | Docker Engine and Docker Compose | Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed and validated on the first Linux guest. |
-| Assistant | Hermes Agent | Deployed on the first guest; persistent memory loading has been verified in a new session. |
+| Assistant | Hermes Agent | Deployed on the first guest; persistent-memory loading and an approval-gated write cycle have been verified. |
 | Remote access | Tailscale private overlay | Private administration of the Hermes host is externally tested, including access from the selected travel laptop through a mobile hotspot. The dedicated container's presence does not by itself verify routed access. |
-| Home automation | Home Assistant | Operational in a separate VM with private name resolution and connected mobile companion apps. Voice setup remains in progress. |
+| Home automation | Home Assistant | Operational in a separate VM with private name resolution and connected mobile companion apps. One voice unit completed onboarding and one Home Assistant-to-Hermes request/response cycle succeeded; broader validation remains in progress. |
 | Availability monitoring | Uptime Kuma | Operational with initial alerting configured; the Home Assistant monitor reported **Up** after saving. |
-| Application backup | Home Assistant export | Exported, archive contents inspected, and copied to external storage. Restoration has not yet been demonstrated. |
+| Recovery copy | Home Assistant VM backup | An encrypted VM-level copy was exported to secondary storage. Source-to-copy integrity and restoration have not yet been demonstrated. |
 | Future services | n8n, Prometheus, and Grafana | Planned; not documented as deployed. |
 
 ## Verified Network Segmentation
@@ -69,13 +71,13 @@ Proxmox VE remains the virtualization layer for the operational assistant, home-
 
 ```mermaid
 flowchart TD
-    HERMES["Hermes: operational text workflow"] -. "planned approved actions" .-> HA["Home Assistant: operational base"]
-    VOICE["Voice interfaces: setup in progress"] -. "planned validated voice path" .-> HA
+    VOICE["Voice interface: one unit tested"] --> HA["Home Assistant: operational"]
+    HA -->|"initial request and response verified"| HERMES["Hermes: operational"]
     HERMES -. "planned workflows" .-> N8N["n8n: planned"]
-    N8N -. "planned heavy tasks" .-> GPU["GPU workstation: integration planned"]
+    N8N -. "planned heavy tasks" .-> GPU["GPU workstation: planned"]
 ```
 
-The diagram's dashed relationships are intended integrations, not completed connections. Hermes, Home Assistant, and Uptime Kuma are operational as individual services. Their deployment does not establish Hermes control of home devices or a working voice-to-Hermes path. n8n, Prometheus, Grafana, and GPU integration remain planned. Initial Uptime Kuma availability checks do not replace the planned metrics and capacity-monitoring layer.
+The solid path records one successful request-and-response validation; it does not establish reliable repeated operation, validation of both voice units, home-device control, or broad permissions. The dashed relationships remain intended integrations. n8n, Prometheus, Grafana, and GPU integration remain planned. Initial Uptime Kuma availability checks do not replace the planned metrics and capacity-monitoring layer.
 
 The GPU-equipped primary workstation is not intended to be permanently dedicated to Hermes or other HomeLab services. The target design treats it as an on-demand compute node for approved heavy local-AI tasks. When the workstation is off, an authorized automation may request Wake-on-LAN; automatic suspension or shutdown after an automated task will be evaluated later. The GPU must remain available for interactive workloads such as streaming and must not be consumed merely because the computer is powered on.
 
@@ -88,11 +90,11 @@ The GPU-equipped primary workstation is not intended to be permanently dedicated
 | Network distribution | Managed switching and role-based segmentation | Traffic forwarding, private management, firmware, and three VLANs are operational. |
 | Virtualization | Virtual machines and separate service workloads | Proxmox VE `9.2.11` hosts the Ubuntu assistant guest, a separate Home Assistant VM, and container workloads for Uptime Kuma and Tailscale. |
 | Containers | Reproducible deployment of selected services | Docker Engine `29.7.2` and Docker Compose `5.5.0` are operational on the first guest. |
-| Home automation | Home Assistant and local voice interfaces | Home Assistant and selected mobile companion apps are operational. Voice configuration and approved assistant integrations remain in progress. |
+| Home automation | Home Assistant and local voice interfaces | Home Assistant and selected mobile companion apps are operational. One voice unit and one request/response path to Hermes are verified; reliability, remaining-device rollout, and approved control actions remain in progress. |
 | Observability | Availability checks, alerts, metrics, and dashboards | Uptime Kuma and initial alerting are configured; Home Assistant reported **Up**. Broader coverage and notification validation remain in progress. Prometheus and Grafana are planned. |
-| Assistant platform | Persistent local assistant using Hermes Agent | Operational initial deployment with cross-session memory loading verified. |
+| Assistant platform | Persistent local assistant using Hermes Agent | Operational initial deployment with cross-session memory loading, approval-gated writes, and an initial Home Assistant voice request/response path verified. |
 | AI compute | Heavy local inference on the GPU-equipped workstation | Planned as an on-demand node; Wake-on-LAN and workload controls are not yet integrated. |
-| Storage and backups | Network configuration, workload and application backups, future NAS, and recovery procedures | Earlier encrypted VM and container backups and the follow-up VM copy passed integrity validation. The new Home Assistant application export was inspected and copied to external storage; its encryption and checksum checks are not established here. Recurring rotation and controlled restoration remain pending. |
+| Storage and backups | Network configuration, workload and service backups, future NAS, and recovery procedures | Earlier encrypted VM and container backups and the follow-up VM copy passed integrity validation. A separate encrypted VM-level Home Assistant recovery copy was exported, but its source-to-copy integrity and restoration are not established here. A private assistant-configuration safety copy exists without a recovery claim. Recurring rotation and controlled restoration remain pending. |
 
 ## Architecture Principles
 

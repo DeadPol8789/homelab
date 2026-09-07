@@ -51,6 +51,7 @@ The following content may be technically useful, but it must be cleaned before p
 - Firewall-rule names, ordering, directions, source and destination mappings, ports, and logging details tied to the live environment
 - Usernames and paths containing personal or account names
 - Assistant memory files, user profiles, prompts, conversation exports, and tool histories
+- Memory-write approval identifiers, pending-operation records, gateway request logs, and assistant tool-call payloads
 - Timestamps that reveal personal routines when they are not technically relevant
 - Logs containing addresses, identifiers, query strings, tokens, or unrelated events
 - Browser tabs, bookmarks, account avatars, notifications, and task-history panels
@@ -58,7 +59,7 @@ The following content may be technically useful, but it must be cleaned before p
 - Backup identifiers, filenames, timestamps, sizes, paths, destinations, checksums, encryption recipients, and recovery metadata
 - Tailscale addresses, tailnet names, device names, node identifiers, tags, account details, and live access-policy values
 - Tailscale authentication keys, node keys, API tokens, recovery material, and unredacted ACL or grants configuration
-- Home Assistant device and entity identifiers, areas, household routines, presence data, companion-app registrations, integration settings, and voice recordings or transcripts
+- Home Assistant device and entity identifiers, areas, household routines, presence data, companion-app registrations, integration settings, voice recordings, transcripts, and voice-session identifiers
 - Home Assistant application backups, security material, archive listings, and recovery metadata
 - Uptime Kuma monitor targets, dashboard addresses, notification recipients, webhook URLs, credentials, databases, and exported configuration
 - Mobile SSH-client profiles, synchronized key stores, public keys, fingerprints, connection labels, and session history
@@ -163,10 +164,12 @@ Run this review before every commit intended for the public repository:
 11. Review the final diff for unexpected or unrelated content.
 12. Publish only after all checks pass.
 
-For Home Assistant, Uptime Kuma, and remote-client updates, also verify that:
+For Home Assistant, Hermes, Uptime Kuma, and remote-client updates, also verify that:
 
 - Application availability is distinguished from working voice, assistant integration, and notification delivery.
-- The Home Assistant application export is distinguished from earlier Proxmox archives; encryption and checksum results are attributed only to the copies actually checked.
+- A single successful voice request is distinguished from reliable repeated operation, acceptable latency, second-device validation, and permissioned device control.
+- VM-level, application-level, and configuration-only recovery copies are classified accurately; encryption and checksum results are attributed only to the copies actually checked.
+- Memory loading is distinguished from approval-gated writes, and neither result is presented as complete RAG, authorization, or recovery validation.
 - Backup coverage is mapped to the relevant service before it is claimed, and an archive inspection or checksum match is not presented as a successful restoration.
 - Client enrollment is distinguished from external reachability and SSH authentication.
 - A dedicated Tailscale container is not presented as proof of subnet routing, Exit Node operation, or complete access-policy validation.
@@ -213,19 +216,21 @@ At the time of this review, the public documentation may state that:
 - Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed and validated on the first guest.
 - Private name resolution and the approved network path are operational for the first service workload, while all live values remain private.
 - Initial and final network-configuration copies are stored privately and are not part of the repository.
-- Hermes Agent is operational through its initial text workflow, and persistent user-memory loading has been verified across sessions.
+- Hermes Agent is operational through its initial text workflow. Persistent user-memory loading and a temporary approval-gated write-and-delete cycle have been verified.
 - Tailscale provides externally tested private administration of the Hermes host without requiring a direct public inbound service. The selected travel laptop passed a mobile-hotspot test, and a selected tablet confirmed Termius host access through a phone hotspot.
 - A further tablet has connected to Tailscale and had an SSH key prepared; its completed external SSH validation is not established in the current record.
 - A dedicated Tailscale container is present in the workload inventory. Network-wide administration, subnet routing, Exit Node operation, and complete access-governance validation are outside the verified scope.
-- Hermes credentials, live configuration, persistent-memory contents, user identities, session data, and backup material remain private.
+- Hermes credentials, live configuration, persistent-memory contents, approval records, user identities, session data, gateway logs, tool-call payloads, and backup material remain private.
 - Initial encrypted VM and container backups have been copied to separate storage and verified through private SHA-256 comparison. The manual virtual-machine workflow was later repeated after further configuration changes, and the follow-up encrypted copy also passed private source-to-destination integrity comparison.
 - The exact service scope of those earlier archives must be mapped before claiming coverage of current workloads or attributing the follow-up VM archive specifically to Hermes.
 - Home Assistant runs in a separate VM with verified private name resolution and connected mobile companion apps.
-- A Home Assistant application backup was exported, its archive listing inspected, and a copy placed on external storage. Protection and checksum checks for this export are not established by the earlier VM and container results.
+- One Home Assistant Voice Preview Edition unit completed onboarding. One request returned the expected user-specific response through the configured Home Assistant-to-Hermes path in approximately ten seconds. Reliable repetition, acceptable latency, the second unit, and device control are not established.
+- An encrypted VM-level Home Assistant recovery copy was exported to secondary storage. Source-to-copy integrity and controlled restoration are not established by the earlier VM and container results.
+- A private Hermes configuration safety copy was created after the initial voice-path validation. It is not a complete, integrity-verified, or restoration-tested assistant backup.
 - Uptime Kuma runs in a separate container with initial alerting configured. The saved Home Assistant monitor reported **Up**; this does not establish every notification path, complete monitoring coverage, or recoverability.
 - Real backup IDs, filenames, paths, timestamps, sizes, hashes, encryption details, destinations, and local working archives remain private.
-- Earlier initial and follow-up archive integrity checks are verified. Decryption testing, controlled restoration, recurring rotation, and documented protection and integrity checks for the new application export remain pending.
-- Voice configuration has started; resolution of the recorded issues and reliable end-to-end operation are not yet documented. Hermes integration, n8n, Prometheus, Grafana, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain planned.
+- Earlier initial and follow-up archive integrity checks are verified. Decryption testing, controlled restoration, recurring rotation, and source-to-copy integrity checks for the Home Assistant VM recovery copy remain pending.
+- An initial local voice-to-Hermes conversational path is verified. Reliable operation, the second voice unit, device-control permissions, n8n, Prometheus, Grafana, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain in progress or planned.
 - Remaining client tests, assistant-specific monitoring, per-monitor notification validation, and broader access-policy review remain in progress or pending.
 
 No document should imply that unfinished services are operational.

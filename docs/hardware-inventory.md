@@ -31,12 +31,12 @@ These are workloads on the existing virtualization host, not additional physical
 
 | Workload | Placement | Current state |
 | --- | --- | --- |
-| Hermes Agent and Docker platform | Ubuntu Server VM | Operational text workflow with hardened remote administration and cross-session memory loading verified. |
-| Home Assistant | Separate VM | Operational with private name resolution and connected mobile companion apps. Voice setup and Hermes integration remain unfinished. |
+| Hermes Agent and Docker platform | Ubuntu Server VM | Operational text workflow with hardened remote administration, cross-session memory loading, approval-gated writes, and an initial Home Assistant voice request/response path verified. |
+| Home Assistant | Separate VM | Operational with private name resolution and connected mobile companion apps. One voice unit completed onboarding and one request/response cycle to Hermes succeeded; broader reliability and device coverage remain unfinished. |
 | Uptime Kuma | Separate container | Operational with initial alerting configured. The Home Assistant monitor was saved and reported **Up**. |
 | Tailscale | Separate container in the workload inventory | Present as a remote-access workload. Private access to the Hermes host is externally tested; subnet routing, Exit Node operation, and network-wide access are not established by this inventory. |
 
-Initial encrypted VM and container backups and a later manual VM backup passed checksum comparison after transfer to separate storage. The newer Home Assistant application backup was exported, inspected, and copied to external storage. These records cover different backup scopes; they do not establish tested restoration or backup coverage for every current workload.
+Initial encrypted VM and container backups and a later manual VM backup passed checksum comparison after transfer to separate storage. A newer encrypted VM-level Home Assistant recovery copy was exported to secondary storage, but its own source-to-copy integrity result is not established. These records cover different backup scopes; they do not establish tested restoration or backup coverage for every current workload.
 
 ## Network and Security
 
@@ -66,7 +66,7 @@ The segmented path from the ISP equipment through OPNsense and the switch to sel
 
 | Hardware | Quantity | Intended role | Current status |
 | --- | ---: | --- | --- |
-| Home Assistant Voice Preview Edition | 2 | Local voice interfaces for Home Assistant and future approved Hermes integration | **Configuration in progress:** hardware is available and voice setup has started. Configuration errors remain under investigation; reliable end-to-end voice operation and Hermes integration are not yet documented as complete. |
+| Home Assistant Voice Preview Edition | 2 | Local voice interfaces for Home Assistant and approved Hermes interaction | **Initial path verified on one unit:** onboarding completed and one request returned the expected assistant response through Home Assistant and Hermes. Repeated reliability, latency, the second unit, and any device-control permissions still require validation. |
 | SONOFF CAM Pan-Tilt 2 (CAM-PT2) | 1 | Indoor physical monitoring of the HomeLab area | **In use independently:** HomeLab or Home Assistant integration has not yet been verified. No camera feeds, credentials, or access details will be published. |
 
 ## Client and Supporting Devices
@@ -78,7 +78,7 @@ The HomeLab serves selected wired and wireless clients, with further client vali
 | Main desktop workstation | Administration, development, testing, and future on-demand GPU workloads | Connected as a client; automated heavy-compute integration is planned but not deployed. |
 | Laptops | Administration and client testing | A wired client has validated connectivity through OPNsense and the switch. The selected travel laptop has also passed a Tailscale access test to the Hermes host through an external mobile hotspot. |
 | Mobile phone and tablet clients | Home Assistant companion apps and selected remote-access clients | Home Assistant companion apps are connected on selected devices. Completion of the wider remote-client rollout is tracked separately from local app connectivity. |
-| Secondary backup storage | Hold backup copies away from the primary virtualization host | **In use:** earlier encrypted VM and container backups passed checksum comparison. An external drive now also holds a copy of the exported Home Assistant application backup; encryption and checksum checks for that new copy are not established here. Exact hardware, capacity, connection, and location remain private. |
+| Secondary backup storage | Hold backup copies away from the primary virtualization host | **In use:** earlier encrypted VM and container backups passed checksum comparison. Secondary storage also holds an encrypted VM-level Home Assistant recovery copy; its source-to-copy integrity and restoration are not established here. Exact hardware, capacity, connection, and location remain private. |
 | Smart-home and camera devices | Future isolated or controlled network clients | Deployment and integration will be documented individually after verification. |
 
 ## Planned Hardware
