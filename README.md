@@ -1,6 +1,6 @@
 # Personal HomeLab
 
-> **Status:** Work in progress — operational segmented network, Hermes Agent, Home Assistant, initial availability monitoring, and tested private remote access.
+> **Status:** Work in progress — operational segmented network, Hermes Agent, Home Assistant, initial voice-to-assistant validation, availability monitoring, and tested private remote access.
 
 This repository documents the design, deployment, and evolution of my personal HomeLab. The project is being built to develop practical skills in virtualization, Linux systems administration, networking, cybersecurity, monitoring, automation, and self-hosted services.
 
@@ -17,10 +17,10 @@ The documentation reflects only work that has actually been completed. Planned c
 | Firewall appliance | Operational with initial policy enforcement | OPNsense `26.7.2_2` is installed on the dedicated appliance. Routing, DHCP, DNS, internet connectivity, local administration, segmented network access, and initial cross-segment policy controls have been verified. |
 | Managed switch | Operational segmented foundation | The switch is running firmware `3.30.6`, its private administration path is operational, and three role-based VLANs are active and verified. |
 | HomeLab network path | Operational, segmented, and policy-tested | The path from the ISP equipment through OPNsense and the managed switch has been tested successfully. Approved management access, segment-specific DNS access, and isolation between selected network roles have also been verified. |
-| Self-hosted services | Initial platform operational | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and Hermes Agent are deployed on the first Linux guest. Hermes persistent memory loading has been verified across sessions. |
-| Home automation | Initial Home Assistant deployment operational | Home Assistant is reachable through private name resolution, and the companion apps on selected mobile devices are connected. Voice configuration is in progress; reliable end-to-end voice operation has not yet been documented. |
+| Self-hosted services | Initial platform operational | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and Hermes Agent are deployed on the first Linux guest. Persistent-memory loading and the approval-gated write workflow have been verified. |
+| Home automation | Initial voice path verified | Home Assistant is reachable through private name resolution, and the companion apps on selected mobile devices are connected. One Voice Preview Edition unit completed onboarding and returned the expected assistant response through the configured Home Assistant-to-Hermes path. This single test does not establish reliable operation, acceptable latency, or validation of the second unit. |
 | Availability monitoring | Initial Uptime Kuma deployment operational | Uptime Kuma and initial alerting are configured. The Home Assistant monitor was saved and reported **Up**. Coverage and notification delivery must be assessed for each monitored service. |
-| Backup and recovery | Earlier integrity checks verified; Home Assistant export added | The initial VM and container backups and a follow-up VM backup were encrypted, copied to separate storage, and checked with matching SHA-256 checksums. A separate Home Assistant application backup has now been exported, its archive contents inspected, and a copy placed on external storage. The earlier encryption and checksum results do not establish those checks for this new application backup. Controlled restoration and automated rotation remain pending. |
+| Backup and recovery | Earlier integrity checks verified; Home Assistant recovery copy added | The initial VM and container backups and a follow-up VM backup were encrypted, copied to separate storage, and checked with matching SHA-256 checksums. A separate encrypted VM-level Home Assistant recovery copy was exported to secondary storage. Its source-to-copy integrity and restoration have not yet been documented. A private assistant-configuration safety copy also exists, but it is not presented as a complete or recovery-tested backup. |
 | Remote access | Travel-laptop path externally tested | Tailscale provides private remote administration of the Hermes host. The selected travel laptop has passed a real external-network test through a mobile hotspot. Wider client rollout and access-governance review remain in progress. |
 
 ## Hardware Overview
@@ -81,6 +81,7 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Complete, update, and harden the first Linux virtual machine
 - [x] Install and validate Docker Engine and Docker Compose
 - [x] Deploy Hermes Agent and verify persistent memory loading across sessions
+- [x] Enable approval-gated Hermes memory writes and verify an approve-and-delete test cycle
 - [x] Create encrypted initial backups of the current VM and container workloads
 - [x] Copy the protected backups to separate storage and verify matching SHA-256 checksums
 - [x] Repeat the encrypted virtual-machine backup, secondary-copy, and integrity-check workflow after later configuration changes
@@ -98,9 +99,10 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [ ] Add monitoring with Prometheus and Grafana
 - [x] Deploy Home Assistant in a separate virtual machine and verify private name resolution
 - [x] Connect the Home Assistant companion apps on selected mobile devices
-- [x] Export a Home Assistant application backup, inspect its contents, and copy it to external storage
-- [ ] Document encryption and integrity checks for the new Home Assistant application-backup copy
-- [ ] Resolve voice-configuration issues and validate end-to-end local voice operation
+- [x] Create an encrypted VM-level Home Assistant recovery copy and export it to secondary storage
+- [ ] Document source-to-copy integrity checks for the Home Assistant recovery copy
+- [x] Complete onboarding for one Voice Preview Edition unit and verify one end-to-end assistant response
+- [ ] Repeat voice validation, assess latency and reliability, and complete the second-unit rollout
 - [ ] Add further local automation services and approved Hermes integrations
 - [ ] Evaluate and deploy the planned AI assistant services
 
@@ -123,8 +125,8 @@ This repository follows four rules:
 | [Architecture](docs/architecture.md) | Verified current state and separate target architecture. |
 | [Physical setup](docs/physical-setup.md) | Completed rack and cabling foundation, maintenance principles, and photo-review guidance. |
 | [Proxmox installation](docs/proxmox-installation.md) | Verified Proxmox VE installation progress and current limitations. |
-| [Hermes Agent deployment](docs/hermes-agent-deployment.md) | Sanitized first-guest, container-platform, Hermes Agent, and persistent-memory deployment record. |
-| [Home Assistant deployment](docs/home-assistant-deployment.md) | Sanitized deployment, mobile-app connectivity, application-backup, monitoring, and voice-progress record. |
+| [Hermes Agent deployment](docs/hermes-agent-deployment.md) | Sanitized first-guest, Hermes Agent, persistent-memory approval, and initial voice-path deployment record. |
+| [Home Assistant deployment](docs/home-assistant-deployment.md) | Sanitized deployment, mobile-app connectivity, recovery-copy, monitoring, and initial voice-validation record. |
 | [Uptime Kuma deployment](docs/uptime-kuma-deployment.md) | Sanitized availability-monitoring, alerting, failure-boundary, and remaining-validation record. |
 | [Backup and recovery](docs/backup-and-recovery.md) | Sanitized backup scope, encryption, integrity validation, and remaining restoration work. |
 | [Tailscale remote access](docs/tailscale-remote-access.md) | Sanitized private-access design, external validation, security boundary, and remaining client rollout. |

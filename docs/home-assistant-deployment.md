@@ -1,9 +1,9 @@
 # Home Assistant Deployment
 
 > **Last documented:** September 2026  
-> **Status:** Initial deployment operational; application backup exported and copied; voice validation in progress
+> **Status:** Initial deployment operational; encrypted VM recovery copy exported; first voice-to-Hermes response verified
 
-This document records the initial Home Assistant deployment. It separates application availability, backup handling, and voice configuration so that progress in one area does not imply completion of the others.
+This document records the initial Home Assistant deployment. It separates application availability, recovery-copy handling, and voice validation so that progress in one area does not imply completion of the others.
 
 Live guest identifiers, addresses, DNS records, device names, account data, backup metadata, and configuration exports are excluded.
 
@@ -13,7 +13,7 @@ Home Assistant runs in its own virtual machine on the existing Proxmox host, sep
 
 Uptime Kuma provides an initial availability check. The Home Assistant monitor was saved and reported **Up**. Initial alerting exists in the monitoring platform, but this record does not establish a successful failure-and-recovery notification test for this specific monitor.
 
-A Home Assistant application backup has been exported, its archive listing inspected, and a copy placed on external storage. This is an application export, distinct from a Proxmox VM backup. Controlled application restoration has not yet been documented.
+An encrypted VM-level Home Assistant recovery copy has been exported to secondary storage. Its source-to-copy integrity and controlled restoration have not yet been documented.
 
 ## Recorded Progress
 
@@ -23,9 +23,9 @@ A Home Assistant application backup has been exported, its archive listing inspe
 | Private name resolution | Resolution for the application has been verified | Live DNS records and addresses remain private. |
 | Mobile access | Companion apps on selected phone and tablet clients are connected | This does not establish external Home Assistant access from every mobile device. |
 | Availability monitoring | The saved Home Assistant monitor reported **Up** in Uptime Kuma | This is the result of the configured check at that time, not proof that every integration works. |
-| Application backup | Export completed, archive listing inspected, and copy placed on external storage | Protection, source-to-copy integrity checks, and restoration for this export still need a documented result. |
-| Voice hardware | Two Home Assistant Voice Preview Edition devices are available and voice setup has started | Reliable end-to-end voice operation remains unverified in this record. |
-| Hermes integration | Planned as a later approved integration | Home Assistant deployment does not establish voice access to Hermes or assistant control of home devices. |
+| VM recovery copy | Encrypted backup exported to secondary storage | A source-to-copy integrity comparison and controlled restoration still need documented results. |
+| Voice hardware | Two Home Assistant Voice Preview Edition devices are available; one completed onboarding | The second unit and repeated operation remain unverified in this record. |
+| Hermes integration | **Initial request path verified** | One voice request returned the expected user-specific response through the configured Home Assistant-to-Hermes path in approximately ten seconds. This does not establish sustained reliability, acceptable latency, or assistant control of home devices. |
 
 ## Workload and Access Design
 
@@ -35,30 +35,31 @@ The verified mobile-app connections are recorded independently from the external
 
 Future device control and assistant integrations require defined permissions and explicit functional tests. No household device-control scope is claimed by this initial deployment record.
 
-## Application Backup
+## VM Recovery Copy
 
 The recorded sequence was:
 
-1. Export a Home Assistant application backup.
-2. Inspect its archive listing.
-3. Copy the export to external storage.
+1. Create a VM-level Home Assistant backup.
+2. Protect the backup with private encryption material.
+3. Export the encrypted recovery copy to secondary storage.
 
-The listing included application data, local speech-component data, SSL-related content, and backup metadata. Their presence establishes only that those entries appeared in the archive. It does not prove that every payload is usable, that speech processing works, or that the application can be restored successfully.
+This recovery source covers the Home Assistant guest at the virtualization layer. It does not prove that the archive can be decrypted and restored successfully or that every application component and integration will work after recovery.
 
-Earlier VM and container backups passed encryption and SHA-256 comparison steps. Those results apply to their respective archives and cannot establish protection or transfer integrity for this new application export. See [Backup and recovery](backup-and-recovery.md) for the separate scopes and remaining checks.
+Earlier VM and container backups passed SHA-256 comparison steps. Those results apply to their respective archives and cannot establish transfer integrity for this Home Assistant copy. See [Backup and recovery](backup-and-recovery.md) for the separate scopes and remaining checks.
 
 ## Voice Configuration
 
-Voice setup is in progress. The available troubleshooting record includes a satellite-loading issue and a speech-component configuration error. A verified resolution and successful end-to-end voice test are not yet recorded here.
+One Home Assistant Voice Preview Edition unit completed local onboarding. After the earlier satellite-loading and speech-component issues were addressed sufficiently for testing, an initial request traversed the configured Home Assistant-to-Hermes path and returned the expected user-specific response in approximately ten seconds.
 
-The next voice validation should demonstrate the intended input, processing, response, and any permitted device action. A working Home Assistant interface, installed speech components, or an **Up** availability check is insufficient to mark that workflow complete. Integration with Hermes requires its own implementation and validation.
+This single result verifies an initial input, processing, and response path. It does not establish repeated reliability, acceptable performance, validation of the second voice unit, or any permitted device action. A working Home Assistant interface, installed speech components, or an **Up** availability check remains insufficient on its own to mark the broader workflow complete.
 
 ## Remaining Work
 
-- Record protection and source-to-copy integrity checks for the application-backup copy.
-- Perform a controlled application restoration and validate the recovered configuration and required integrations.
-- Resolve and retest the recorded voice-configuration issues.
-- Validate the intended voice workflow on each device before marking it operational.
+- Record source-to-copy integrity checks for the encrypted VM recovery copy.
+- Perform a controlled VM restoration and validate Home Assistant, speech components, and required integrations.
+- Repeat the successful voice request and assess reliability and latency.
+- Complete onboarding and validation for the second voice unit.
+- Define and validate any permitted device actions separately from conversational responses.
 - Test actionable failure and recovery notifications for the Home Assistant monitor.
 - Define recurring backups, retention, capacity checks, and update procedures.
 - Define and test any future remote Home Assistant access separately from Hermes host administration.

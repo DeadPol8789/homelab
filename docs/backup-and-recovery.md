@@ -1,9 +1,9 @@
 # Backup and Recovery
 
 > **Last verified:** September 2026  
-> **Project status:** Earlier encrypted workload copies integrity-verified; Home Assistant application backup exported and copied; controlled restoration pending
+> **Project status:** Earlier encrypted workload copies integrity-verified; encrypted Home Assistant VM recovery copy exported; controlled restoration pending
 
-This document records backup milestones for the HomeLab virtualization workloads and Home Assistant application. It distinguishes the earlier encrypted, integrity-checked workload copies from the newer Home Assistant application export. Live identifiers, filenames, paths, hashes, credentials, and storage details are excluded.
+This document records backup milestones for the HomeLab virtualization workloads and service configuration. It distinguishes the earlier encrypted, integrity-checked workload copies from the newer encrypted Home Assistant VM recovery copy and a separate private Hermes configuration safety copy. Live identifiers, filenames, paths, hashes, credentials, and storage details are excluded.
 
 ## Verified Backup Scope
 
@@ -11,7 +11,7 @@ Initial backups were created for selected Proxmox virtual-machine and container 
 
 After further configuration changes, the virtual-machine workflow was performed again. A new compressed archive was created, encrypted, transferred to separate storage, and checked against its encrypted source. The matching SHA-256 result confirms that a newer protected copy reached the secondary location without detected transfer corruption.
 
-The earlier virtualization backups are identified only by workload type because their precise service scope is not established in this public record. The new application export is explicitly identified as a Home Assistant backup. Live guest identifiers, hostnames, storage volumes, resource configuration, and backup filenames remain private.
+The earlier virtualization backups are identified only by workload type because their precise service scope is not established in this public record. Later evidence identifies the Home Assistant recovery source as a VM-level backup rather than an application-level export. Live guest identifiers, hostnames, storage volumes, resource configuration, and backup filenames remain private.
 
 ## Verified Progress
 
@@ -24,9 +24,9 @@ The earlier virtualization backups are identified only by workload type because 
 | Source checksum | **Recorded privately** | A SHA-256 checksum was calculated for each encrypted source backup. |
 | Destination checksum | **Verified** | Each secondary copy produced the same SHA-256 checksum as its encrypted source. |
 | Follow-up virtual-machine cycle | **Completed and integrity-verified** | The manual create, encrypt, transfer, and SHA-256 comparison workflow was repeated successfully after later configuration changes. |
-| Home Assistant application export | **Completed** | A separate application backup was exported and its archive contents inspected. |
-| Home Assistant external copy | **Completed** | A copy of the application export was placed on external storage. |
-| Home Assistant export protection and integrity | **Not established in this record** | The earlier encryption and checksum results cannot be attributed to this new application export. Its protection and source-to-copy integrity checks still need to be documented. |
+| Home Assistant VM recovery copy | **Created, encrypted, and exported** | A VM-level recovery source was created, protected with private encryption material, and exported to secondary storage. |
+| Home Assistant source-to-copy integrity | **Not established in this record** | The earlier checksum results cannot be attributed to this recovery copy. A matching source-to-copy result still needs to be documented. |
+| Hermes configuration safety copy | **Created privately** | A copy of the active configuration was retained after the initial voice-path validation. It is not presented as a complete assistant backup. |
 | Local working archives | **Temporarily retained** | Unencrypted working archives remain protected on the virtualization host while cleanup and retention handling are finalized. |
 | Controlled restoration | **Pending** | Earlier checksum matches and inspection of the newer application archive do not prove that a workload or application can be restored successfully. |
 | Automated schedule and retention | **Pending** | Recurring jobs, retention periods, rotation, and capacity alerts have not yet been finalized. |
@@ -62,22 +62,23 @@ The later virtual-machine cycle provides evidence that the documented manual pro
 
 This repetition does not establish automated scheduling, retention rotation, or recovery readiness. It also does not show that every future execution will succeed without validation. Each protected copy must continue to be checked, and a controlled restoration remains necessary.
 
-## Home Assistant Application Backup
+## Home Assistant VM Recovery Copy
 
-The latest application-backup milestone consists of:
+The latest Home Assistant recovery milestone consists of:
 
-1. Exporting a Home Assistant backup.
-2. Inspecting the archive listing, which included application data, local speech-component data, SSL-related content, and backup metadata.
-3. Copying the exported backup to external storage.
+1. Creating a VM-level backup of the Home Assistant guest.
+2. Protecting the recovery copy with private encryption material.
+3. Exporting the encrypted copy to secondary storage.
 
-The archive listing establishes the presence of those entries. It does not validate every payload, prove that the voice components function correctly, or demonstrate a successful restore. Filenames and the contents of the backup remain private.
+This record establishes the existence and protection state of the exported recovery copy. It does not prove that the archive can be decrypted, restored, or used to recover each Home Assistant component and integration successfully. Filenames and backup contents remain private.
 
-This export is an application-level recovery source, distinct from a Proxmox VM archive. The available record does not establish encryption, a matching source-to-copy checksum, or a controlled restore for this particular export. These checks must be recorded separately before the export is described as protected, integrity-verified, or recovery-tested.
+The available record does not establish a matching source-to-copy checksum or a controlled restore for this recovery copy. Those checks must be recorded separately before it is described as integrity-verified or recovery-tested.
 
 | Recovery source | Recorded result | Remaining validation |
 | --- | --- | --- |
 | Earlier VM and container archives | Encrypted secondary copies with matching SHA-256 checksums; the manual VM cycle was repeated | Decryption, isolated restoration, startup, and service validation |
-| Home Assistant application export | Exported, archive listing inspected, and copied to external storage | Protection and integrity checks, application restoration, and functional validation |
+| Home Assistant VM recovery copy | Encrypted and exported to secondary storage | Source-to-copy integrity comparison, decryption, VM restoration, and functional validation |
+| Hermes configuration safety copy | Created privately after the initial voice-path configuration | Protection, integrity comparison, completeness review, and controlled configuration recovery |
 
 Uptime Kuma's Home Assistant monitor reported **Up** after saving. That availability result concerns the running service; it provides no validation of the backup copy or its recoverability.
 
@@ -110,11 +111,11 @@ The earlier encrypted virtualization-backup baseline follows these controls:
 - The public repository contains documentation only, never live backup archives.
 - Unencrypted working archives remain on the primary host only temporarily and require explicit cleanup or retention decisions.
 
-These verified encryption controls must not be assumed for the new Home Assistant export without a separate record. The application backup contains potentially sensitive configuration and security material. Its protection and handling must be reviewed, and neither its contents nor its metadata should be uploaded to the public repository.
+The Home Assistant VM recovery copy contains potentially sensitive configuration and security material. Its handling must remain private, and neither its contents nor its metadata should be uploaded to the public repository. The Hermes configuration safety copy has a narrower scope and must not be treated as evidence of complete assistant or persistent-memory recovery.
 
 ## Recovery Boundary
 
-The current milestone consists of **earlier encrypted workload copies with verified transfer integrity, plus a Home Assistant application export inspected and copied to external storage**. Automated backup rotation and tested disaster recovery remain pending.
+The current milestone consists of **earlier encrypted workload copies with verified transfer integrity, an encrypted Home Assistant VM recovery copy exported to secondary storage, and a private Hermes configuration safety copy**. Source-to-copy validation for the Home Assistant copy, recurring rotation, and tested disaster recovery remain pending.
 
 A future controlled restoration test should verify:
 
@@ -123,15 +124,16 @@ A future controlled restoration test should verify:
 3. Restoration into an isolated or otherwise safe target.
 4. Successful guest or container start-up.
 5. Expected storage, network, and service behavior.
-6. Hermes Agent availability and persistent-memory behavior where applicable, or Home Assistant application and required integration behavior for an application restore.
+6. Hermes Agent availability and persistent-memory behavior where applicable, or Home Assistant application, speech, and required integration behavior after VM recovery.
 7. Cleanup of temporary restored resources and sensitive test material.
 8. A sanitized recovery record that does not expose the live environment.
 
 ## Remaining Work
 
-- Map the current VM, container, and application inventory to its backup scope and recovery dependencies.
-- Document protection and source-to-copy integrity checks for the Home Assistant application export.
-- Test restoration of the Home Assistant export and validate the restored application separately from VM restoration.
+- Map the current VM, container, and service inventory to its backup scope and recovery dependencies.
+- Document source-to-copy integrity checks for the encrypted Home Assistant VM recovery copy.
+- Test restoration of the Home Assistant VM and validate the recovered application, speech components, and required integrations.
+- Review protection, completeness, and recovery use of the private Hermes configuration safety copy.
 - Decide when protected local working archives should be removed.
 - Define recurring backup jobs for virtual machines, containers, service configuration, and persistent data.
 - Define retention periods, rotation, capacity thresholds, and failure notifications.
