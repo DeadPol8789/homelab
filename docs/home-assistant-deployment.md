@@ -1,7 +1,7 @@
 # Home Assistant Deployment
 
 > **Last documented:** September 2026  
-> **Status:** Initial deployment operational; encrypted VM recovery copy exported; first voice-to-Hermes response verified
+> **Status:** Home Assistant Core `2026.9.1` operational on Home Assistant OS `18.2`; two-unit voice-to-Hermes conversation path verified
 
 This document records the initial Home Assistant deployment. It separates application availability, recovery-copy handling, and voice validation so that progress in one area does not imply completion of the others.
 
@@ -13,7 +13,7 @@ Home Assistant runs in its own virtual machine on the existing Proxmox host, sep
 
 Uptime Kuma provides an initial availability check. The Home Assistant monitor was saved and reported **Up**. Initial alerting exists in the monitoring platform, but this record does not establish a successful failure-and-recovery notification test for this specific monitor.
 
-An encrypted VM-level Home Assistant recovery copy has been exported to secondary storage. Its source-to-copy integrity and controlled restoration have not yet been documented.
+An earlier encrypted VM-level Home Assistant recovery copy was exported to secondary storage. After the A2A voice integration became stable, a protected compressed Proxmox snapshot of the Home Assistant guest completed successfully. A separate encrypted local Home Assistant application backup includes configuration and the installed voice applications. Controlled restoration has not yet been documented.
 
 ## Recorded Progress
 
@@ -23,9 +23,10 @@ An encrypted VM-level Home Assistant recovery copy has been exported to secondar
 | Private name resolution | Resolution for the application has been verified | Live DNS records and addresses remain private. |
 | Mobile access | Companion apps on selected phone and tablet clients are connected | This does not establish external Home Assistant access from every mobile device. |
 | Availability monitoring | The saved Home Assistant monitor reported **Up** in Uptime Kuma | This is the result of the configured check at that time, not proof that every integration works. |
-| VM recovery copy | Encrypted backup exported to secondary storage | A source-to-copy integrity comparison and controlled restoration still need documented results. |
-| Voice hardware | Two Home Assistant Voice Preview Edition devices are available; one completed onboarding | The second unit and repeated operation remain unverified in this record. |
-| Hermes integration | **Initial request path verified** | One voice request returned the expected user-specific response through the configured Home Assistant-to-Hermes path in approximately ten seconds. This does not establish sustained reliability, acceptable latency, or assistant control of home devices. |
+| Recovery sources | Earlier encrypted VM recovery copy, protected stable-state snapshot, and encrypted application backup | Controlled restoration and recovered-service validation still need documented results. |
+| Voice hardware | Two Home Assistant Voice Preview Edition devices onboarded and tested | Both returned the expected persistent-memory response through the same configured assistant pipeline. |
+| Speech services | **Operational for the Spanish pipeline** | Whisper `3.5.3` provides speech-to-text and Piper `2.3.4` provides text-to-speech. Speech-to-Phrase `1.4.5` is installed but is not the active transcription engine for this pipeline. |
+| Hermes integration | **Authenticated A2A path verified** | The custom conversation connector returned Hermes responses in text and through both voice endpoints. Approved device control remains separate and unverified. |
 
 ## Workload and Access Design
 
@@ -47,21 +48,24 @@ This recovery source covers the Home Assistant guest at the virtualization layer
 
 Earlier VM and container backups passed SHA-256 comparison steps. Those results apply to their respective archives and cannot establish transfer integrity for this Home Assistant copy. See [Backup and recovery](backup-and-recovery.md) for the separate scopes and remaining checks.
 
-## Voice Configuration
+## Voice and Conversation Configuration
 
-One Home Assistant Voice Preview Edition unit completed local onboarding. After the earlier satellite-loading and speech-component issues were addressed sufficiently for testing, an initial request traversed the configured Home Assistant-to-Hermes path and returned the expected user-specific response in approximately ten seconds.
+Both Home Assistant Voice Preview Edition units completed local onboarding. The Spanish Assist pipeline uses the Hermes custom conversation agent, Whisper for speech-to-text, and Piper for text-to-speech. Local-command preference is enabled, allowing Home Assistant to handle supported commands before forwarding other requests to Hermes.
 
-This single result verifies an initial input, processing, and response path. It does not establish repeated reliability, acceptable performance, validation of the second voice unit, or any permitted device action. A working Home Assistant interface, installed speech components, or an **Up** availability check remains insufficient on its own to mark the broader workflow complete.
+The Home Assistant connector communicates with Hermes as an authenticated A2A peer. Its response parser supports a returned task wrapper, artifacts, task-status messages, and direct messages. This corrected an earlier case in which the assistant answer existed inside the A2A result but was not extracted for Home Assistant.
+
+Both voice endpoints returned the expected user-specific response from Hermes persistent memory in approximately ten seconds. A simple text conversation completed in approximately four to five seconds. A natural-language Home Assistant state query also succeeded; a literal technical identifier had first been mis-transcribed, demonstrating why spoken requests should prefer natural entity names. One duplicate wake-up event was observed and cancelled without evidence of a persistent fault.
+
+These results verify the conversational path and both endpoints. They do not establish approved household-device actions, complete reliability, or continuous full-path monitoring.
 
 ## Remaining Work
 
 - Record source-to-copy integrity checks for the encrypted VM recovery copy.
 - Perform a controlled VM restoration and validate Home Assistant, speech components, and required integrations.
-- Repeat the successful voice request and assess reliability and latency.
-- Complete onboarding and validation for the second voice unit.
+- Monitor repeated voice requests and continue latency and reliability assessment.
 - Define and validate any permitted device actions separately from conversational responses.
 - Test actionable failure and recovery notifications for the Home Assistant monitor.
-- Define recurring backups, retention, capacity checks, and update procedures.
+- Test the protected VM snapshot and application backup through controlled restoration, then define recurring retention and capacity checks.
 - Define and test any future remote Home Assistant access separately from Hermes host administration.
 - Define permissions before connecting Hermes or additional automation services to household devices.
 

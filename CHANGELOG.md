@@ -8,6 +8,12 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 
 ### Added
 
+- Added a sanitized record of the authenticated A2A conversation bridge between Home Assistant and Hermes Agent.
+- Added the local Spanish speech pipeline using Whisper `3.5.3` for speech-to-text and Piper `2.3.4` for text-to-speech.
+- Added the second Home Assistant Voice Preview Edition endpoint and verified the same persistent-memory response from both units.
+- Added an initial persistent Hermes wiki and verified knowledge retrieval through the Home Assistant conversation path.
+- Added protected compressed Proxmox snapshots for both the assistant and Home Assistant guests after the stable integration milestone.
+
 - Added a sanitized OPNsense deployment record covering installation, base network roles, validation, security controls, private backup handling, and remaining work.
 - Added a sanitized managed-switch deployment record covering traffic forwarding, local administration, stable private management, firmware compatibility review, validation, and remaining work.
 - Added a sanitized Hermes Agent deployment record covering the first Linux guest, hardened administration, Docker validation, the initial text workflow, persistent memory, and remaining work.
@@ -18,6 +24,10 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Added the planned on-demand GPU-compute role and Wake-on-LAN concept to the target architecture.
 
 ### Changed
+
+- Updated Hermes Agent to the documented `0.20.6` deployment state.
+- Changed the default free inference model from `upstage/solar-pro4:free` to `meituan/longcat-2.0:free` after transient upstream failures caused retries and excessive latency.
+- Updated the custom Home Assistant conversation connector to accept standard A2A task wrappers, artifacts, task-status messages, and direct messages without publishing live endpoint or authentication details.
 
 - Updated the README to show the operational segmented foundation, first validated Linux guest, Docker platform, and Hermes Agent deployment.
 - Updated the architecture with the operational Proxmox-to-Linux-to-Hermes workload path while preserving planned services separately.
@@ -47,6 +57,16 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Expanded public-sanitization rules for voice transcripts, request and conversation identifiers, gateway logs, tool-call payloads, and memory-approval records.
 
 ### Verified infrastructure progress
+
+- Home Assistant Core `2026.9.1` is operational on Home Assistant OS `18.2`.
+- Both Voice Preview Edition units completed onboarding and returned the expected Hermes persistent-memory response in approximately ten seconds.
+- A simple text conversation completed in approximately four to five seconds after the model change.
+- A Home Assistant state query completed successfully through the A2A path; the assistant-side processing took approximately ten seconds, while natural voice interaction remained below approximately thirty seconds in the observed test.
+- Natural-language phrasing avoided a speech-recognition error encountered with a literal technical identifier.
+- One duplicate wake-up event was observed and safely cancelled; it is recorded as an isolated event rather than a persistent fault.
+- A persistent-wiki query returned the documented high-level Hermes deployment facts through Home Assistant.
+- The current public repository snapshot was staged as a read-only wiki source, but bulk ingestion was deliberately cancelled because the documentation required this update.
+- Protected Proxmox snapshot jobs for the assistant and Home Assistant guests completed successfully after the stable voice milestone.
 
 - OPNsense has been installed on the dedicated firewall appliance and boots from internal storage.
 - The initial upstream and LAN roles have been validated.
@@ -93,8 +113,8 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - The selected travel laptop passed a real Hermes host-access test through a mobile hotspot.
 - A selected tablet confirmed Termius access to the Hermes host through a phone hotspot.
 - A further tablet has joined Tailscale and received an SSH key; its completed external SSH validation is not yet documented.
-- One Home Assistant Voice Preview Edition unit completed onboarding.
-- One request returned the expected user-specific response through the configured Home Assistant-to-Hermes path in approximately ten seconds.
+- The first Home Assistant Voice Preview Edition unit completed the initial onboarding milestone before the second-unit rollout.
+- The initial request returned the expected user-specific response through the configured Home Assistant-to-Hermes path in approximately ten seconds.
 - Hermes persistent-memory writes now require explicit approval, and a temporary approve-and-delete test cycle completed successfully.
 - A private Hermes configuration safety copy was retained after the initial voice-path configuration.
 
@@ -117,8 +137,9 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Defining restricted access for any future additional users without exposing infrastructure administration.
 - Network-wide remote administration, advanced firewall policy, complete monitoring coverage, and automated backup rotation.
 - Validating Uptime Kuma failure, recovery, and notification delivery for each required monitor.
-- Repeating the voice-to-Hermes workflow, assessing latency and reliability, and completing validation of the second voice unit.
 - Defining and validating approved Home Assistant device actions separately from the initial conversational path.
+- Monitoring the complete speech, Home Assistant, A2A, inference, and response path and continuing latency optimization.
+- Curating and ingesting the updated public documentation into the persistent wiki.
 - Expanded memory/RAG, isolated user profiles, a remote Hermes conversation interface, broader Home Assistant integration, and n8n.
 - Additional container-hosted services and assistant integrations.
 - Wake-on-LAN and controlled use of the GPU workstation for approved heavy tasks.
