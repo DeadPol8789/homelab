@@ -1,7 +1,7 @@
 # Backup and Recovery
 
-> **Last verified:** September 2026  
-> **Project status:** Earlier encrypted workload copies integrity-verified; protected stable-state snapshots completed for Hermes and Home Assistant; controlled restoration pending
+> **Last documented:** October 2026  
+> **Project status:** Home Assistant public-key export and restart/sign-in execution tested; remaining scheduling tests, retention and functional restoration pending
 
 This document records backup milestones for the HomeLab virtualization workloads and service configuration. It distinguishes the earlier encrypted, integrity-checked workload copies from the current protected guest snapshots, the Home Assistant application backup, and private Hermes configuration safety copies. Live identifiers, filenames, paths, hashes, credentials, and storage details are excluded.
 
@@ -25,14 +25,15 @@ After the Home Assistant-to-Hermes voice integration reached a stable tested sta
 | Destination checksum | **Verified** | Each secondary copy produced the same SHA-256 checksum as its encrypted source. |
 | Follow-up virtual-machine cycle | **Completed and integrity-verified** | The manual create, encrypt, transfer, and SHA-256 comparison workflow was repeated successfully after later configuration changes. |
 | Home Assistant VM recovery copy | **Created, encrypted, and exported** | A VM-level recovery source was created, protected with private encryption material, and exported to secondary storage. |
-| Home Assistant source-to-copy integrity | **Not established in this record** | The earlier checksum results cannot be attributed to this recovery copy. A matching source-to-copy result still needs to be documented. |
+| Home Assistant public-key export integrity | **Verified for a selected VM copy** | VMA validation, ciphertext transfer integrity and guided decryption matching the original were tested. Existing-copy automatic runs only verify retained ciphertext integrity. |
 | Hermes configuration safety copy | **Created privately** | A copy of the active configuration was retained after the initial voice-path validation. It is not presented as a complete assistant backup. |
 | Stable Hermes guest snapshot | **Completed and protected** | A compressed snapshot-mode Proxmox backup completed successfully after the A2A voice path was validated. |
 | Stable Home Assistant guest snapshot | **Completed and protected** | A compressed snapshot-mode Proxmox backup completed successfully after the same integration milestone. |
 | Home Assistant application backup | **Created and encrypted locally** | The application backup includes Home Assistant configuration and installed voice applications; restoration remains untested. |
 | Local working archives | **Temporarily retained** | Unencrypted working archives remain protected on the virtualization host while cleanup and retention handling are finalized. |
 | Controlled restoration | **Pending** | Earlier checksum matches and inspection of the newer application archive do not prove that a workload or application can be restored successfully. |
-| Automated schedule and retention | **Pending** | Recurring jobs, retention periods, rotation, and capacity alerts have not yet been finalized. |
+| Windows export task | **Configured and partly tested** | Demand-runs, missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in succeeded. Daily timing, missed-run catch-up and a new-copy task run remain unverified. |
+| Wider retention and coverage | **Pending** | The export task does not establish complete workload coverage, rotation, capacity alerts or disaster recovery. |
 
 ## Earlier Virtualization Backup Workflow
 
@@ -67,25 +68,112 @@ This repetition does not establish automated scheduling, retention rotation, or 
 
 ## Home Assistant VM Recovery Copy
 
-The latest Home Assistant recovery milestone consists of:
-
-1. Creating a VM-level backup of the Home Assistant guest.
-2. Protecting the recovery copy with private encryption material.
-3. Exporting the encrypted copy to secondary storage.
-
-This record establishes the existence and protection state of the exported recovery copy. It does not prove that the archive can be decrypted, restored, or used to recover each Home Assistant component and integration successfully. Filenames and backup contents remain private.
-
-The available record does not establish a matching source-to-copy checksum or a controlled restore for this recovery copy. Those checks must be recorded separately before it is described as integrity-verified or recovery-tested.
+An earlier encrypted Home Assistant VM recovery copy was followed by the separately tested public-key export described below. Results apply to their selected copies; earlier workload checks do not establish current coverage or restoration.
 
 | Recovery source | Recorded result | Remaining validation |
 | --- | --- | --- |
 | Earlier VM and container archives | Encrypted secondary copies with matching SHA-256 checksums; the manual VM cycle was repeated | Decryption, isolated restoration, startup, and service validation |
-| Home Assistant VM recovery copy | Encrypted and exported to secondary storage | Source-to-copy integrity comparison, decryption, VM restoration, and functional validation |
+| Home Assistant public-key VM export | Selected archive validation, ciphertext integrity and guided decryption tested; automatic existing-copy verification after restart/sign-in succeeded | Periodic decryption review, remaining scheduling tests, VM restoration and functional validation |
 | Hermes configuration safety copy | Created privately after the initial voice-path configuration | Protection, integrity comparison, completeness review, and controlled configuration recovery |
 | Stable Hermes and Home Assistant guest snapshots | Protected compressed snapshot jobs completed successfully | Isolated restoration, guest startup, and functional validation |
 | Home Assistant application backup | Encrypted local backup containing configuration and installed voice applications | Application-level restoration and voice-integration validation |
 
 Uptime Kuma's Home Assistant monitor reported **Up** after saving. That availability result concerns the running service; it provides no validation of the backup copy or its recoverability.
+
+## Home Assistant Public-Key Export
+
+The October continuation added a separate public-key export procedure for an
+existing compressed Home Assistant VM backup. Earlier encrypted copies remain
+separate recovery sources; their historical results are not reassigned.
+
+### Earlier isolated restoration checks
+
+The prior handoff reports two older Home Assistant VM backups restored into
+separate isolated test guests. Both booted, returned HTTP 200 locally and
+passed the SQLite integrity check. The last reported state had both test guests
+stopped, their network interfaces removed and automatic startup disabled.
+
+These are historical results for those selected older copies, not a fresh test
+of the October public-key export or of the live guests. Login, historical data,
+integrations, voice and restored automations were not fully validated. No
+restoration of Hermes, Tailscale, Uptime Kuma or the whole environment is claimed.
+
+### Source schedule and retention
+
+The historical record describes a weekly snapshot-mode, zstd-compressed
+Proxmox backup job for Home Assistant. Its reported keep-last setting did not
+match the observed number of retained copies; the cause remains unreviewed.
+The Windows task exports the newest available source backup rather than
+creating or reconfiguring that source job. Its daily trigger does not prove
+daily source-backup creation or correct source retention.
+
+### Encryption and recovery material
+
+A dedicated GPG RSA3072 certification key and RSA3072 encryption subkey were
+created with a protected private key. Private-key, public-key and revocation
+exports were checked on separate recovery storage intended to remain offline.
+Import into a separate GPG home and small-file encryption/decryption were tested,
+including ciphertext generated on Proxmox and decrypted on Windows. Sensitive
+test key homes were removed after those tests.
+
+A guided export of the actual VM backup validated its VMA archive on Proxmox,
+verified transferred ciphertext and decrypted it on Windows. The decrypted
+bytes matched the original archive's private SHA-256 reference. This establishes
+archive/decryption integrity for that selected copy, not functional VM recovery.
+The working Windows key store is separate from the offline recovery copy.
+
+### Restricted SSH boundary
+
+The dedicated protected SSH key is limited by a forced command and SSH
+restrictions to a reviewed backup gateway. An allowed probe succeeded and an
+unrelated command was refused. Existing authorization entries and the existing
+authorized-keys link were preserved. A full restricted export was tested.
+
+The gateway limits operations and inputs, pins the public recipient, checks
+file boundaries and serializes remote work. This constrained privileged backup
+helper does not establish comprehensive Proxmox host hardening.
+
+### Verification modes
+
+| Situation | Checks performed | Checks not performed |
+| --- | --- | --- |
+| New automatic export | Proxmox VMA validation, public-key encryption, transfer, and matching ciphertext SHA-256 in Windows | No automatic decryption or functional restore |
+| Existing automatic copy | Local ciphertext compared with its retained SHA-256 reference; recorded source reference read | No fresh source hash, VMA validation, encryption, transfer or decryption |
+| Guided export tested | VMA validation, ciphertext integrity and decrypted archive matching the original SHA-256 | No restored-guest, application, integration or voice validation |
+
+Automatic runs never decrypt or store/request the GPG password. Manual
+decryption review is a follow-up duty; its frequency has not yet been decided.
+The new-copy automatic exporter passed a manual script execution. Actual task
+runs so far have verified an existing copy.
+
+### Windows task and failure handling
+
+The task has daily and same-user sign-in triggers, with a short sign-in delay.
+It uses the user's interactive session and limited privileges, stores no task
+password, and does not wake or power on the PC. Missed-run catch-up is configured
+but its dedicated computer-off test remains pending.
+
+The launcher checks the destination volume identity, pinned scripts/public key,
+and restricted SSH readiness. Logs and JSON reports are stored on the system
+disk so a missing destination can still be reported. Only one instance runs.
+A started export failure or pending remote cleanup retains a review marker
+rather than being blindly retried. Successful runs are quiet.
+
+| Actual test | Confirmed result | Boundary |
+| --- | --- | --- |
+| Task demand-run | Exporter succeeded and existing ciphertext hash matched | Current-session test |
+| Destination disconnected | Local warning received; preflight failure; exporter not started | No export state reset needed |
+| Same destination reconnected | Readiness and task run succeeded without resetting state | Existing-copy check |
+| Windows restart/sign-in | Task ran without manual launch/key reload and verified ciphertext | Reports do not identify which trigger launched it |
+
+This proves restricted SSH availability and automatic execution after the
+tested restart/sign-in. It does not independently prove the daily timer,
+missed-run catch-up or new-copy creation by the task. Several-minute durations
+were observed; the reports do not establish the exact timing breakdown.
+
+The exporter selects the newest retained source backup and cannot recover one
+already deleted by retention. The secondary Windows storage is not an off-site
+backup. Offline key storage is not an offline copy of the VM archive.
 
 ## What the Integrity Check Proves
 
@@ -120,7 +208,7 @@ The Home Assistant VM recovery copy contains potentially sensitive configuration
 
 ## Recovery Boundary
 
-The current milestone consists of **earlier encrypted workload copies with verified transfer integrity, protected stable-state snapshots for the Hermes and Home Assistant guests, an encrypted Home Assistant application backup, and private Hermes configuration safety copies**. Recurring rotation and tested disaster recovery remain pending.
+The current milestone includes the earlier recovery sources and a tested public-key Home Assistant VM export with selected archive/decryption integrity and restart/sign-in task execution. These scopes remain distinct. Wider recurring rotation, remaining scheduling tests and functional disaster recovery remain pending.
 
 A future controlled restoration test should verify:
 
@@ -136,15 +224,16 @@ A future controlled restoration test should verify:
 ## Remaining Work
 
 - Map the current VM, container, and service inventory to its backup scope and recovery dependencies.
-- Document source-to-copy integrity checks for the encrypted Home Assistant VM recovery copy.
+- Validate daily timed execution, catch-up after a missed daily run, and a new-copy scheduled-task run.
+- Choose and document a periodic manual decryption-review interval.
 - Test restoration of the Home Assistant VM and validate the recovered application, speech components, and required integrations.
 - Review protection, completeness, and recovery use of the private Hermes configuration safety copy.
 - Perform isolated restoration tests for both protected stable-state guest snapshots.
 - Test application-level Home Assistant recovery, including the local speech services and Hermes conversation connector.
 - Decide when protected local working archives should be removed.
 - Define recurring backup jobs for virtual machines, containers, service configuration, and persistent data.
-- Define retention periods, rotation, capacity thresholds, and failure notifications.
-- Convert the validated manual procedure into a reviewed schedule without weakening encryption or secondary-copy controls.
+- Define complete retention, rotation and capacity thresholds; extend failure monitoring beyond the tested local export-task warning.
+- Extend the tested Home Assistant export schedule to other required scopes only after reviewing their recovery dependencies and permissions.
 - Keep at least one protected copy separate from the primary virtualization host.
 - Perform and document controlled restoration tests.
 - Review whether an additional offline or off-site copy is appropriate.

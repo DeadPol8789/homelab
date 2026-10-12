@@ -1,6 +1,6 @@
 # Security and Privacy Policy
 
-> **Last reviewed:** September 2026  
+> **Last reviewed:** October 2026  
 > **Scope:** Public documentation for this personal HomeLab repository
 
 This document defines the security and privacy rules used when publishing HomeLab documentation. Its purpose is to make the project useful as a technical portfolio without exposing credentials, personal information, access paths, or unnecessary details about the live environment.
@@ -225,11 +225,11 @@ At the time of this review, the public documentation may state that:
 - The exact service scope of those earlier archives must be mapped before claiming coverage of current workloads or attributing the follow-up VM archive specifically to Hermes.
 - Home Assistant runs in a separate VM with verified private name resolution and connected mobile companion apps.
 - One Home Assistant Voice Preview Edition unit completed onboarding. One request returned the expected user-specific response through the configured Home Assistant-to-Hermes path in approximately ten seconds. Reliable repetition, acceptable latency, the second unit, and device control are not established.
-- An encrypted VM-level Home Assistant recovery copy was exported to secondary storage. Source-to-copy integrity and controlled restoration are not established by the earlier VM and container results.
+- A separate public-key Home Assistant VM export passed selected VMA, ciphertext-transfer and guided-decryption integrity checks. Recovery-key import and cross-platform decryption were tested. These results do not establish functional restoration or validate every historical copy.
 - A private Hermes configuration safety copy was created after the initial voice-path validation. It is not a complete, integrity-verified, or restoration-tested assistant backup.
 - Uptime Kuma runs in a separate container with initial alerting configured. The saved Home Assistant monitor reported **Up**; this does not establish every notification path, complete monitoring coverage, or recoverability.
 - Real backup IDs, filenames, paths, timestamps, sizes, hashes, encryption details, destinations, and local working archives remain private.
-- Earlier initial and follow-up archive integrity checks are verified. Decryption testing, controlled restoration, recurring rotation, and source-to-copy integrity checks for the Home Assistant VM recovery copy remain pending.
+- The restricted SSH export gateway and Windows task passed demand-run, missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in tests. Automatic runs never decrypt or store the GPG password. Daily timing, missed-run catch-up, new-copy task execution, periodic manual decryption review, wider rotation and functional restoration remain pending.
 - An initial local voice-to-Hermes conversational path is verified. Reliable operation, the second voice unit, device-control permissions, n8n, Prometheus, Grafana, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain in progress or planned.
 - Remaining client tests, assistant-specific monitoring, per-monitor notification validation, and broader access-policy review remain in progress or pending.
 

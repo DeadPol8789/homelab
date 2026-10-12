@@ -1,6 +1,6 @@
 # Proxmox VE Installation
 
-> **Last verified:** September 2026  
+> **Last documented:** October 2026  
 > **Project status:** Proxmox VE `9.2.11` operational with assistant, home-automation, monitoring, and remote-access workloads
 
 This document records the verified progress of the Proxmox VE deployment used as the virtualization foundation of the HomeLab. It intentionally separates completed work from unfinished tasks and excludes sensitive information about the live environment.
@@ -20,6 +20,8 @@ Home Assistant now runs in a separate VM. Private name resolution is verified, a
 Initial compressed VM and container backups were created and encrypted copies transferred to separate storage, with matching SHA-256 checksums verifying transfer integrity. After further configuration changes, the manual VM procedure was repeated with another encrypted and integrity-checked secondary copy. Cleanup and retention handling for unencrypted working archives remain to be finalized. These earlier backup records do not establish coverage of every workload added since then.
 
 A separate Home Assistant application backup has now been exported, its archive contents inspected, and a copy placed on external storage. This application export is distinct from a Proxmox VM backup. The earlier encryption and checksum results do not establish those checks for the new application export. Controlled restoration of the documented backups remains pending.
+
+A subsequent public-key Home Assistant VM export was validated separately: its selected VMA archive, transferred ciphertext and guided decryption passed their checks. A restricted SSH gateway and limited Windows task now provide the export path, with missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in tested. Daily timing, missed-run catch-up, a new-copy task run and functional restoration remain pending. See [Backup and recovery](backup-and-recovery.md); these VM checks do not validate the separate application export.
 
 ## Verified Progress
 
@@ -120,7 +122,7 @@ The host now runs multiple service workloads. Earlier encrypted VM and container
 8. Confirm restored Hermes memory behavior and Home Assistant application recovery where applicable.
 9. Document the sanitized recovery procedure and its limitations.
 
-Until these checks are complete, the recovery status remains **earlier encrypted backup integrity checks verified and Home Assistant application export copied; recurring rotation and controlled restoration pending**.
+Until these checks are complete, the recovery status remains **selected Home Assistant VM archive/decryption integrity and restart/sign-in export execution verified; broader rotation and functional restoration pending**. Earlier workload copies and the separate application export retain their own evidence boundaries.
 
 ## Future Documentation
 

@@ -1,6 +1,6 @@
 # Home Assistant Deployment
 
-> **Last documented:** September 2026  
+> **Last documented:** October 2026  
 > **Status:** Home Assistant Core `2026.9.1` operational on Home Assistant OS `18.2`; two-unit voice-to-Hermes conversation path verified
 
 This document records the initial Home Assistant deployment. It separates application availability, recovery-copy handling, and voice validation so that progress in one area does not imply completion of the others.
@@ -13,7 +13,7 @@ Home Assistant runs in its own virtual machine on the existing Proxmox host, sep
 
 Uptime Kuma provides an initial availability check. The Home Assistant monitor was saved and reported **Up**. Initial alerting exists in the monitoring platform, but this record does not establish a successful failure-and-recovery notification test for this specific monitor.
 
-An earlier encrypted VM-level Home Assistant recovery copy was exported to secondary storage. After the A2A voice integration became stable, a protected compressed Proxmox snapshot of the Home Assistant guest completed successfully. A separate encrypted local Home Assistant application backup includes configuration and the installed voice applications. Controlled restoration has not yet been documented.
+An earlier encrypted VM-level Home Assistant recovery copy was exported to secondary storage. After the A2A voice integration became stable, a protected compressed Proxmox snapshot of the Home Assistant guest completed successfully. A separate encrypted local Home Assistant application backup includes configuration and the installed voice applications. Full functional restoration remains pending; earlier isolated checks are distinguished below.
 
 ## Recorded Progress
 
@@ -23,7 +23,7 @@ An earlier encrypted VM-level Home Assistant recovery copy was exported to secon
 | Private name resolution | Resolution for the application has been verified | Live DNS records and addresses remain private. |
 | Mobile access | Companion apps on selected phone and tablet clients are connected | This does not establish external Home Assistant access from every mobile device. |
 | Availability monitoring | The saved Home Assistant monitor reported **Up** in Uptime Kuma | This is the result of the configured check at that time, not proof that every integration works. |
-| Recovery sources | Earlier encrypted VM recovery copy, protected stable-state snapshot, and encrypted application backup | Controlled restoration and recovered-service validation still need documented results. |
+| Recovery sources | Earlier VM copy, protected snapshot, encrypted application backup and tested public-key VM export | Selected VM archive/decryption integrity and restart/sign-in execution verified; functional restoration and remaining scheduling tests pending. |
 | Voice hardware | Two Home Assistant Voice Preview Edition devices onboarded and tested | Both returned the expected persistent-memory response through the same configured assistant pipeline. |
 | Speech services | **Operational for the Spanish pipeline** | Whisper `3.5.3` provides speech-to-text and Piper `2.3.4` provides text-to-speech. Speech-to-Phrase `1.4.5` is installed but is not the active transcription engine for this pipeline. |
 | Hermes integration | **Authenticated A2A path verified** | The custom conversation connector returned Hermes responses in text and through both voice endpoints. Approved device control remains separate and unverified. |
@@ -38,15 +38,27 @@ Future device control and assistant integrations require defined permissions and
 
 ## VM Recovery Copy
 
-The recorded sequence was:
+An earlier encrypted VM recovery copy was followed by a tested public-key
+export using a restricted SSH gateway. The selected actual archive passed VMA
+validation on Proxmox, ciphertext integrity checks and guided decryption in
+Windows with a SHA-256 matching the original.
 
-1. Create a VM-level Home Assistant backup.
-2. Protect the backup with private encryption material.
-3. Export the encrypted recovery copy to secondary storage.
+A Windows task automates export without storing the GPG password. New exports
+validate the VMA and ciphertext; existing-copy runs check only the retained
+ciphertext. Automatic runs never decrypt. Missing-disk notification, recovery
+after reconnecting storage and automatic existing-copy verification after
+Windows restart/sign-in were tested successfully.
 
-This recovery source covers the Home Assistant guest at the virtualization layer. It does not prove that the archive can be decrypted and restored successfully or that every application component and integration will work after recovery.
+The earlier handoff also reports two older VM copies restored into isolated
+test guests, with successful boot, local HTTP response and SQLite integrity
+checks. Those historical checks do not establish full application recovery
+or restoration of the current public-key export.
 
-Earlier VM and container backups passed SHA-256 comparison steps. Those results apply to their respective archives and cannot establish transfer integrity for this Home Assistant copy. See [Backup and recovery](backup-and-recovery.md) for the separate scopes and remaining checks.
+Daily timing, missed-run catch-up, new-copy creation by the task, periodic
+manual decryption review and complete functional VM restoration remain pending.
+These results do not establish recovery of the separate application backup.
+See [Backup and recovery](backup-and-recovery.md) for the distinct sources,
+verification modes, scheduling limits and remaining work.
 
 ## Voice and Conversation Configuration
 
@@ -60,7 +72,7 @@ These results verify the conversational path and both endpoints. They do not est
 
 ## Remaining Work
 
-- Record source-to-copy integrity checks for the encrypted VM recovery copy.
+- Complete the remaining export-task scheduling tests and define periodic manual decryption review.
 - Perform a controlled VM restoration and validate Home Assistant, speech components, and required integrations.
 - Monitor repeated voice requests and continue latency and reliability assessment.
 - Define and validate any permitted device actions separately from conversational responses.
