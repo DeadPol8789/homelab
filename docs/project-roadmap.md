@@ -1,6 +1,6 @@
 # HomeLab Project Roadmap
 
-> **Last verified:** September 2026  
+> **Last documented:** October 2026  
 > **Project status:** Work in progress  
 > **Current focus:** Knowledge-corpus curation, approved device actions, full-path monitoring, service recovery, remaining client tests, and access governance
 
@@ -154,6 +154,9 @@ The Linux and Docker foundation, Home Assistant VM, and initial monitoring deplo
 - [x] Verify private name resolution for Home Assistant.
 - [x] Connect Home Assistant companion apps on selected phone and tablet clients.
 - [x] Create an encrypted VM-level Home Assistant recovery copy and export it to secondary storage.
+- [x] Validate the selected Home Assistant VM archive, ciphertext transfer and guided decryption against the original.
+- [x] Test protected GPG recovery-key import and cross-platform encryption/decryption.
+- [x] Test restricted SSH export, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
 - [x] Deploy Uptime Kuma as a separate container workload with initial alerting configured.
 - [x] Save the existing Home Assistant monitor and observe its **Up** state.
 - [x] Complete onboarding and conversational validation for both Voice Preview Edition units.
@@ -169,7 +172,7 @@ The Linux and Docker foundation, Home Assistant VM, and initial monitoring deplo
 - [ ] Deploy Grafana dashboards for infrastructure health and capacity.
 - [ ] Validate failure and recovery notification delivery for each required monitor.
 - [ ] Review monitoring coverage, useful thresholds, and shared host or network dependencies.
-- [ ] Document source-to-copy integrity checks for the encrypted Home Assistant VM recovery copy.
+- [ ] Complete daily/catch-up/new-copy export-task tests and define periodic manual decryption review.
 - [ ] Test VM restoration and recovered Home Assistant, speech, and integration behavior.
 
 Home Assistant and Uptime Kuma are operational. Both voice units completed onboarding and returned the expected Hermes persistent-memory response through the local speech and A2A path. Long-term reliability, continuous monitoring, and any device-control permissions remain unverified. n8n, Prometheus, and Grafana remain planned. The phase remains **In progress**.
@@ -242,6 +245,9 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 - [x] Verify matching SHA-256 checksums between encrypted source and secondary copies.
 - [x] Repeat the manual virtual-machine backup, encryption, secondary-copy, and integrity-validation workflow after further configuration changes.
 - [x] Create an encrypted VM-level Home Assistant recovery copy and export it to secondary storage.
+- [x] Validate the selected Home Assistant VM archive, ciphertext transfer and guided decryption against the original.
+- [x] Test protected GPG recovery-key import and cross-platform encryption/decryption.
+- [x] Test restricted SSH export, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
 - [x] Retain a private Hermes configuration safety copy after the initial voice-path validation.
 - [x] Create protected compressed Proxmox snapshots of the stable Hermes and Home Assistant guests.
 - [x] Create an encrypted local Home Assistant application backup containing configuration and installed voice applications.
@@ -260,7 +266,8 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 - [ ] Define restricted access for any future additional users without exposing infrastructure administration.
 - [ ] Finalize cleanup or retention handling for unencrypted working archives.
 - [ ] Map every current workload to its actual backup coverage, including Hermes configuration and persistent memory.
-- [ ] Document source-to-copy integrity checks for the Home Assistant VM recovery copy.
+- [ ] Validate the daily export timer, missed-run catch-up and a new-copy task run.
+- [ ] Define periodic manual decryption review and retain functional restoration as pending.
 - [ ] Define recurring configuration and service backups outside the public repository.
 - [ ] Add retention, capacity, and backup-failure monitoring.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
@@ -290,7 +297,7 @@ The GPU-equipped workstation has been selected as a future on-demand compute nod
 
 The travel-laptop external test, Home Assistant deployment, Uptime Kuma deployment, both voice endpoints, the authenticated A2A conversation bridge, initial wiki retrieval, stable guest snapshots, and the memory-approval test are already recorded. The next priorities are:
 
-1. Reconcile current workload backup coverage and document source-to-copy integrity checks for the Home Assistant VM recovery copy.
+1. Complete the remaining Home Assistant export-task scheduling tests, define periodic manual decryption review and reconcile wider workload backup coverage.
 2. Validate actionable monitor notifications and complete remaining external client tests.
 3. Perform controlled VM, container, service-configuration, and network-configuration restoration tests.
 4. Monitor the complete voice-to-Hermes path, assess long-term latency and reliability, and define approved device actions.

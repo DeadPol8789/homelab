@@ -1,6 +1,6 @@
 # Hardware Inventory
 
-> **Last verified:** September 2026  
+> **Last documented:** October 2026  
 > **Project status:** Work in progress
 
 This document lists the hardware that is relevant to the HomeLab project. It distinguishes between equipment that is already in use, equipment that is available but still awaiting deployment, and hardware that is only being considered for a future phase.
@@ -36,7 +36,7 @@ These are workloads on the existing virtualization host, not additional physical
 | Uptime Kuma | Separate container | Operational with initial alerting configured. The Home Assistant monitor was saved and reported **Up**. |
 | Tailscale | Separate container in the workload inventory | Present as a remote-access workload. Private access to the Hermes host is externally tested; subnet routing, Exit Node operation, and network-wide access are not established by this inventory. |
 
-Initial encrypted VM and container backups and a later manual VM backup passed checksum comparison after transfer to separate storage. A newer encrypted VM-level Home Assistant recovery copy was exported to secondary storage, but its own source-to-copy integrity result is not established. These records cover different backup scopes; they do not establish tested restoration or backup coverage for every current workload.
+Initial encrypted VM and container backups and a later manual VM backup passed checksum comparison after transfer to separate storage. A separately tested public-key Home Assistant VM export now has archive validation, ciphertext integrity and guided decryption results, plus automatic existing-copy verification after Windows restart/sign-in. These records cover different backup scopes; they do not establish full functional restoration or backup coverage for every current workload.
 
 ## Network and Security
 
@@ -78,7 +78,7 @@ The HomeLab serves selected wired and wireless clients, with further client vali
 | Main desktop workstation | Administration, development, testing, and future on-demand GPU workloads | Connected as a client; automated heavy-compute integration is planned but not deployed. |
 | Laptops | Administration and client testing | A wired client has validated connectivity through OPNsense and the switch. The selected travel laptop has also passed a Tailscale access test to the Hermes host through an external mobile hotspot. |
 | Mobile phone and tablet clients | Home Assistant companion apps and selected remote-access clients | Home Assistant companion apps are connected on selected devices. Completion of the wider remote-client rollout is tracked separately from local app connectivity. |
-| Secondary backup storage | Hold backup copies away from the primary virtualization host | **In use:** earlier encrypted VM and container backups passed checksum comparison. Secondary storage also holds an encrypted VM-level Home Assistant recovery copy; its source-to-copy integrity and restoration are not established here. Exact hardware, capacity, connection, and location remain private. |
+| Secondary backup storage | Hold backup copies away from the primary virtualization host | **In use:** earlier encrypted VM and container backups passed checksum comparison. Secondary storage also holds the tested public-key Home Assistant VM export; selected archive/decryption integrity is verified while functional restoration remains pending. Offline recovery-key storage is a separate role. Exact hardware, capacity, connection, and location remain private. |
 | Smart-home and camera devices | Future isolated or controlled network clients | Deployment and integration will be documented individually after verification. |
 
 ## Planned Hardware

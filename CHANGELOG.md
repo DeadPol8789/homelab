@@ -8,6 +8,11 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 
 ### Added
 
+- Documented the Home Assistant public-key VM export, protected recovery-key import and cross-platform decryption tests.
+- Documented the restricted SSH gateway's allowed-probe test and unrelated-command refusal.
+- Recorded task demand-runs, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
+- Distinguished guided decryption, new automatic export validation and existing-copy hash checks; daily timing, missed-run catch-up, new-copy task execution and functional restoration remain pending.
+
 - Added a sanitized record of the authenticated A2A conversation bridge between Home Assistant and Hermes Agent.
 - Added the local Spanish speech pipeline using Whisper `3.5.3` for speech-to-text and Piper `2.3.4` for text-to-speech.
 - Added the second Home Assistant Voice Preview Edition endpoint and verified the same persistent-memory response from both units.
@@ -24,6 +29,8 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Added the planned on-demand GPU-compute role and Wake-on-LAN concept to the target architecture.
 
 ### Changed
+
+- Updated backup-related summaries with the October export evidence while preserving historical recovery scopes and private operational metadata.
 
 - Updated Hermes Agent to the documented `0.20.6` deployment state.
 - Changed the default free inference model from `upstage/solar-pro4:free` to `meituan/longcat-2.0:free` after transient upstream failures caused retries and excessive latency.
@@ -52,7 +59,7 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Expanded public-sanitization rules for Home Assistant household and voice data, Uptime Kuma targets and notifications, and mobile SSH-client profiles and keys.
 - Updated the Home Assistant, Hermes, architecture, inventory, roadmap, and README records with the first successful local voice request and assistant response.
 - Recorded the approval-gated Hermes memory-write workflow after a temporary entry was held, explicitly approved, and removed.
-- Corrected the Home Assistant recovery-copy classification to a protected VM-level backup exported to secondary storage; source-to-copy integrity and restoration remain pending.
+- Corrected the initial Home Assistant recovery-copy classification to a protected VM-level backup exported to secondary storage; its integrity and restoration checks were still pending at that earlier milestone. The later public-key export results are recorded above.
 - Recorded a private Hermes configuration safety copy without presenting it as a complete or recovery-tested backup.
 - Expanded public-sanitization rules for voice transcripts, request and conversation identifiers, gateway logs, tool-call payloads, and memory-approval records.
 

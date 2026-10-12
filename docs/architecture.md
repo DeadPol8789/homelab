@@ -1,6 +1,6 @@
 # HomeLab Architecture
 
-> **Last verified:** September 2026  
+> **Last documented:** October 2026  
 > **Project status:** Work in progress
 
 This document describes the HomeLab at two different levels:
@@ -56,8 +56,10 @@ flowchart TD
 | Remote access | Tailscale private overlay | Private administration of the Hermes host is externally tested, including access from the selected travel laptop through a mobile hotspot. The dedicated container's presence does not by itself verify routed access. |
 | Home automation | Home Assistant | Core `2026.9.1` on OS `18.2`, with connected mobile apps, two onboarded voice endpoints, Whisper `3.5.3`, Piper `2.3.4`, and the Hermes A2A conversation path verified. Device actions remain pending. |
 | Availability monitoring | Uptime Kuma | Operational with initial alerting configured; the Home Assistant monitor reported **Up** after saving. |
-| Recovery | Stable guest snapshots and application backup | Protected compressed snapshots completed for both principal guests, and an encrypted Home Assistant application backup exists. Controlled restoration has not yet been demonstrated. |
+| Recovery | Stable guest snapshots and application backup | Protected compressed snapshots completed for both principal guests, and an encrypted Home Assistant application backup exists. Full functional restoration has not yet been demonstrated. |
 | Future services | n8n, Prometheus, and Grafana | Planned; not documented as deployed. |
+
+A separate Windows client runs the reviewed public-key Home Assistant VM export through a restricted SSH gateway. Archive/ciphertext integrity, guided decryption and automatic existing-copy verification after restart/sign-in were tested. Local missing-disk warning and recovery were verified. Remaining scheduling tests and functional restoration are tracked in [Backup and recovery](backup-and-recovery.md). This does not establish off-site recovery or change the planned service integrations.
 
 ## Verified Network Segmentation
 
