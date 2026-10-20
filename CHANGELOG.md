@@ -11,7 +11,13 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 - Documented the Home Assistant public-key VM export, protected recovery-key import and cross-platform decryption tests.
 - Documented the restricted SSH gateway's allowed-probe test and unrelated-command refusal.
 - Recorded task demand-runs, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
-- Distinguished guided decryption, new automatic export validation and existing-copy hash checks; daily timing, missed-run catch-up, new-copy task execution and functional restoration remain pending.
+- Distinguished guided decryption, new automatic export validation and existing-copy hash checks; automatic exports never decrypt.
+- Verified a daily time-triggered new-copy export, sign-in fallback after the PC was off, and suppression of an overlapping launch attempt. Independent missed-daily-run catch-up remains unverified.
+- Verified manual decryption of the newer selected copy and chose monthly review, plus review after key or backup-system changes; repeated monthly execution remains to be demonstrated.
+- Restored a selected external encrypted Home Assistant VM backup into an isolated test guest after source-hash and VMA validation. Application startup, SQLite integrity, Core configuration, historical-record presence and a direct Spanish Piper-to-Whisper round-trip passed.
+- Recorded the missing offline tokenizer and its manually verified supplement, plus the manual Whisper start; the unchanged archive did not demonstrate unattended offline speech recovery.
+- Verified restored UI login, selected historical-state rendering and browser voice preview through temporary restricted access. Closed the access path, restored the pre-UI VM configuration and retained the test guest stopped and isolated.
+- Kept full restored Assist/Hermes, physical voice, automations, data completeness, other workload recovery and wider retention explicitly pending.
 
 - Added a sanitized record of the authenticated A2A conversation bridge between Home Assistant and Hermes Agent.
 - Added the local Spanish speech pipeline using Whisper `3.5.3` for speech-to-text and Piper `2.3.4` for text-to-speech.
@@ -30,7 +36,7 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 
 ### Changed
 
-- Updated backup-related summaries with the October export evidence while preserving historical recovery scopes and private operational metadata.
+- Updated backup-related summaries with daily export and selected isolated restoration evidence, preserving historical recovery scopes and excluding private operational metadata. The tokenizer repair is recorded as manual intervention, not automatic disaster recovery.
 
 - Updated Hermes Agent to the documented `0.20.6` deployment state.
 - Changed the default free inference model from `upstage/solar-pro4:free` to `meituan/longcat-2.0:free` after transient upstream failures caused retries and excessive latency.

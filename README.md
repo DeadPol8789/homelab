@@ -20,7 +20,7 @@ The documentation reflects only work that has actually been completed. Planned c
 | Self-hosted services | Assistant platform operational | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and Hermes Agent `0.20.6` are deployed on the first Linux guest. Persistent-memory loading, the approval-gated write workflow, the A2A service, and an initial persistent-wiki query have been verified. |
 | Home automation | Two-unit conversational path verified | Home Assistant Core `2026.9.1` runs on Home Assistant OS `18.2`. Both Voice Preview Edition units completed onboarding and returned the expected persistent-memory response through a custom authenticated A2A conversation bridge. The active Spanish pipeline uses Whisper for speech-to-text and Piper for text-to-speech. Conversational operation is verified; approved household-device actions remain a separate milestone. |
 | Availability monitoring | Initial Uptime Kuma deployment operational | Uptime Kuma and initial alerting are configured. The Home Assistant monitor was saved and reported **Up**. Coverage and notification delivery must be assessed for each monitored service. |
-| Backup and recovery | Home Assistant export automation tested | Public-key VM export through restricted SSH passed archive validation, ciphertext integrity, guided decryption and recovery-key tests. Task missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in succeeded. Daily timing, missed-run catch-up, wider retention and functional restoration remain pending. Earlier snapshot, application and configuration backups retain their separate scopes. |
+| Backup and recovery | Daily export and selected isolated restoration tested | A time-triggered new-copy export passed VMA and ciphertext checks. A selected external encrypted VM copy was decrypted and restored in isolation; application, selected history and speech checks passed after manual tokenizer repair. Monthly manual decryption review is the chosen policy. Independent missed-run catch-up, full restored Assist/Hermes and physical voice tests, automation, data completeness and wider retention remain pending. See [Backup and recovery](docs/backup-and-recovery.md). |
 | Remote access | Travel-laptop path externally tested | Tailscale provides private remote administration of the Hermes host. The selected travel laptop has passed a real external-network test through a mobile hotspot. Wider client rollout and access-governance review remain in progress. |
 
 ## Hardware Overview
@@ -103,8 +103,13 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Validate the selected Home Assistant VM archive, ciphertext transfer and guided decryption against the original.
 - [x] Test protected GPG recovery-key import and cross-platform encryption/decryption.
 - [x] Test restricted SSH export, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
-- [ ] Verify the daily export timer, missed-run catch-up and a new-copy task run
-- [ ] Define periodic manual decryption review and complete functional Home Assistant restoration
+- [x] Verify a daily time-triggered new-copy export with archive and ciphertext checks
+- [x] Verify sign-in fallback after the PC was off and observed overlap suppression
+- [x] Choose monthly manual decryption review and verify decryption of the selected newer copy
+- [x] Restore a selected encrypted Home Assistant VM copy in isolation and test application, history and speech after manual tokenizer repair
+- [x] Test restored UI login and browser voice preview, then remove temporary access and retain the guest stopped and isolated
+- [ ] Independently validate missed-daily-run catch-up and carry out recurring manual reviews
+- [ ] Complete restored Assist/Hermes, physical voice, automation and data-completeness validation
 - [x] Complete onboarding and end-to-end conversational validation for both Voice Preview Edition units
 - [x] Deploy and validate the authenticated Home Assistant-to-Hermes A2A conversation bridge
 - [x] Validate the Spanish Whisper and Piper speech pipeline and persistent-memory responses from both voice units
@@ -137,7 +142,7 @@ This repository follows four rules:
 | [Hermes Agent deployment](docs/hermes-agent-deployment.md) | Sanitized first-guest, Hermes Agent, memory controls, A2A conversation, model reliability, wiki retrieval, and voice deployment record. |
 | [Home Assistant deployment](docs/home-assistant-deployment.md) | Sanitized deployment, mobile connectivity, local speech services, two-unit voice validation, monitoring, and recovery record. |
 | [Uptime Kuma deployment](docs/uptime-kuma-deployment.md) | Sanitized availability-monitoring, alerting, failure-boundary, and remaining-validation record. |
-| [Backup and recovery](docs/backup-and-recovery.md) | Sanitized backup scope, encryption, integrity validation, and remaining restoration work. |
+| [Backup and recovery](docs/backup-and-recovery.md) | Sanitized backup scope, daily export evidence, selected isolated restoration, manual speech repair, and remaining recovery work. |
 | [Tailscale remote access](docs/tailscale-remote-access.md) | Sanitized private-access design, external validation, security boundary, and remaining client rollout. |
 | [OPNsense deployment](docs/opnsense-deployment.md) | Sanitized installation, initial network roles, security controls, and connectivity validation. |
 | [Managed-switch deployment](docs/managed-switch-deployment.md) | Sanitized management setup, firmware state, VLAN deployment, validation, and recovery notes. |

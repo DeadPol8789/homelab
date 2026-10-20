@@ -13,7 +13,7 @@ Home Assistant runs in its own virtual machine on the existing Proxmox host, sep
 
 Uptime Kuma provides an initial availability check. The Home Assistant monitor was saved and reported **Up**. Initial alerting exists in the monitoring platform, but this record does not establish a successful failure-and-recovery notification test for this specific monitor.
 
-An earlier encrypted VM-level Home Assistant recovery copy was exported to secondary storage. After the A2A voice integration became stable, a protected compressed Proxmox snapshot of the Home Assistant guest completed successfully. A separate encrypted local Home Assistant application backup includes configuration and the installed voice applications. Full functional restoration remains pending; earlier isolated checks are distinguished below.
+An earlier encrypted VM-level Home Assistant recovery copy was exported to secondary storage. After the A2A voice integration became stable, a protected compressed Proxmox snapshot of the Home Assistant guest completed successfully. A separate encrypted local Home Assistant application backup includes configuration and the installed voice applications. A later selected public-key VM copy was restored in isolation and passed application and speech checks after manual tokenizer repair. Full restored integration and data-completeness validation remain pending; the sources and limits are distinguished below.
 
 ## Recorded Progress
 
@@ -23,7 +23,7 @@ An earlier encrypted VM-level Home Assistant recovery copy was exported to secon
 | Private name resolution | Resolution for the application has been verified | Live DNS records and addresses remain private. |
 | Mobile access | Companion apps on selected phone and tablet clients are connected | This does not establish external Home Assistant access from every mobile device. |
 | Availability monitoring | The saved Home Assistant monitor reported **Up** in Uptime Kuma | This is the result of the configured check at that time, not proof that every integration works. |
-| Recovery sources | Earlier VM copy, protected snapshot, encrypted application backup and tested public-key VM export | Selected VM archive/decryption integrity and restart/sign-in execution verified; functional restoration and remaining scheduling tests pending. |
+| Recovery sources | Earlier VM copy, protected snapshot, encrypted application backup and tested public-key VM export | Daily new-copy export and selected isolated VM restoration verified within the checks below; manual speech repair was required. Independent missed-run catch-up, full restored integration, data completeness and wider recovery remain pending. |
 | Voice hardware | Two Home Assistant Voice Preview Edition devices onboarded and tested | Both returned the expected persistent-memory response through the same configured assistant pipeline. |
 | Speech services | **Operational for the Spanish pipeline** | Whisper `3.5.3` provides speech-to-text and Piper `2.3.4` provides text-to-speech. Speech-to-Phrase `1.4.5` is installed but is not the active transcription engine for this pipeline. |
 | Hermes integration | **Authenticated A2A path verified** | The custom conversation connector returned Hermes responses in text and through both voice endpoints. Approved device control remains separate and unverified. |
@@ -47,16 +47,31 @@ A Windows task automates export without storing the GPG password. New exports
 validate the VMA and ciphertext; existing-copy runs check only the retained
 ciphertext. Automatic runs never decrypt. Missing-disk notification, recovery
 after reconnecting storage and automatic existing-copy verification after
-Windows restart/sign-in were tested successfully.
+Windows restart/sign-in were tested successfully. A later time-triggered run
+created a new encrypted copy with VMA and ciphertext checks. Sign-in fallback
+after the PC was off and overlapping-run suppression were also observed.
 
 The earlier handoff also reports two older VM copies restored into isolated
 test guests, with successful boot, local HTTP response and SQLite integrity
 checks. Those historical checks do not establish full application recovery
 or restoration of the current public-key export.
 
-Daily timing, missed-run catch-up, new-copy creation by the task, periodic
-manual decryption review and complete functional VM restoration remain pending.
-These results do not establish recovery of the separate application backup.
+A newer selected external encrypted copy was subsequently decrypted, checked
+against its source reference, VMA-validated and restored into a separate
+isolated guest. Boot, local HTTP, SQLite integrity, Core configuration checks,
+selected historical data and browser login were verified. Whisper required a
+missing public tokenizer to be supplied and the service started manually. A
+direct synthetic Spanish Piper-to-Whisper round-trip then matched the expected
+text; the restored browser voice preview also worked. The test guest was
+retained stopped and isolated after temporary UI access was removed and its
+configuration matched the pre-UI baseline. These checks do not establish
+unchanged-backup offline speech readiness, restored Assist/Hermes or physical
+voice operation, automation, or complete data recovery.
+
+Monthly manual decryption review and additional review after key or backup
+changes are the chosen policy. Recurring compliance, independent missed-daily
+catch-up and full functional recovery remain pending. These results do not
+establish recovery of the separate application backup.
 See [Backup and recovery](backup-and-recovery.md) for the distinct sources,
 verification modes, scheduling limits and remaining work.
 
@@ -72,8 +87,9 @@ These results verify the conversational path and both endpoints. They do not est
 
 ## Remaining Work
 
-- Complete the remaining export-task scheduling tests and define periodic manual decryption review.
-- Perform a controlled VM restoration and validate Home Assistant, speech components, and required integrations.
+- Independently validate missed-daily-run catch-up and carry out the chosen monthly manual decryption review.
+- Address the missing offline speech dependency in the recovery procedure and repeat startup without ad hoc repair.
+- Extend the selected restoration test to Assist/Hermes, physical voice hardware, automations and data completeness.
 - Monitor repeated voice requests and continue latency and reliability assessment.
 - Define and validate any permitted device actions separately from conversational responses.
 - Test actionable failure and recovery notifications for the Home Assistant monitor.

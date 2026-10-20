@@ -157,6 +157,10 @@ The Linux and Docker foundation, Home Assistant VM, and initial monitoring deplo
 - [x] Validate the selected Home Assistant VM archive, ciphertext transfer and guided decryption against the original.
 - [x] Test protected GPG recovery-key import and cross-platform encryption/decryption.
 - [x] Test restricted SSH export, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
+- [x] Verify a daily time-triggered new-copy export and sign-in fallback with observed overlap suppression.
+- [x] Verify selected-copy manual decryption and choose monthly review plus review after key or backup-system changes.
+- [x] Restore a selected external encrypted Home Assistant VM copy in isolation; test application, history and speech after manual tokenizer repair.
+- [x] Verify restored browser login and voice preview, then remove temporary UI access and retain the guest stopped and isolated.
 - [x] Deploy Uptime Kuma as a separate container workload with initial alerting configured.
 - [x] Save the existing Home Assistant monitor and observe its **Up** state.
 - [x] Complete onboarding and conversational validation for both Voice Preview Edition units.
@@ -172,8 +176,8 @@ The Linux and Docker foundation, Home Assistant VM, and initial monitoring deplo
 - [ ] Deploy Grafana dashboards for infrastructure health and capacity.
 - [ ] Validate failure and recovery notification delivery for each required monitor.
 - [ ] Review monitoring coverage, useful thresholds, and shared host or network dependencies.
-- [ ] Complete daily/catch-up/new-copy export-task tests and define periodic manual decryption review.
-- [ ] Test VM restoration and recovered Home Assistant, speech, and integration behavior.
+- [ ] Independently validate missed-daily-run catch-up and carry out monthly manual decryption reviews.
+- [ ] Address the missing offline speech dependency and extend restored validation to Assist/Hermes, physical voice, automations and data completeness.
 
 Home Assistant and Uptime Kuma are operational. Both voice units completed onboarding and returned the expected Hermes persistent-memory response through the local speech and A2A path. Long-term reliability, continuous monitoring, and any device-control permissions remain unverified. n8n, Prometheus, and Grafana remain planned. The phase remains **In progress**.
 
@@ -248,6 +252,10 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 - [x] Validate the selected Home Assistant VM archive, ciphertext transfer and guided decryption against the original.
 - [x] Test protected GPG recovery-key import and cross-platform encryption/decryption.
 - [x] Test restricted SSH export, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
+- [x] Verify a daily time-triggered new-copy export and sign-in fallback with observed overlap suppression.
+- [x] Verify selected-copy manual decryption and choose monthly review plus review after key or backup-system changes.
+- [x] Restore a selected external encrypted Home Assistant VM copy in isolation; test application, history and speech after manual tokenizer repair.
+- [x] Verify restored browser login and voice preview, then remove temporary UI access and retain the guest stopped and isolated.
 - [x] Retain a private Hermes configuration safety copy after the initial voice-path validation.
 - [x] Create protected compressed Proxmox snapshots of the stable Hermes and Home Assistant guests.
 - [x] Create an encrypted local Home Assistant application backup containing configuration and installed voice applications.
@@ -266,8 +274,9 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 - [ ] Define restricted access for any future additional users without exposing infrastructure administration.
 - [ ] Finalize cleanup or retention handling for unencrypted working archives.
 - [ ] Map every current workload to its actual backup coverage, including Hermes configuration and persistent memory.
-- [ ] Validate the daily export timer, missed-run catch-up and a new-copy task run.
-- [ ] Define periodic manual decryption review and retain functional restoration as pending.
+- [ ] Independently validate missed-daily-run catch-up, separately from the tested sign-in fallback.
+- [ ] Carry out the chosen monthly manual decryption reviews and test recovery relying only on offline material.
+- [ ] Extend the selected restoration checks to full integration, data completeness and other recovery sources; repeat offline speech startup without ad hoc repair.
 - [ ] Define recurring configuration and service backups outside the public repository.
 - [ ] Add retention, capacity, and backup-failure monitoring.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
@@ -276,7 +285,7 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 
 The segmented network and initial policy controls remain verified. Earlier encrypted VM and container copies passed SHA-256 comparison after transfer, and the manual VM procedure was repeated. Their exact service scope must be mapped before claiming coverage of every current workload or attributing the follow-up VM archive specifically to Hermes.
 
-The newer protected snapshots of the Hermes and Home Assistant guests completed successfully after the stable A2A voice milestone. An encrypted Home Assistant application backup and private Hermes configuration safety copies also exist without a recovery claim. External Hermes host access is confirmed for the travel laptop and a selected tablet. Remaining client tests, broader remote administration, routing capabilities, comprehensive least-privilege review, automated backup rotation, and controlled restoration still require validation.
+The newer protected snapshots of the Hermes and Home Assistant guests completed successfully after the stable A2A voice milestone. An encrypted Home Assistant application backup and private Hermes configuration safety copies also exist without a recovery claim. External Hermes host access is confirmed for the travel laptop and a selected tablet. A selected external encrypted Home Assistant VM copy now has an isolated restoration record, including application and speech checks after manual tokenizer repair, browser access and safe closure. Full restored Assist/Hermes, physical voice, automations and data completeness remain unverified. Remaining client tests, broader remote administration, routing capabilities, comprehensive least-privilege review, automated backup rotation and other workload restoration still require validation. See [Backup and recovery](backup-and-recovery.md) for the evidence boundaries.
 
 ## Phase 8 — Advanced Labs
 
@@ -297,9 +306,9 @@ The GPU-equipped workstation has been selected as a future on-demand compute nod
 
 The travel-laptop external test, Home Assistant deployment, Uptime Kuma deployment, both voice endpoints, the authenticated A2A conversation bridge, initial wiki retrieval, stable guest snapshots, and the memory-approval test are already recorded. The next priorities are:
 
-1. Complete the remaining Home Assistant export-task scheduling tests, define periodic manual decryption review and reconcile wider workload backup coverage.
+1. Independently validate missed-daily-run catch-up, carry out monthly manual decryption reviews and reconcile wider workload backup coverage.
 2. Validate actionable monitor notifications and complete remaining external client tests.
-3. Perform controlled VM, container, service-configuration, and network-configuration restoration tests.
+3. Resolve the selected restore's offline speech dependency, extend Assist/Hermes, physical voice, automation and data-completeness checks, and test other workload and configuration recovery sources.
 4. Monitor the complete voice-to-Hermes path, assess long-term latency and reliability, and define approved device actions.
 5. Review Tailscale authorization, device lifecycle, recovery procedures, and any intended routing role.
 6. Confirm remaining DHCP reservations and essential connectivity, and complete the inter-VLAN policy review.

@@ -19,9 +19,9 @@ Home Assistant now runs in a separate VM. Private name resolution is verified, a
 
 Initial compressed VM and container backups were created and encrypted copies transferred to separate storage, with matching SHA-256 checksums verifying transfer integrity. After further configuration changes, the manual VM procedure was repeated with another encrypted and integrity-checked secondary copy. Cleanup and retention handling for unencrypted working archives remain to be finalized. These earlier backup records do not establish coverage of every workload added since then.
 
-A separate Home Assistant application backup has now been exported, its archive contents inspected, and a copy placed on external storage. This application export is distinct from a Proxmox VM backup. The earlier encryption and checksum results do not establish those checks for the new application export. Controlled restoration of the documented backups remains pending.
+A separate Home Assistant application backup has now been exported, its archive contents inspected, and a copy placed on external storage. This application export is distinct from a Proxmox VM backup. The earlier encryption and checksum results do not establish those checks for the new application export. The later isolated Home Assistant VM restoration described below does not establish restoration of this separate application export or of every documented backup.
 
-A subsequent public-key Home Assistant VM export was validated separately: its selected VMA archive, transferred ciphertext and guided decryption passed their checks. A restricted SSH gateway and limited Windows task now provide the export path, with missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in tested. Daily timing, missed-run catch-up, a new-copy task run and functional restoration remain pending. See [Backup and recovery](backup-and-recovery.md); these VM checks do not validate the separate application export.
+A subsequent public-key Home Assistant VM export was validated separately: its selected VMA archive, transferred ciphertext and guided decryption passed their checks. A restricted SSH gateway and limited Windows task now provide the export path, with missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in tested. A daily time-triggered new-copy export and sign-in fallback were subsequently verified. A selected external encrypted VM copy was restored in isolation and passed application and speech checks after manual tokenizer repair. Browser login, selected history and voice preview also passed; temporary UI access was removed and the test guest retained stopped and isolated. Independent missed-run catch-up, full restored integration and wider recovery remain pending. See [Backup and recovery](backup-and-recovery.md); these VM checks do not validate the separate application export.
 
 ## Verified Progress
 
@@ -44,7 +44,7 @@ A subsequent public-key Home Assistant VM export was validated separately: its s
 | First service workload | **Operational** | Hermes Agent is deployed, and persistent memory loading has been verified across sessions. |
 | Home Assistant guest | **Operational** | A separate VM hosts Home Assistant with verified private name resolution and connected mobile companion apps. Voice setup and Hermes integration remain unfinished. |
 | Additional container workloads | **Present** | Separate containers host Uptime Kuma and Tailscale. Placement alone does not establish every intended monitoring or remote-routing function. |
-| Backup and restore testing | **Earlier integrity checks verified; restoration pending** | A private pre-update host-configuration copy and encrypted initial VM and container backups exist. The later manual VM backup also passed secondary-copy SHA-256 comparison. Recurring rotation and controlled restoration remain pending. |
+| Backup and restore testing | **Selected Home Assistant VM restoration tested** | Earlier workload integrity checks retain their scopes. A selected encrypted Home Assistant VM copy was restored and tested in isolation, with manual speech repair. Recurring rotation, full restored integration and other workload recovery remain pending. |
 | Home Assistant application backup | **Exported and copied** | Archive contents were inspected and a copy placed on external storage. This is a separate application-level backup; its encryption and checksum checks are not established here. |
 | Monitoring and alerting | **Initial deployment operational** | Uptime Kuma and initial alerting are configured. The Home Assistant availability monitor reported **Up**. Full host and guest coverage, per-monitor notification validation, Prometheus, and Grafana remain future work. |
 
@@ -122,7 +122,7 @@ The host now runs multiple service workloads. Earlier encrypted VM and container
 8. Confirm restored Hermes memory behavior and Home Assistant application recovery where applicable.
 9. Document the sanitized recovery procedure and its limitations.
 
-Until these checks are complete, the recovery status remains **selected Home Assistant VM archive/decryption integrity and restart/sign-in export execution verified; broader rotation and functional restoration pending**. Earlier workload copies and the separate application export retain their own evidence boundaries.
+Until these checks are complete, the recovery status remains **daily Home Assistant export and selected isolated VM restoration checks verified with manual speech repair; full restored integration, other workload recovery and broader rotation pending**. Earlier workload copies and the separate application export retain their own evidence boundaries.
 
 ## Future Documentation
 
