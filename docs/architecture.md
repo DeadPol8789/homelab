@@ -22,7 +22,7 @@ Uptime Kuma runs as a separate container workload with initial alerting configur
 
 Tailscale provides private remote administration of the Hermes host. The selected travel laptop has passed an external-network access test through a mobile hotspot. A dedicated Tailscale container is also present in the workload inventory; that alone does not establish verified subnet routing, Exit Node operation, or network-wide access. Broader remote-access policy and client validation remain in progress.
 
-Final private network-configuration backups have been saved and verified. Earlier encrypted VM and container backups were copied to separate storage and checked with matching SHA-256 checksums. After the assistant integration became stable, protected compressed Proxmox snapshots of both the Hermes and Home Assistant guests completed successfully. An encrypted Home Assistant application backup and private Hermes configuration safety copies also exist. Controlled restoration remains pending.
+Final private network-configuration backups have been saved and verified. Earlier encrypted VM and container backups were copied to separate storage and checked with matching SHA-256 checksums. After the assistant integration became stable, protected compressed Proxmox snapshots of both the Hermes and Home Assistant guests completed successfully. An encrypted Home Assistant application backup and private Hermes configuration safety copies also exist. A selected external encrypted Home Assistant VM copy was later restored in isolation with application and speech checks after manual tokenizer repair; complete integration and wider workload restoration remain pending.
 
 The following diagram shows workload placement and the tested access and monitoring relationships. It is not a map of firewall permissions.
 
@@ -56,10 +56,10 @@ flowchart TD
 | Remote access | Tailscale private overlay | Private administration of the Hermes host is externally tested, including access from the selected travel laptop through a mobile hotspot. The dedicated container's presence does not by itself verify routed access. |
 | Home automation | Home Assistant | Core `2026.9.1` on OS `18.2`, with connected mobile apps, two onboarded voice endpoints, Whisper `3.5.3`, Piper `2.3.4`, and the Hermes A2A conversation path verified. Device actions remain pending. |
 | Availability monitoring | Uptime Kuma | Operational with initial alerting configured; the Home Assistant monitor reported **Up** after saving. |
-| Recovery | Stable guest snapshots and application backup | Protected compressed snapshots completed for both principal guests, and an encrypted Home Assistant application backup exists. Full functional restoration has not yet been demonstrated. |
+| Recovery | Guest snapshots, application backup and selected VM export | Protected backups retain separate scopes. A selected encrypted Home Assistant VM export was restored in isolation with application and speech checks after manual tokenizer repair. Full restored integration, data completeness and wider recovery remain pending. |
 | Future services | n8n, Prometheus, and Grafana | Planned; not documented as deployed. |
 
-A separate Windows client runs the reviewed public-key Home Assistant VM export through a restricted SSH gateway. Archive/ciphertext integrity, guided decryption and automatic existing-copy verification after restart/sign-in were tested. Local missing-disk warning and recovery were verified. Remaining scheduling tests and functional restoration are tracked in [Backup and recovery](backup-and-recovery.md). This does not establish off-site recovery or change the planned service integrations.
+A separate Windows client runs the reviewed public-key Home Assistant VM export through a restricted SSH gateway. Archive/ciphertext integrity, guided decryption, a daily timed new-copy task run, sign-in fallback and local missing-disk warning/recovery were verified. Monthly manual decryption review is the chosen policy. The selected isolated restore required manual speech repair; temporary UI access was removed and the test guest retained stopped and isolated. Independent missed-run catch-up, full restored integration and wider recovery are tracked in [Backup and recovery](backup-and-recovery.md). This does not establish off-site recovery or change the planned service integrations.
 
 ## Verified Network Segmentation
 
@@ -96,7 +96,7 @@ The GPU-equipped primary workstation is not intended to be permanently dedicated
 | Observability | Availability checks, alerts, metrics, and dashboards | Uptime Kuma and initial alerting are configured; Home Assistant reported **Up**. Broader coverage and notification validation remain in progress. Prometheus and Grafana are planned. |
 | Assistant platform | Persistent local assistant using Hermes Agent | Operational deployment with cross-session memory, approval-gated writes, authenticated A2A conversation, both voice endpoints, and initial wiki retrieval verified. |
 | AI compute | Heavy local inference on the GPU-equipped workstation | Planned as an on-demand node; Wake-on-LAN and workload controls are not yet integrated. |
-| Storage and backups | Network configuration, workload and service backups, future NAS, and recovery procedures | Earlier encrypted workload copies passed transfer-integrity validation. Protected compressed snapshots of the stable Hermes and Home Assistant guests and an encrypted Home Assistant application backup now exist. Recurring rotation and controlled restoration remain pending. |
+| Storage and backups | Network configuration, workload and service backups, future NAS, and recovery procedures | Earlier encrypted workload copies passed transfer-integrity validation. Protected compressed snapshots of the stable Hermes and Home Assistant guests and an encrypted Home Assistant application backup now exist. Selected Home Assistant VM restoration checks passed after manual speech repair; recurring rotation and recovery of other workloads remain pending. |
 
 ## Architecture Principles
 
@@ -108,7 +108,7 @@ The project will follow these principles as it evolves:
 - **Safe changes:** major network changes should be tested before becoming the primary network path.
 - **Reproducibility:** relevant deployment steps and sanitized example configurations should be documented.
 - **Observability:** important services should eventually expose health and performance information without publishing sensitive operational data.
-- **Recoverability:** private network-configuration and encrypted workload backups are retained and integrity-checked, while restoration procedures must still be tested before recovery is treated as dependable.
+- **Recoverability:** private network-configuration and encrypted workload backups are retained and integrity-checked, while the selected Home Assistant restoration result must not be generalized to untested copies, complete integration recovery or unattended disaster recovery.
 - **Privacy by design:** public documentation must not reveal details that could identify or weaken the live environment.
 
 ## Future Documentation

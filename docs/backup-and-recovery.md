@@ -1,7 +1,7 @@
 # Backup and Recovery
 
 > **Last documented:** October 2026  
-> **Project status:** Home Assistant public-key export and restart/sign-in execution tested; remaining scheduling tests, retention and functional restoration pending
+> **Project status:** Daily Home Assistant export and selected isolated VM restoration tested; speech required manual repair; full integration, independent missed-run catch-up and wider recovery remain pending
 
 This document records backup milestones for the HomeLab virtualization workloads and service configuration. It distinguishes the earlier encrypted, integrity-checked workload copies from the current protected guest snapshots, the Home Assistant application backup, and private Hermes configuration safety copies. Live identifiers, filenames, paths, hashes, credentials, and storage details are excluded.
 
@@ -31,8 +31,9 @@ After the Home Assistant-to-Hermes voice integration reached a stable tested sta
 | Stable Home Assistant guest snapshot | **Completed and protected** | A compressed snapshot-mode Proxmox backup completed successfully after the same integration milestone. |
 | Home Assistant application backup | **Created and encrypted locally** | The application backup includes Home Assistant configuration and installed voice applications; restoration remains untested. |
 | Local working archives | **Temporarily retained** | Unencrypted working archives remain protected on the virtualization host while cleanup and retention handling are finalized. |
-| Controlled restoration | **Pending** | Earlier checksum matches and inspection of the newer application archive do not prove that a workload or application can be restored successfully. |
-| Windows export task | **Configured and partly tested** | Demand-runs, missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in succeeded. Daily timing, missed-run catch-up and a new-copy task run remain unverified. |
+| Selected Home Assistant VM restoration | **Tested with manual intervention** | An external encrypted copy was decrypted, hash-checked, VMA-validated, restored and booted in isolation. Application, history and speech checks passed within the scope below; Whisper required a manual tokenizer supplement and service start. Full integration recovery remains unverified. |
+| Windows export task | **Daily new-copy run verified** | The time trigger launched a successful new export with VMA and ciphertext checks. Sign-in fallback after the PC was off and overlapping-run suppression were also observed. Independent missed-daily-run catch-up remains unverified. |
+| Manual decryption review | **Selected copy verified; monthly policy chosen** | Guided decryption matched the original archive reference. Review is planned monthly and after key or backup-system changes; repeated monthly execution has not yet been demonstrated. |
 | Wider retention and coverage | **Pending** | The export task does not establish complete workload coverage, rotation, capacity alerts or disaster recovery. |
 
 ## Earlier Virtualization Backup Workflow
@@ -64,7 +65,7 @@ This diagram represents the verification sequence only. It is not a disclosure o
 
 The later virtual-machine cycle provides evidence that the documented manual procedure can be executed again after the workload changes. It produced a new encrypted recovery source on storage separate from the virtualization host and confirmed byte-for-byte consistency between the encrypted source and its transferred copy.
 
-This repetition does not establish automated scheduling, retention rotation, or recovery readiness. It also does not show that every future execution will succeed without validation. Each protected copy must continue to be checked, and a controlled restoration remains necessary.
+This earlier manual repetition does not establish automated scheduling, retention rotation, or recovery readiness. Later task and selected restoration results are recorded separately below. Each protected copy must continue to be checked; one successful restoration does not validate every archive or service.
 
 ## Home Assistant VM Recovery Copy
 
@@ -73,7 +74,7 @@ An earlier encrypted Home Assistant VM recovery copy was followed by the separat
 | Recovery source | Recorded result | Remaining validation |
 | --- | --- | --- |
 | Earlier VM and container archives | Encrypted secondary copies with matching SHA-256 checksums; the manual VM cycle was repeated | Decryption, isolated restoration, startup, and service validation |
-| Home Assistant public-key VM export | Selected archive validation, ciphertext integrity and guided decryption tested; automatic existing-copy verification after restart/sign-in succeeded | Periodic decryption review, remaining scheduling tests, VM restoration and functional validation |
+| Home Assistant public-key VM export | Daily new-copy task execution, manual decryption and selected isolated VM restoration tested; application and speech checks passed after manual tokenizer repair | Recurring manual review, independently attributed missed-run catch-up, full Assist/Hermes and physical voice tests, automation and data-completeness checks |
 | Hermes configuration safety copy | Created privately after the initial voice-path configuration | Protection, integrity comparison, completeness review, and controlled configuration recovery |
 | Stable Hermes and Home Assistant guest snapshots | Protected compressed snapshot jobs completed successfully | Isolated restoration, guest startup, and functional validation |
 | Home Assistant application backup | Encrypted local backup containing configuration and installed voice applications | Application-level restoration and voice-integration validation |
@@ -119,8 +120,10 @@ test key homes were removed after those tests.
 A guided export of the actual VM backup validated its VMA archive on Proxmox,
 verified transferred ciphertext and decrypted it on Windows. The decrypted
 bytes matched the original archive's private SHA-256 reference. This establishes
-archive/decryption integrity for that selected copy, not functional VM recovery.
-The working Windows key store is separate from the offline recovery copy.
+archive/decryption integrity for that selected copy; the later controlled VM
+restoration is recorded separately below. The working Windows key store is
+separate from the offline recovery copy. The selected restoration used that
+working key store, not a fresh recovery relying only on offline key material.
 
 ### Restricted SSH boundary
 
@@ -141,17 +144,20 @@ helper does not establish comprehensive Proxmox host hardening.
 | Existing automatic copy | Local ciphertext compared with its retained SHA-256 reference; recorded source reference read | No fresh source hash, VMA validation, encryption, transfer or decryption |
 | Guided export tested | VMA validation, ciphertext integrity and decrypted archive matching the original SHA-256 | No restored-guest, application, integration or voice validation |
 
-Automatic runs never decrypt or store/request the GPG password. Manual
-decryption review is a follow-up duty; its frequency has not yet been decided.
-The new-copy automatic exporter passed a manual script execution. Actual task
-runs so far have verified an existing copy.
+Automatic runs never decrypt or store/request the GPG password. Guided
+decryption of the newer selected copy matched its original archive reference.
+A monthly manual review was chosen, with an additional review after changes
+to keys or the backup system. This is a maintenance policy, not proof of
+repeated monthly reviews or a newly configured reminder. The daily task has
+now created and verified a new encrypted copy without decrypting it.
 
 ### Windows task and failure handling
 
 The task has daily and same-user sign-in triggers, with a short sign-in delay.
 It uses the user's interactive session and limited privileges, stores no task
-password, and does not wake or power on the PC. Missed-run catch-up is configured
-but its dedicated computer-off test remains pending.
+password, and does not wake or power on the PC. Missed-run catch-up is configured.
+A run after the PC was off was attributed to sign-in; it does not independently
+validate catch-up caused by a missed daily trigger.
 
 The launcher checks the destination volume identity, pinned scripts/public key,
 and restricted SSH readiness. Logs and JSON reports are stored on the system
@@ -164,16 +170,76 @@ rather than being blindly retried. Successful runs are quiet.
 | Task demand-run | Exporter succeeded and existing ciphertext hash matched | Current-session test |
 | Destination disconnected | Local warning received; preflight failure; exporter not started | No export state reset needed |
 | Same destination reconnected | Readiness and task run succeeded without resetting state | Existing-copy check |
-| Windows restart/sign-in | Task ran without manual launch/key reload and verified ciphertext | Reports do not identify which trigger launched it |
+| Windows restart/sign-in | Task ran without manual launch/key reload and verified ciphertext | The earlier reports do not identify which trigger launched it |
+| Daily time trigger | Scheduler history identifies the time trigger; a new copy passed VMA validation and ciphertext SHA-256 verification | Selected scheduled run; no automatic decryption |
+| Sign-in after the PC was off | Scheduler history identifies sign-in; the retained ciphertext check and task completion succeeded | Confirms sign-in fallback, not independent missed-daily-run catch-up |
+| Overlapping launch attempt | Scheduler refused a second instance while the first was running | Observed overlap suppression; the second attempt's trigger was not established |
 
-This proves restricted SSH availability and automatic execution after the
-tested restart/sign-in. It does not independently prove the daily timer,
-missed-run catch-up or new-copy creation by the task. Several-minute durations
-were observed; the reports do not establish the exact timing breakdown.
+These tests establish restricted export availability, a daily timed new-copy
+run, sign-in fallback and observed overlap suppression. Independent
+missed-daily-run catch-up remains open. The reports do not establish the
+exact timing breakdown or guarantee future runs.
 
 The exporter selects the newest retained source backup and cannot recover one
 already deleted by retention. The secondary Windows storage is not an off-site
 backup. Offline key storage is not an offline copy of the VM archive.
+
+## Selected Isolated Home Assistant VM Restoration
+
+The newer selected public-key VM export was recovered from its external
+encrypted copy. It was decrypted using the working Windows key store and
+streamed into protected temporary staging on the virtualization host. The
+received archive matched the retained original SHA-256 reference and passed
+VMA validation before restoration. No unencrypted VM archive was written to
+Windows during this transfer.
+
+The archive was restored into a separate test guest with its own disks.
+Automatic startup was disabled and the copied network interface was removed
+before the first boot. The original service guests remained running in the
+reported checks. Results apply to this selected archive and test guest.
+
+| Check | Observed result | Limit |
+| --- | --- | --- |
+| VM and application startup | The guest booted; Supervisor reached running state and local HTTP returned success | Does not establish that every application or integration recovered |
+| Database and configuration | Read-only SQLite structural integrity and the Core configuration check passed; historical records were present | Structural integrity and aggregate records do not prove complete history, statistics or application data |
+| Speech dependency | Whisper initially failed because a tokenizer was absent locally and unavailable over the isolated network | The unchanged backup did not demonstrate unattended offline speech recovery |
+| Manual speech repair | A separately obtained public tokenizer was hash-checked, parsed and placed alongside the restored model; Whisper became healthy after a manual service start | This supplemented the restored guest; it did not repair the retained backup or the original service guest |
+| Direct speech round-trip | Piper generated a synthetic Spanish sentence and Whisper transcribed the expected sentence exactly | Component test bypassing Assist, Hermes and physical voice hardware |
+| Restored browser UI | User login, panel access, a selected historical-state view and Piper voice-preview playback succeeded | Selected frontend checks, not complete history or integration validation |
+| Stored assistant settings | The Spanish speech engines, voice and Hermes conversation-engine reference were visible | Stored settings are not proof of a successful restored Assist/Hermes conversation |
+
+### Isolated UI access and closure
+
+UI inspection used a temporary restricted QEMU user-network backend with no
+production bridge. A host loopback-only web forward was reached through a
+local SSH tunnel. The expected guest address, local-only listener and HTTP
+response were checked. Sampled outbound TCP connections to host, management
+and external targets failed while the guest's local web control succeeded.
+These sampled probes support the configured restriction; they are not a
+comprehensive test of all protocols or destinations.
+
+After testing, the user closed the browser session and SSH tunnel. The test
+guest was shut down, the temporary network arguments were removed, and its
+configuration checksum matched the protected pre-UI baseline. The final host
+listener check showed no temporary web listener. The test guest was retained
+stopped, without a configured network interface and with automatic startup
+disabled. Its manual tokenizer addition and test activity remain on its disks;
+matching configuration files do not mean unchanged guest-disk contents.
+
+The decrypted host staging archives and transfer files were removed after
+individual review. The retained encrypted backup, source archive and test
+guest disks were preserved. This cleanup does not establish cleanup or a
+retention policy for every earlier working archive.
+
+### Remaining functional boundary
+
+The test establishes selected VM recovery with application and speech checks
+after manual intervention. It does not establish an unchanged backup's offline
+speech readiness, a full restored Assist/Hermes conversation, physical
+microphone or voice-endpoint operation, automation execution, complete data
+recovery, Hermes guest or memory restoration, or recovery of the separate
+Home Assistant application backup. The earlier live voice-to-Hermes results
+must not be reassigned to this isolated restored guest.
 
 ## What the Integrity Check Proves
 
@@ -191,7 +257,7 @@ The checksum comparison does **not** prove that:
 - The restored guest boots, obtains the intended network behavior, or starts its services.
 - Hermes Agent configuration and persistent memory behave correctly after restoration.
 
-Those outcomes require a controlled restoration test.
+Those outcomes require separate checks, such as the selected controlled restoration above; a checksum match alone is not their evidence.
 
 ## Security and Privacy Controls
 
@@ -208,27 +274,28 @@ The Home Assistant VM recovery copy contains potentially sensitive configuration
 
 ## Recovery Boundary
 
-The current milestone includes the earlier recovery sources and a tested public-key Home Assistant VM export with selected archive/decryption integrity and restart/sign-in task execution. These scopes remain distinct. Wider recurring rotation, remaining scheduling tests and functional disaster recovery remain pending.
+The current milestone combines selected export integrity, a daily timed
+new-copy task run, guided decryption and an isolated Home Assistant VM
+restoration with the limited functional checks above. Manual tokenizer repair
+was required. Earlier recovery sources retain their separate scopes.
 
-A future controlled restoration test should verify:
-
-1. Access to the required encryption and recovery material.
-2. Successful decryption of a selected protected archive.
-3. Restoration into an isolated or otherwise safe target.
-4. Successful guest or container start-up.
-5. Expected storage, network, and service behavior.
-6. Hermes Agent availability and persistent-memory behavior where applicable, or Home Assistant application, speech, and required integration behavior after VM recovery.
-7. Cleanup of temporary restored resources and sensitive test material.
-8. A sanitized recovery record that does not expose the live environment.
+The monthly decryption-review policy has been chosen; recurring compliance
+remains to be demonstrated. Independent missed-daily-run catch-up, source
+retention, wider workload coverage and complete functional disaster recovery
+remain open. Future drills should test those dependencies and recovery using
+offline material, record required manual intervention, validate the intended
+services and data, and close temporary access and plaintext staging safely.
 
 ## Remaining Work
 
 - Map the current VM, container, and service inventory to its backup scope and recovery dependencies.
-- Validate daily timed execution, catch-up after a missed daily run, and a new-copy scheduled-task run.
-- Choose and document a periodic manual decryption-review interval.
-- Test restoration of the Home Assistant VM and validate the recovered application, speech components, and required integrations.
+- Independently attribute and validate catch-up after a missed daily run, separately from sign-in fallback.
+- Carry out the chosen monthly manual decryption review and additional reviews after key or backup-system changes.
+- Make the missing speech dependency available through a reviewed recovery procedure and repeat offline speech startup without ad hoc repair.
+- Validate restored Assist/Hermes conversation, physical voice hardware and automations in an appropriately controlled test; assess data completeness separately.
+- Test recovery using only the intended offline recovery material rather than the working Windows key store.
 - Review protection, completeness, and recovery use of the private Hermes configuration safety copy.
-- Perform isolated restoration tests for both protected stable-state guest snapshots.
+- Test the other retained guest snapshots, including Hermes startup and persistent memory; the selected Home Assistant test does not validate those sources.
 - Test application-level Home Assistant recovery, including the local speech services and Hermes conversation connector.
 - Decide when protected local working archives should be removed.
 - Define recurring backup jobs for virtual machines, containers, service configuration, and persistent data.
