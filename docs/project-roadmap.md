@@ -176,7 +176,7 @@ The Linux and Docker foundation, Home Assistant VM, and initial monitoring deplo
 - [ ] Deploy Grafana dashboards for infrastructure health and capacity.
 - [ ] Validate failure and recovery notification delivery for each required monitor.
 - [ ] Review monitoring coverage, useful thresholds, and shared host or network dependencies.
-- [ ] Independently validate missed-daily-run catch-up and carry out monthly manual decryption reviews.
+- [ ] Independently validate Home Assistant missed-daily-run catch-up and carry out monthly manual decryption reviews; Hermes catch-up has separate event-114 evidence.
 - [ ] Address the missing offline speech dependency and extend restored validation to Assist/Hermes, physical voice, automations and data completeness.
 
 Home Assistant and Uptime Kuma are operational. Both voice units completed onboarding and returned the expected Hermes persistent-memory response through the local speech and A2A path. Long-term reliability, continuous monitoring, and any device-control permissions remain unverified. n8n, Prometheus, and Grafana remain planned. The phase remains **In progress**.
@@ -228,6 +228,12 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 
 ### Verified foundation controls
 
+- [x] Verify weekly Home Assistant and Hermes source cycles and timed new-copy encrypted exports.
+- [x] Verify a separate restricted Hermes export/task path and explicit missed-schedule recovery using event 114.
+- [x] Create and validate fresh Tailscale/Uptime Kuma encrypted backups and configure their weekly source job; first scheduled execution remains pending.
+- [x] Restore selected Hermes, Uptime Kuma and Tailscale sources in isolation with documented manual adaptations and functional limits.
+- [x] Verify disconnected ciphertext copies for all four selected workloads and recovered-key decryption of both selected VM copies.
+
 - [x] Enable multi-factor authentication for OPNsense administration.
 - [x] Use a separate administrative account with multi-factor authentication for normal Proxmox administration.
 - [x] Keep live configuration exports and credentials outside the public repository.
@@ -274,10 +280,10 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 - [ ] Define restricted access for any future additional users without exposing infrastructure administration.
 - [ ] Finalize cleanup or retention handling for unencrypted working archives.
 - [ ] Map every current workload to its actual backup coverage, including Hermes configuration and persistent memory.
-- [ ] Independently validate missed-daily-run catch-up, separately from the tested sign-in fallback.
-- [ ] Carry out the chosen monthly manual decryption reviews and test recovery relying only on offline material.
+- [ ] Independently validate Home Assistant missed-daily-run catch-up; keep its sign-in evidence separate from the demonstrated Hermes catch-up.
+- [ ] Carry out recurring manual decryption reviews and extend the recovered-key VM decryption drill to controlled restored-service checks.
 - [ ] Extend the selected restoration checks to full integration, data completeness and other recovery sources; repeat offline speech startup without ad hoc repair.
-- [ ] Define recurring configuration and service backups outside the public repository.
+- [ ] Verify the newly enabled container job's first scheduled run and maintain the four-workload source jobs; decide separately whether container encrypted export should be automated.
 - [ ] Add retention, capacity, and backup-failure monitoring.
 - [ ] Test recovery procedures instead of relying only on successful backup jobs.
 - [ ] Review logging, patching, account security, and administrative access.
@@ -285,7 +291,7 @@ Hermes Agent `0.20.6`, persistent memory, approval-gated writes, private host ad
 
 The segmented network and initial policy controls remain verified. Earlier encrypted VM and container copies passed SHA-256 comparison after transfer, and the manual VM procedure was repeated. Their exact service scope must be mapped before claiming coverage of every current workload or attributing the follow-up VM archive specifically to Hermes.
 
-The newer protected snapshots of the Hermes and Home Assistant guests completed successfully after the stable A2A voice milestone. An encrypted Home Assistant application backup and private Hermes configuration safety copies also exist without a recovery claim. External Hermes host access is confirmed for the travel laptop and a selected tablet. A selected external encrypted Home Assistant VM copy now has an isolated restoration record, including application and speech checks after manual tokenizer repair, browser access and safe closure. Full restored Assist/Hermes, physical voice, automations and data completeness remain unverified. Remaining client tests, broader remote administration, routing capabilities, comprehensive least-privilege review, automated backup rotation and other workload restoration still require validation. See [Backup and recovery](backup-and-recovery.md) for the evidence boundaries.
+The newer protected snapshots of the Hermes and Home Assistant guests completed successfully after the stable A2A voice milestone. An encrypted Home Assistant application backup and private Hermes configuration safety copies also exist without a recovery claim. External Hermes host access is confirmed for the travel laptop and a selected tablet. A selected external encrypted Home Assistant VM copy now has an isolated restoration record, including application and speech checks after manual tokenizer repair, browser access and safe closure. Full restored Assist/Hermes, physical voice, automations and data completeness remain unverified. Remaining client tests, broader remote administration, routing capabilities, comprehensive least-privilege review, complete retention/capacity controls and full functional recovery still require validation. Later Hermes and container checks, enabled schedules and disconnected-copy results are recorded in the recovery document; configuration is distinguished from first scheduled execution. See [Backup and recovery](backup-and-recovery.md) for the evidence boundaries.
 
 ## Phase 8 — Advanced Labs
 
@@ -306,13 +312,13 @@ The GPU-equipped workstation has been selected as a future on-demand compute nod
 
 The travel-laptop external test, Home Assistant deployment, Uptime Kuma deployment, both voice endpoints, the authenticated A2A conversation bridge, initial wiki retrieval, stable guest snapshots, and the memory-approval test are already recorded. The next priorities are:
 
-1. Independently validate missed-daily-run catch-up, carry out monthly manual decryption reviews and reconcile wider workload backup coverage.
+1. Verify the new container job's first scheduled run, independently test Home Assistant missed-schedule catch-up and carry out recurring manual decryption reviews. Hermes catch-up is already demonstrated for a selected run.
 2. Validate actionable monitor notifications and complete remaining external client tests.
 3. Resolve the selected restore's offline speech dependency, extend Assist/Hermes, physical voice, automation and data-completeness checks, and test other workload and configuration recovery sources.
 4. Monitor the complete voice-to-Hermes path, assess long-term latency and reliability, and define approved device actions.
 5. Review Tailscale authorization, device lifecycle, recovery procedures, and any intended routing role.
 6. Confirm remaining DHCP reservations and essential connectivity, and complete the inter-VLAN policy review.
-7. Finalize working-archive handling, recurring backups, retention, and capacity or failure alerts.
+7. Maintain the enabled source jobs, manually refreshed disconnected copies and reviewed staging cleanup; extend retention, capacity and failure alerts without treating protected archives as ordinary rotation.
 8. Curate and ingest the updated public documentation into the Hermes wiki, then expand approved service actions after the required recovery and access boundaries are established.
 
 Implementation should proceed one bounded change at a time, with validation before the next change. Adjust the order when testing reveals a dependency, and record the reason. Optional integrations remain separate from the operational baseline.

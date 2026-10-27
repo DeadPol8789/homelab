@@ -44,7 +44,7 @@ A subsequent public-key Home Assistant VM export was validated separately: its s
 | First service workload | **Operational** | Hermes Agent is deployed, and persistent memory loading has been verified across sessions. |
 | Home Assistant guest | **Operational** | A separate VM hosts Home Assistant with verified private name resolution and connected mobile companion apps. Voice setup and Hermes integration remain unfinished. |
 | Additional container workloads | **Present** | Separate containers host Uptime Kuma and Tailscale. Placement alone does not establish every intended monitoring or remote-routing function. |
-| Backup and restore testing | **Selected Home Assistant VM restoration tested** | Earlier workload integrity checks retain their scopes. A selected encrypted Home Assistant VM copy was restored and tested in isolation, with manual speech repair. Recurring rotation, full restored integration and other workload recovery remain pending. |
+| Backup and restore testing | **Selected four-workload checks recorded** | Weekly source jobs are enabled; new VM cycles and selected VM/container restoration checks passed within documented limits. The container job awaits its first scheduled execution; manual speech/network adaptations and full functional gaps remain explicit. |
 | Home Assistant application backup | **Exported and copied** | Archive contents were inspected and a copy placed on external storage. This is a separate application-level backup; its encryption and checksum checks are not established here. |
 | Monitoring and alerting | **Initial deployment operational** | Uptime Kuma and initial alerting are configured. The Home Assistant availability monitor reported **Up**. Full host and guest coverage, per-monitor notification validation, Prometheus, and Grafana remain future work. |
 
@@ -115,14 +115,14 @@ The host now runs multiple service workloads. Earlier encrypted VM and container
 1. Map each current VM, container, and application to its required backup scope and recovery dependencies.
 2. Document protection and integrity checks for the new Home Assistant application-backup copy.
 3. Finalize cleanup or retention handling for unencrypted working archives.
-4. Establish a recurring backup schedule and retention policy.
+4. Verify the new container job's first scheduled run and maintain the enabled source schedules and their protected/ordinary retention boundaries.
 5. Add capacity and backup-failure monitoring; an **Up** availability check does not validate backup health.
-6. Perform controlled restoration tests in an isolated context.
-7. Confirm that restored guests and containers start and their services behave as expected.
+6. Extend the selected isolated restoration tests to the required full service and integration behaviors.
+7. Retain the recorded startup checks separately from full functional equivalence and repeat tests for selected newer archives.
 8. Confirm restored Hermes memory behavior and Home Assistant application recovery where applicable.
 9. Document the sanitized recovery procedure and its limitations.
 
-Until these checks are complete, the recovery status remains **daily Home Assistant export and selected isolated VM restoration checks verified with manual speech repair; full restored integration, other workload recovery and broader rotation pending**. Earlier workload copies and the separate application export retain their own evidence boundaries.
+The current recovery record includes enabled weekly source coverage, selected isolated VM/container restoration checks, separate daily VM encrypted-export tasks, disconnected copies and a recovered-key VM decryption drill. The container schedule still awaits execution evidence. Full restored integration, recurring maintenance and broader capacity/failure controls remain pending. See [Backup and recovery](backup-and-recovery.md); application-level and configuration-only copies retain their own boundaries.
 
 ## Future Documentation
 

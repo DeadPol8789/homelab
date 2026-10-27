@@ -174,6 +174,16 @@ For Home Assistant, Hermes, Uptime Kuma, and remote-client updates, also verify 
 - Client enrollment is distinguished from external reachability and SSH authentication.
 - A dedicated Tailscale container is not presented as proof of subnet routing, Exit Node operation, or complete access-policy validation.
 
+## Recovery Evidence and Secret Handling
+
+The later recovery record includes selected isolated tests for both principal VMs and the two infrastructure containers. Document only the scope actually checked: HTTP success, SQLite integrity, aggregate counts, readable files, state-file metadata and daemon startup do not establish complete application behavior or accepted live credentials.
+
+Private key exports and Tailscale state files can contain secret material and must never be displayed or committed. A recovered-key drill imported a protected export into a separate temporary GPG home and decrypted selected removable VM copies in memory; only the temporary key home was removed. The working store and offline export were preserved, with the passphrase retained separately. A passphrase alone cannot replace the private key.
+
+Disconnected archive copies are now separately verified for selected workloads; offline key storage alone was not that evidence. The removable device requires manual refresh and has no demonstrated off-site placement. New restoration reports on working storage must not be described as already copied offline.
+
+Restricted SSH/task state remains separate for Home Assistant and Hermes. Automatic runs never decrypt. A reviewed interrupted-run marker was archived only after checking its identity, logs and remote state; this is not a blanket permission to clear pending markers. Never infer missed-schedule recovery from configuration alone: event 114 supports the selected Hermes catch-up, whereas event 119 supports Home Assistant sign-in only.
+
 ## Repository Practices
 
 - Keep the public repository separate from live configuration and backup locations.
@@ -229,9 +239,9 @@ At the time of this review, the public documentation may state that:
 - A private Hermes configuration safety copy was created after the initial voice-path validation. It is not a complete, integrity-verified, or restoration-tested assistant backup.
 - Uptime Kuma runs in a separate container with initial alerting configured. The saved Home Assistant monitor reported **Up**; this does not establish every notification path, complete monitoring coverage, or recoverability.
 - Real backup IDs, filenames, paths, timestamps, sizes, hashes, encryption details, destinations, and local working archives remain private.
-- The restricted SSH export gateway and Windows task passed demand-run, missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in tests. Automatic runs never decrypt or store the GPG password. A daily time-triggered new-copy run, sign-in fallback and overlap suppression were later verified. Monthly manual decryption review is the chosen policy; recurring compliance, independent missed-daily-run catch-up and wider retention remain pending.
+- The restricted SSH export gateway and Windows task passed demand-run, missing-disk warning/recovery and automatic existing-copy verification after restart/sign-in tests. Automatic runs never decrypt or store the GPG password. A daily time-triggered new-copy run, sign-in fallback and overlap suppression were later verified. Monthly manual decryption review is the chosen policy; recurring compliance, independent Home Assistant missed-daily-run catch-up and complete retention/capacity controls remain pending. Later Hermes event-114 catch-up and selected recovery/offline-copy checks are documented separately.
 - Selected restored-UI login, history rendering and voice preview passed through temporary restricted QEMU networking and loopback-only SSH forwarding. The tunnel was closed, the guest stopped, the temporary network arguments removed, and the configuration checksum matched its pre-UI baseline; the host listener was absent in the final check. Sampled negative outbound probes are not a comprehensive isolation proof. The guest disks retain the manual speech supplement and test activity.
-- The selected restoration does not demonstrate unchanged-backup offline speech readiness, restored Assist/Hermes conversation, physical voice hardware, automation execution, complete data recovery, or restoration of Hermes and its persistent memory. Decrypted host staging files were removed; other working-archive retention remains a separate decision.
+- The selected restoration does not demonstrate unchanged-backup offline speech readiness, restored Assist/Hermes conversation, physical voice hardware, automation execution, complete data recovery, or restored Hermes conversation and semantic memory behavior. Later Hermes SQLite and file-read checks retain their narrower scope. Decrypted host staging files were removed; other working-archive retention remains a separate decision.
 - An initial local voice-to-Hermes conversational path is verified. Reliable operation, the second voice unit, device-control permissions, n8n, Prometheus, Grafana, expanded memory/RAG, multi-user profiles, and on-demand GPU integration remain in progress or planned.
 - Remaining client tests, assistant-specific monitoring, per-monitor notification validation, and broader access-policy review remain in progress or pending.
 

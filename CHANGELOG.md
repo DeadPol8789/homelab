@@ -8,16 +8,24 @@ The project follows a simple evidence-based rule: an infrastructure milestone is
 
 ### Added
 
+- Documented the separate Hermes restricted SSH export/task path, the first observed weekly VM cycle and timed new-copy export, and manual decryption verification.
+- Recorded Hermes missed-schedule recovery using scheduler event 114 and matching launcher/exporter success. Home Assistant's observed event 119 remains sign-in evidence.
+- Documented selected encrypted-copy Hermes restoration with local HTTP, SQLite and readable memory/wiki-file checks after manual isolated networking adaptations; restored conversation remains untested.
+- Recorded fresh Tailscale/Uptime Kuma container backups, encryption, transfer hashes, streaming manual decryption and selected local-archive restoration checks with explicit functional limits.
+- Recorded enabled weekly container scheduling as configuration only; its first scheduled execution remains pending.
+- Added disconnected ciphertext copies for the four selected workloads and a recovered-key decryption drill for both VM copies. No restored VM or container is claimed from that key drill.
+- Recorded reviewed staging cleanup, preserved protected source backups and remaining capacity/retention work.
+
 - Documented the Home Assistant public-key VM export, protected recovery-key import and cross-platform decryption tests.
 - Documented the restricted SSH gateway's allowed-probe test and unrelated-command refusal.
 - Recorded task demand-runs, missing-disk warning/recovery and automatic existing-copy verification after Windows restart/sign-in.
 - Distinguished guided decryption, new automatic export validation and existing-copy hash checks; automatic exports never decrypt.
-- Verified a daily time-triggered new-copy export, sign-in fallback after the PC was off, and suppression of an overlapping launch attempt. Independent missed-daily-run catch-up remains unverified.
+- Verified a daily time-triggered new-copy export, sign-in fallback after the PC was off, and suppression of an overlapping launch attempt. Independent Home Assistant missed-daily-run catch-up remains unverified; later Hermes catch-up is documented separately.
 - Verified manual decryption of the newer selected copy and chose monthly review, plus review after key or backup-system changes; repeated monthly execution remains to be demonstrated.
 - Restored a selected external encrypted Home Assistant VM backup into an isolated test guest after source-hash and VMA validation. Application startup, SQLite integrity, Core configuration, historical-record presence and a direct Spanish Piper-to-Whisper round-trip passed.
 - Recorded the missing offline tokenizer and its manually verified supplement, plus the manual Whisper start; the unchanged archive did not demonstrate unattended offline speech recovery.
 - Verified restored UI login, selected historical-state rendering and browser voice preview through temporary restricted access. Closed the access path, restored the pre-UI VM configuration and retained the test guest stopped and isolated.
-- Kept full restored Assist/Hermes, physical voice, automations, data completeness, other workload recovery and wider retention explicitly pending.
+- Kept full restored Assist/Hermes, physical voice, automations, data completeness and wider retention explicitly pending; later selected other-workload checks retain their own limits.
 
 - Added a sanitized record of the authenticated A2A conversation bridge between Home Assistant and Hermes Agent.
 - Added the local Spanish speech pipeline using Whisper `3.5.3` for speech-to-text and Piper `2.3.4` for text-to-speech.

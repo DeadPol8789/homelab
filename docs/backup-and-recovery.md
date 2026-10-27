@@ -1,40 +1,29 @@
 # Backup and Recovery
 
 > **Last documented:** October 2026  
-> **Project status:** Daily Home Assistant export and selected isolated VM restoration tested; speech required manual repair; full integration, independent missed-run catch-up and wider recovery remain pending
+> **Project status:** Four-workload backup coverage recorded; selected isolated recovery and disconnected-copy checks tested; container scheduling and full functional recovery retain explicit limits
 
 This document records backup milestones for the HomeLab virtualization workloads and service configuration. It distinguishes the earlier encrypted, integrity-checked workload copies from the current protected guest snapshots, the Home Assistant application backup, and private Hermes configuration safety copies. Live identifiers, filenames, paths, hashes, credentials, and storage details are excluded.
 
 ## Verified Backup Scope
 
-Initial backups were created for selected Proxmox virtual-machine and container workloads. Together, these copies established the first protected workload baseline beyond the existing private network-configuration and pre-update host-configuration backups. They do not establish backup coverage for every workload added since that baseline.
+Weekly source jobs are enabled for Home Assistant, Hermes, Tailscale and Uptime Kuma. New weekly VM backups and timed encrypted exports were verified for Home Assistant and Hermes; the new container job awaits its first scheduled-run check. Selected copies of all four workloads have encrypted secondary and disconnected copies. Recovery checks are specific to the selected archives and do not establish full disaster recovery.
 
-After further configuration changes, the virtual-machine workflow was performed again. A new compressed archive was created, encrypted, transferred to separate storage, and checked against its encrypted source. The matching SHA-256 result confirms that a newer protected copy reached the secondary location without detected transfer corruption.
-
-After the Home Assistant-to-Hermes voice integration reached a stable tested state, protected compressed Proxmox snapshot jobs completed successfully for both principal guests. Home Assistant also produced an encrypted local application backup containing its configuration and installed voice applications. These are additional recovery sources; they do not prove recoverability until controlled restoration succeeds. Live guest identifiers, hostnames, storage volumes, resource configuration, and backup filenames remain private.
+Earlier archives, protected guest backups, the Home Assistant application backup and private Hermes configuration safety copies remain distinct recovery sources. The newer tests below do not retroactively validate every earlier archive. Live identifiers, filenames, schedules, locations, resource sizes and cryptographic metadata remain private.
 
 ## Verified Progress
 
-| Stage | Status | Verified result |
+| Workload or control | Verified result | Remaining boundary |
 | --- | --- | --- |
-| Initial virtual-machine backup | **Completed** | A compressed backup of the selected virtual machine was created successfully. |
-| Initial container backup | **Completed** | A compressed backup of the selected container was created successfully. |
-| Backup encryption | **Completed** | Protected encrypted copies were created before transfer to secondary storage. |
-| Secondary copy | **Completed** | The encrypted workload backups were copied away from the primary virtualization host. |
-| Source checksum | **Recorded privately** | A SHA-256 checksum was calculated for each encrypted source backup. |
-| Destination checksum | **Verified** | Each secondary copy produced the same SHA-256 checksum as its encrypted source. |
-| Follow-up virtual-machine cycle | **Completed and integrity-verified** | The manual create, encrypt, transfer, and SHA-256 comparison workflow was repeated successfully after later configuration changes. |
-| Home Assistant VM recovery copy | **Created, encrypted, and exported** | A VM-level recovery source was created, protected with private encryption material, and exported to secondary storage. |
-| Home Assistant public-key export integrity | **Verified for a selected VM copy** | VMA validation, ciphertext transfer integrity and guided decryption matching the original were tested. Existing-copy automatic runs only verify retained ciphertext integrity. |
-| Hermes configuration safety copy | **Created privately** | A copy of the active configuration was retained after the initial voice-path validation. It is not presented as a complete assistant backup. |
-| Stable Hermes guest snapshot | **Completed and protected** | A compressed snapshot-mode Proxmox backup completed successfully after the A2A voice path was validated. |
-| Stable Home Assistant guest snapshot | **Completed and protected** | A compressed snapshot-mode Proxmox backup completed successfully after the same integration milestone. |
-| Home Assistant application backup | **Created and encrypted locally** | The application backup includes Home Assistant configuration and installed voice applications; restoration remains untested. |
-| Local working archives | **Temporarily retained** | Unencrypted working archives remain protected on the virtualization host while cleanup and retention handling are finalized. |
-| Selected Home Assistant VM restoration | **Tested with manual intervention** | An external encrypted copy was decrypted, hash-checked, VMA-validated, restored and booted in isolation. Application, history and speech checks passed within the scope below; Whisper required a manual tokenizer supplement and service start. Full integration recovery remains unverified. |
-| Windows export task | **Daily new-copy run verified** | The time trigger launched a successful new export with VMA and ciphertext checks. Sign-in fallback after the PC was off and overlapping-run suppression were also observed. Independent missed-daily-run catch-up remains unverified. |
-| Manual decryption review | **Selected copy verified; monthly policy chosen** | Guided decryption matched the original archive reference. Review is planned monthly and after key or backup-system changes; repeated monthly execution has not yet been demonstrated. |
-| Wider retention and coverage | **Pending** | The export task does not establish complete workload coverage, rotation, capacity alerts or disaster recovery. |
+| Home Assistant VM | New weekly source backup, VMA validation, timed new-copy encrypted export and manual decryption matching the source | The newest archive has not itself been restored; earlier selected isolated recovery required manual speech repair |
+| Hermes VM | Protected recovery copy and selected encrypted-copy restoration; subsequent weekly source backup and timed new-copy export; manual decryption | Local HTTP, SQLite structure and readable memory/wiki files do not prove restored conversation or semantic memory retrieval |
+| Uptime Kuma container | Fresh protected snapshot backup, decompression/TAR check, encrypted transfer and manual decryption; selected local archive restored | Healthy application, dashboard HTTP, SQLite integrity and aggregate record counts passed after isolated networking adaptations; login, alerts and target connectivity untested |
+| Tailscale container | Fresh protected snapshot backup, decompression/TAR check, encrypted transfer and manual decryption; selected local archive restored | Daemon startup, state-file metadata and observed isolation checked; live overlay connectivity and routing untested |
+| Windows export tasks | Separate daily tasks and restricted SSH paths for the two VMs; post-restart/sign-in and timed new-copy runs recorded | Container exports remain manual; interactive session, destination, network and SSH readiness are required |
+| Missed daily schedule | Hermes task event 114 explicitly identified catch-up; wrapper and exporter succeeded with an existing-copy check | Home Assistant's observed event 119 identifies sign-in; independent missed-schedule recovery remains unproven for that task |
+| Disconnected copies | Selected ciphertexts for all four workloads and checksum references/reports were copied to removable storage and compared | A disconnected snapshot requires manual refresh; off-site storage is not established |
+| Recovery-key drill | Exported private recovery material imported into a separate temporary GPG home; both selected VM ciphertexts decrypted from removable storage to matching source hashes | No VM was restored in this key drill; container decryption used the working Windows key store |
+| Cleanup and retention | Reviewed duplicate ciphertext staging removed after matching destination checks; protected source backups preserved | Complete retention, growth thresholds, failure alerting and recurring maintenance remain ongoing work |
 
 ## Earlier Virtualization Backup Workflow
 
@@ -73,10 +62,10 @@ An earlier encrypted Home Assistant VM recovery copy was followed by the separat
 
 | Recovery source | Recorded result | Remaining validation |
 | --- | --- | --- |
-| Earlier VM and container archives | Encrypted secondary copies with matching SHA-256 checksums; the manual VM cycle was repeated | Decryption, isolated restoration, startup, and service validation |
+| Earlier VM and container archives | Encrypted secondary copies with matching SHA-256 checksums; the manual VM cycle was repeated | Later selected recovery tests below apply only to their identified sources |
 | Home Assistant public-key VM export | Daily new-copy task execution, manual decryption and selected isolated VM restoration tested; application and speech checks passed after manual tokenizer repair | Recurring manual review, independently attributed missed-run catch-up, full Assist/Hermes and physical voice tests, automation and data-completeness checks |
 | Hermes configuration safety copy | Created privately after the initial voice-path configuration | Protection, integrity comparison, completeness review, and controlled configuration recovery |
-| Stable Hermes and Home Assistant guest snapshots | Protected compressed snapshot jobs completed successfully | Isolated restoration, guest startup, and functional validation |
+| Stable Hermes and Home Assistant guest snapshots | Protected compressed snapshot jobs completed successfully; later selected guest restorations are recorded below | No recovery claim for every retained snapshot |
 | Home Assistant application backup | Encrypted local backup containing configuration and installed voice applications | Application-level restoration and voice-integration validation |
 
 Uptime Kuma's Home Assistant monitor reported **Up** after saving. That availability result concerns the running service; it provides no validation of the backup copy or its recoverability.
@@ -96,17 +85,16 @@ stopped, their network interfaces removed and automatic startup disabled.
 
 These are historical results for those selected older copies, not a fresh test
 of the October public-key export or of the live guests. Login, historical data,
-integrations, voice and restored automations were not fully validated. No
-restoration of Hermes, Tailscale, Uptime Kuma or the whole environment is claimed.
+integrations, voice and restored automations were not fully validated. The later Hermes, Tailscale and Uptime Kuma tests below are separate milestones;
+none establishes whole-environment recovery.
 
 ### Source schedule and retention
 
-The historical record describes a weekly snapshot-mode, zstd-compressed
-Proxmox backup job for Home Assistant. Its reported keep-last setting did not
-match the observed number of retained copies; the cause remains unreviewed.
-The Windows task exports the newest available source backup rather than
-creating or reconfiguring that source job. Its daily trigger does not prove
-daily source-backup creation or correct source retention.
+Weekly snapshot-mode source jobs are enabled for both principal VMs and for a combined Tailscale/Uptime Kuma container scope. The VM jobs produced new archives in the observed weekly cycle. The container job was created disabled, inspected, enabled and checked for a calculated next run; its first scheduled execution is still pending validation.
+
+Each job has an explicit bounded keep-last policy. Protected archives remain outside ordinary pruning, explaining why the total retained count can exceed the keep-last setting. The observed Home Assistant cycle pruned one ordinary older archive; the Hermes cycle pruned none. This does not establish every future pruning outcome or sufficient storage indefinitely.
+
+The Windows tasks export the newest retained VM source backup. Their daily triggers do not create daily source backups. Container encryption and external copying currently use a manual procedure. Source storage and thin-provisioned guest-disk storage have separate capacity limits; free space in one does not establish available backup space in the other.
 
 ### Encryption and recovery material
 
@@ -176,13 +164,13 @@ rather than being blindly retried. Successful runs are quiet.
 | Overlapping launch attempt | Scheduler refused a second instance while the first was running | Observed overlap suppression; the second attempt's trigger was not established |
 
 These tests establish restricted export availability, a daily timed new-copy
-run, sign-in fallback and observed overlap suppression. Independent
-missed-daily-run catch-up remains open. The reports do not establish the
+run, sign-in fallback and observed overlap suppression. Independent Home Assistant
+missed-daily-run catch-up remains open; later Hermes evidence is separate. The reports do not establish the
 exact timing breakdown or guarantee future runs.
 
 The exporter selects the newest retained source backup and cannot recover one
 already deleted by retention. The secondary Windows storage is not an off-site
-backup. Offline key storage is not an offline copy of the VM archive.
+backup. The later disconnected archive-copy and recovery-key drill is recorded separately below.
 
 ## Selected Isolated Home Assistant VM Restoration
 
@@ -241,6 +229,60 @@ recovery, Hermes guest or memory restoration, or recovery of the separate
 Home Assistant application backup. The earlier live voice-to-Hermes results
 must not be reassigned to this isolated restored guest.
 
+## Hermes Export and Selected Isolated Restoration
+
+Hermes has its own restricted SSH identity, forced-command gateway, state directories, Windows launcher and reports, separate from Home Assistant. An allowed probe succeeded and an unrelated command was refused. Existing Home Assistant authorization remained functional. New automatic exports validate the VMA and ciphertext; retained-copy runs report `ExistingCipherHashVerified`. Neither mode decrypts automatically.
+
+A selected protected Hermes VM backup was validated, encrypted, transferred and manually decrypted to its source SHA-256. Its encrypted external copy was then decrypted into protected temporary host staging, hash-checked, VMA-validated and restored into a separate guest with independent disks, no production network interface and automatic startup disabled.
+
+The restored Docker service initially failed because its published address was absent in the isolated guest. A temporary address on guest loopback and reconnection to the existing internal Docker bridge allowed the application to start and return local HTTP success. These were manual test adaptations; an unchanged unattended recovery is not demonstrated.
+
+Read-only checks passed for the selected SQLite databases. Retained memory and wiki Markdown files were readable and nonempty. No complete restored LLM conversation, semantic memory retrieval, A2A integration or Telegram exchange was tested in this guest. A response from the original live service is separate evidence.
+
+After the checks, the application stopped with exit code zero, the temporary loopback address was removed and the guest was shut down. Plaintext transfer staging was removed after review; source backups, ciphertexts and the isolated test disks were retained.
+
+### Actual timed and missed-schedule execution
+
+The first observed weekly Hermes source job completed successfully. Windows scheduler event 107 identified the daily time trigger, and a new export reported `CreatedCipherHashVerified` with source VMA validation and ciphertext integrity checks. Manual decryption later matched the retained source reference. The equivalent new Home Assistant cycle was also verified. These newer archives were not themselves restored in the earlier drills.
+
+After a later Windows boot, Hermes event 114 explicitly stated that a missed scheduled execution was being recovered. The same scheduler instance completed with code zero, its launcher reported `ExporterSucceeded`, and its exporter verified the existing weekly ciphertext without decrypting. Event 322 rejected an additional launch while that instance was running. Home Assistant instead started through event 119 (user sign-in), then completed with an existing-copy check. Catch-up is therefore demonstrated for the Hermes task in that execution, not independently for Home Assistant.
+
+An earlier Home Assistant export was interrupted by a user-requested Windows restart. The review marker blocked subsequent exports until the launcher/exporter logs, Windows shutdown events and remote state were reviewed. A read-only retained-copy check passed; only the matching marker was archived, and a subsequent task run succeeded. This is a reviewed recovery example, not permission to clear markers automatically or reboot active exports.
+
+## Container Backup and Isolated Restoration
+
+Fresh protected snapshot backups of the dedicated Tailscale and Uptime Kuma containers completed. The selected configurations and included root filesystems were reviewed; Uptime Kuma's Docker data bind mount was confirmed to reside on its included root filesystem. Original service checks succeeded before and after backup. Decompression/TAR structure checks and source SHA-256 references were recorded privately.
+
+Both archives were encrypted with the public recovery recipient before external transfer. Ciphertext hashes matched in Windows, and manual streaming decryption matched each original archive without writing plaintext backups to Windows. Reviewed encrypted host staging and auxiliary GPG files were removed afterward. This does not remove the protected local source archives.
+
+### Uptime Kuma
+
+The selected **local** archive was restored into a new unprivileged container, left stopped, assigned its own disk and given a distinct test label. Automatic startup was disabled and its copied network interface removed before boot. This restore did not consume the encrypted external copy; its decryption was verified separately.
+
+Docker initially could not bind the application's inherited address. A temporary address on container loopback and connection to the existing Docker bridge restored the internal publication. No production bridge interface was added. The restored service became healthy, its local redirect pointed to the dashboard, and that page returned HTTP success.
+
+SQLite was opened read-only with its WAL available, and its integrity check returned `ok`. Counts of users, monitors and notification definitions matched the current original service. Counts do not establish identical record contents, historical completeness, successful login, target reachability or alert delivery. No notifications were intentionally sent as part of the test.
+
+The application stopped with exit code zero, the temporary address was removed and the test container was shut down. The original container remained running. The internal Docker-network attachment and test writes remain on the retained test disk.
+
+### Tailscale
+
+The selected **local** archive was restored into a separate unprivileged test container, initially stopped with automatic startup disabled. Its production network interface was removed before boot; the tunnel-device access was retained. The daemon started, and only loopback and the Tailscale tunnel interface were observed. Neither IPv4 nor IPv6 had a default route in the queried main table. These are observed configuration checks, not exhaustive proof of isolation across every possible path.
+
+The restored state file was present, nonempty, owned by root and restricted to root access. Its contents and private keys were not displayed. A tunnel address and active daemon do not establish current overlay connectivity, authentication acceptance, peer access, subnet routing or gateway operation. No new login, `tailscale up` or logout was performed.
+
+The daemon was stopped and its inactive/dead state verified before orderly shutdown. The test container was retained stopped without a production network interface; the original remained running. No live reconnection with the duplicate restored identity was attempted.
+
+## Disconnected Copies and Recovery-Key Drill
+
+Selected encrypted Home Assistant and Hermes VM archives and their references were copied to a second removable device and compared with the working secondary copies. A protected private recovery-key export was retained there, with its passphrase recorded separately. A temporary Windows GPG home imported that export and successfully decrypted both selected VM archives directly from the removable device; raw output was hashed in memory and matched the original references. No VM restoration was performed in this drill.
+
+Only the temporary imported key home was removed after its own agent was stopped and its path reviewed. The working key store and removable recovery export were retained. This drill establishes decryption using the recovered key, not recovery of a lost Windows installation or the whole environment.
+
+The selected encrypted container archives and their verification reports were subsequently copied to the same removable device and compared byte-for-byte through SHA-256. Their manual decryption used the working Windows key store, not this recovered-key drill. The device was safely ejected and disconnected. The later container-restoration reports are currently retained on working secondary storage; copying those new reports to the disconnected device has not been recorded.
+
+This is a manually refreshed disconnected copy, not continuous replication or demonstrated off-site protection. The passphrase alone is not a private-key backup. Source archives, ciphertexts, private key exports, state files and operational reports remain outside the public repository.
+
 ## What the Integrity Check Proves
 
 Matching SHA-256 checksums provide evidence that:
@@ -268,43 +310,31 @@ The earlier encrypted virtualization-backup baseline follows these controls:
 - Checksums are compared privately and are not published.
 - Backup filenames, timestamps, sizes, paths, IDs, and storage destinations are excluded.
 - The public repository contains documentation only, never live backup archives.
-- Unencrypted working archives remain on the primary host only temporarily and require explicit cleanup or retention decisions.
+- Retained source archives remain private on the primary host under explicit protection/retention decisions; reviewed transfer staging is removed separately.
 
 The Home Assistant VM recovery copy contains potentially sensitive configuration and security material. Its handling must remain private, and neither its contents nor its metadata should be uploaded to the public repository. The Hermes configuration safety copy has a narrower scope and must not be treated as evidence of complete assistant or persistent-memory recovery.
 
 ## Recovery Boundary
 
-The current milestone combines selected export integrity, a daily timed
-new-copy task run, guided decryption and an isolated Home Assistant VM
-restoration with the limited functional checks above. Manual tokenizer repair
-was required. Earlier recovery sources retain their separate scopes.
+The recorded scope now includes enabled weekly source coverage for four workloads, observed new weekly VM cycles, separate daily VM export tasks, guided decryption, disconnected copies, a recovered-key decryption drill and selected isolated restoration checks. Hermes missed-schedule recovery has scheduler and exporter evidence; the corresponding independent Home Assistant case remains open.
 
-The monthly decryption-review policy has been chosen; recurring compliance
-remains to be demonstrated. Independent missed-daily-run catch-up, source
-retention, wider workload coverage and complete functional disaster recovery
-remain open. Future drills should test those dependencies and recovery using
-offline material, record required manual intervention, validate the intended
-services and data, and close temporary access and plaintext staging safely.
+The Home Assistant restore required manual speech repair; Hermes and Uptime Kuma required isolated Docker-network adaptations. Tailscale was tested without live overlay reconnection. The container restores used local source archives, whereas the selected earlier VM restores used external encrypted copies. None establishes full integration recovery, every archive's recoverability or unattended disaster recovery.
 
 ## Remaining Work
 
-- Map the current VM, container, and service inventory to its backup scope and recovery dependencies.
-- Independently attribute and validate catch-up after a missed daily run, separately from sign-in fallback.
-- Carry out the chosen monthly manual decryption review and additional reviews after key or backup-system changes.
-- Make the missing speech dependency available through a reviewed recovery procedure and repeat offline speech startup without ad hoc repair.
-- Validate restored Assist/Hermes conversation, physical voice hardware and automations in an appropriately controlled test; assess data completeness separately.
-- Test recovery using only the intended offline recovery material rather than the working Windows key store.
-- Review protection, completeness, and recovery use of the private Hermes configuration safety copy.
-- Test the other retained guest snapshots, including Hermes startup and persistent memory; the selected Home Assistant test does not validate those sources.
-- Test application-level Home Assistant recovery, including the local speech services and Hermes conversation connector.
-- Decide when protected local working archives should be removed.
-- Define recurring backup jobs for virtual machines, containers, service configuration, and persistent data.
-- Define complete retention, rotation and capacity thresholds; extend failure monitoring beyond the tested local export-task warning.
-- Extend the tested Home Assistant export schedule to other required scopes only after reviewing their recovery dependencies and permissions.
-- Keep at least one protected copy separate from the primary virtualization host.
-- Perform and document controlled restoration tests.
-- Review whether an additional offline or off-site copy is appropriate.
-- Revalidate recovery procedures after meaningful infrastructure changes.
+- Verify the container job's first actual scheduled run and its retention outcome; an enabled job and next-run calculation are not execution evidence.
+- Independently attribute Home Assistant missed-daily-schedule recovery without mistaking its sign-in trigger for catch-up.
+- Carry out the chosen monthly manual decryption reviews and reviews after key or backup-system changes; recurring compliance is not yet demonstrated.
+- Decide whether to extend restricted encrypted export automation to the containers; their external exports remain manual.
+- Repeat recovery from selected newer archives and distinguish local-archive restore tests from encrypted-copy and recovered-key recovery paths.
+- Make offline speech dependencies available through a reviewed procedure and extend Home Assistant checks to restored Assist/Hermes, physical voice, automations and data completeness.
+- Validate restored Hermes conversation and semantic memory/wiki behavior; readable files and SQLite integrity alone are insufficient.
+- Test Uptime Kuma login, settings equivalence and approved monitor/notification behavior in a controlled environment.
+- Assess Tailscale live recovery without concurrently reconnecting a clone of an active identity; gateway and routing behavior remain unverified.
+- Test the separate Home Assistant application backup and configuration-only recovery sources.
+- Maintain bounded retention, monitor backup-storage growth and establish useful failure/capacity alerts; protected archives accumulate separately.
+- Refresh disconnected copies and their new reports through a reviewed copy-and-verify process; assess off-site protection separately.
+- Revalidate recovery after meaningful infrastructure changes and retain the scope and manual adaptations in each report.
 
 ## Information Intentionally Omitted
 

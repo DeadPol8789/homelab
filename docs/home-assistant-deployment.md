@@ -75,6 +75,12 @@ establish recovery of the separate application backup.
 See [Backup and recovery](backup-and-recovery.md) for the distinct sources,
 verification modes, scheduling limits and remaining work.
 
+### Later weekly cycle and disconnected copy
+
+A later weekly source backup completed, ordinary retention pruned an older unprotected copy, and a time-triggered Windows run created and verified a new ciphertext. Guided decryption matched its source reference. That newer archive was copied to disconnected removable storage and successfully decrypted using an imported recovery-key export in a temporary GPG home; no VM was restored in that key drill. The earlier selected restored VM and this newer archive remain distinct evidence.
+
+After a later Windows boot, scheduler event 119 attributed the successful retained-copy verification to sign-in. Independent missed-daily-run recovery therefore remains unproven for Home Assistant, even though the separate Hermes task produced explicit catch-up evidence.
+
 ## Voice and Conversation Configuration
 
 Both Home Assistant Voice Preview Edition units completed local onboarding. The Spanish Assist pipeline uses the Hermes custom conversation agent, Whisper for speech-to-text, and Piper for text-to-speech. Local-command preference is enabled, allowing Home Assistant to handle supported commands before forwarding other requests to Hermes.

@@ -1,6 +1,6 @@
 # Tailscale Remote Access
 
-> **Last verified:** September 2026  
+> **Last documented:** October 2026
 > **Project status:** Private host access externally tested on the travel laptop; mobile-client rollout in progress
 
 This document records the initial remote-access deployment and subsequent client rollout for the HomeLab. Tailscale provides a private encrypted path to the Linux host running Hermes Agent. The selected travel laptop has passed a real external-network test through a mobile hotspot, and selected mobile clients are being prepared and validated.
@@ -82,6 +82,16 @@ Passing this test establishes a working external path. It does not replace perio
 The travel laptop completed a real access test through a mobile hotspot. A selected tablet also reached the Hermes host in Termius through a phone hotspot. These results extend the recorded client coverage beyond the original test.
 
 The further tablet's Tailscale connection and SSH-key preparation are recorded as setup progress. Final external SSH access remains to be documented. Private keys, public keys, fingerprints, account names, device labels, and session output are excluded.
+
+## Dedicated Container Backup and Isolated Recovery
+
+A fresh protected backup of the dedicated container passed decompression/TAR checks. Its encrypted secondary copy passed transfer-integrity comparison and manual streaming decryption against the source reference. A verified encrypted copy was placed on disconnected removable storage. This does not change the scope of the earlier external host-access tests.
+
+The local source archive was restored into a separate unprivileged test container with its own disk. Automatic startup was disabled and the production network interface removed before boot; tunnel-device access was retained. The daemon reached active state. Only loopback and its tunnel interface were observed, with no IPv4 or IPv6 default route in the queried main table. The state file was present, nonempty and restricted to root; its contents and keys were not displayed.
+
+These checks establish selected restoration, daemon startup and state-file presence. They do not demonstrate live overlay connection, authentication acceptance, peer reachability, subnet routing or gateway operation. The restored identity was not intentionally reconnected alongside the original. No new login or logout was performed. The daemon was stopped and its inactive state confirmed before shutdown; the original container remained running. The test disk is retained, stopped and isolated.
+
+Weekly source scheduling for the container scope is enabled, but the first actual scheduled run remains pending. Encrypted external copying remains manual. See [Backup and recovery](backup-and-recovery.md) for the separate key drill and copy-validation boundaries.
 
 ## Remaining Work
 
