@@ -1,6 +1,6 @@
 # Hermes Agent Deployment
 
-> **Last verified:** September 2026  
+> **Last documented:** October 2026
 > **Project status:** Hermes `0.20.6` operational; approval-gated memory, authenticated A2A conversation, two voice endpoints, and initial wiki retrieval verified
 
 This document records the verified Hermes Agent deployment in the HomeLab. It covers the sanitized guest foundation, administration controls, container tooling, assistant validation, persistent memory, Home Assistant A2A integration, and initial knowledge retrieval. Live network values, identities, credentials, configuration files, and private memory content are intentionally excluded.
@@ -15,7 +15,7 @@ Docker Engine `29.7.2` and Docker Compose `5.5.0` are installed on the guest. Th
 
 Persistent user memory was also validated: a new Hermes session loaded the stored user profile automatically. Memory writes now require explicit approval, and a temporary test entry was approved and then removed successfully. A persistent LLM Wiki structure is present, and a knowledge query through Home Assistant returned the documented high-level deployment facts. This confirms initial retrieval, not a complete, fully curated RAG corpus or multi-user isolation.
 
-The HomeLab backup record includes earlier encrypted workload copies with verified transfer integrity. After the Home Assistant conversation path became stable, a protected compressed Proxmox snapshot of the Hermes guest completed successfully. Private configuration safety copies also exist. These results establish current backup sources, but decryption where applicable, isolated restoration, service startup, wiki availability, and persistent-memory recovery are not documented as tested.
+Hermes now has a verified weekly VM source cycle and a separate restricted SSH encrypted export/task path. A selected encrypted external VM backup was restored in isolation; local HTTP, SQLite integrity and readable nonempty memory/wiki files passed after temporary loopback and Docker-network adaptations. These are selected recovery checks, not restored conversation, semantic retrieval or integration validation. Private configuration safety copies remain a narrower, separately untested source.
 
 Home Assistant and Uptime Kuma are operational as separate workloads on Proxmox. A custom Home Assistant conversation connector sends text to Hermes through an authenticated A2A peer and extracts the returned assistant message. Both Home Assistant Voice Preview Edition units completed onboarding and returned the expected persistent-memory response in approximately ten seconds. The active Spanish pipeline uses Whisper `3.5.3` and Piper `2.3.4`. Uptime Kuma has initial alerting configured, and its Home Assistant monitor reported **Up**. Approved device actions and direct functional monitoring of the full assistant workflow remain unverified.
 
@@ -37,7 +37,7 @@ The sanitized remote-access path and its current limitations are documented in [
 | Container validation | **Completed** | A disposable test container completed successfully. |
 | Hermes Agent | **Operational** | Version `0.20.6` is usable through text and the A2A messaging gateway. |
 | Persistent user memory | **Verified with write approval** | A fresh session loaded the stored user profile automatically. A temporary write was held for approval, explicitly approved, and later removed. |
-| Workload backup | **Protected snapshot completed** | A protected compressed Proxmox snapshot of the stable Hermes guest completed successfully. Controlled assistant, wiki, and memory restoration remain pending. |
+| Workload backup | **Selected export and isolated restoration tested** | Weekly source and timed new-copy encrypted export verified; selected encrypted-copy restore passed local HTTP, SQLite and file-read checks after manual network adaptations. Full restored assistant and memory behavior remain pending. |
 | Home Assistant A2A path | **Two-unit conversational validation completed** | The authenticated connector returned Hermes responses through both onboarded voice endpoints. Device actions and full-path monitoring remain unverified. |
 | Persistent wiki | **Initial retrieval verified** | The configured wiki returned documented deployment facts through Home Assistant. Corpus curation and bulk ingestion remain in progress. |
 | Configuration safety copy | **Created privately** | A private copy of the active Hermes configuration was retained after the initial integration test. Integrity comparison and restoration are not documented. |
@@ -131,13 +131,17 @@ The public repository does not include:
 - Backup filenames, storage paths, encryption details, hashes, or recovery material.
 - Screenshots containing terminals, browser sessions, account details, or personal memory content.
 
+## Export Task and Recovery Limits
+
+The daily task has recorded timed new-copy export, post-restart/sign-in execution and independent missed-schedule recovery. Scheduler event 114 identified catch-up, the same instance completed with code zero, and its exporter verified an existing ciphertext. Automatic runs never decrypt. These are specific observations, not a guarantee of future execution. The recovered test VM remains stopped and isolated; the original service remained running in the final checks. See [Backup and recovery](backup-and-recovery.md).
+
 ## Remaining Work
 
 The next assistant-platform milestones are:
 
-- Define recurring backups and retention for the guest, Hermes configuration, and persistent memory; the private configuration safety copy is not a substitute for this work.
+- Maintain the verified weekly guest job and separate daily encrypted export; review capacity, application-level dependencies and recurring manual decryption. Configuration safety copies retain their separate scope.
 - Map the assistant's current data and configuration to the protected snapshot and application-level recovery dependencies.
-- Perform a controlled restoration and confirm Hermes, its wiki, and its memory behave as expected.
+- Extend the selected isolated restoration to actual conversation, semantic memory/wiki retrieval and approved integration behavior; structural and file-read checks alone do not establish these.
 - Curate and ingest the updated public documentation into the existing knowledge base.
 - Define isolated personal and restricted-user profiles.
 - Add and validate assistant-specific checks and actionable alerts through the existing monitoring platform.

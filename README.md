@@ -20,7 +20,7 @@ The documentation reflects only work that has actually been completed. Planned c
 | Self-hosted services | Assistant platform operational | Docker Engine `29.7.2`, Docker Compose `5.5.0`, and Hermes Agent `0.20.6` are deployed on the first Linux guest. Persistent-memory loading, the approval-gated write workflow, the A2A service, and an initial persistent-wiki query have been verified. |
 | Home automation | Two-unit conversational path verified | Home Assistant Core `2026.9.1` runs on Home Assistant OS `18.2`. Both Voice Preview Edition units completed onboarding and returned the expected persistent-memory response through a custom authenticated A2A conversation bridge. The active Spanish pipeline uses Whisper for speech-to-text and Piper for text-to-speech. Conversational operation is verified; approved household-device actions remain a separate milestone. |
 | Availability monitoring | Initial Uptime Kuma deployment operational | Uptime Kuma and initial alerting are configured. The Home Assistant monitor was saved and reported **Up**. Coverage and notification delivery must be assessed for each monitored service. |
-| Backup and recovery | Daily export and selected isolated restoration tested | A time-triggered new-copy export passed VMA and ciphertext checks. A selected external encrypted VM copy was decrypted and restored in isolation; application, selected history and speech checks passed after manual tokenizer repair. Monthly manual decryption review is the chosen policy. Independent missed-run catch-up, full restored Assist/Hermes and physical voice tests, automation, data completeness and wider retention remain pending. See [Backup and recovery](docs/backup-and-recovery.md). |
+| Backup and recovery | Four-workload coverage with selected recovery checks | Weekly source jobs cover Home Assistant, Hermes, Tailscale and Uptime Kuma; new VM cycles and timed encrypted exports were verified, while the container job awaits its first scheduled-run check. Selected isolated recoveries, disconnected ciphertext copies and a recovered-key VM decryption drill passed within documented limits. Hermes missed-schedule catch-up is demonstrated; Home Assistant independent catch-up and full functional recovery remain pending. See [Backup and recovery](docs/backup-and-recovery.md). |
 | Remote access | Travel-laptop path externally tested | Tailscale provides private remote administration of the Hermes host. The selected travel laptop has passed a real external-network test through a mobile hotspot. Wider client rollout and access-governance review remain in progress. |
 
 ## Hardware Overview
@@ -90,8 +90,10 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Enroll the selected travel laptop and verify remote access through a mobile hotspot
 - [ ] Complete and document the selected backup-client rollout and external tests
 - [ ] Review Tailscale access controls, device lifecycle, and recovery procedures
-- [ ] Define recurring guest and service backup rotation
-- [ ] Perform controlled guest and service restoration tests
+- [x] Configure bounded weekly source jobs for the four recorded workloads
+- [ ] Verify the new container job's first scheduled execution and maintain capacity/retention checks
+- [x] Perform selected isolated guest and container recovery checks with documented manual adaptations
+- [ ] Complete restored functional integration and data-completeness testing
 - [x] Deploy Uptime Kuma with initial alerting
 - [x] Save the Home Assistant monitor and confirm its **Up** state
 - [ ] Extend monitoring coverage and verify notification delivery for each required service
@@ -108,7 +110,9 @@ This segmented path is operational for selected wired devices, and the switch ca
 - [x] Choose monthly manual decryption review and verify decryption of the selected newer copy
 - [x] Restore a selected encrypted Home Assistant VM copy in isolation and test application, history and speech after manual tokenizer repair
 - [x] Test restored UI login and browser voice preview, then remove temporary access and retain the guest stopped and isolated
-- [ ] Independently validate missed-daily-run catch-up and carry out recurring manual reviews
+- [x] Verify Hermes missed-daily-schedule recovery through scheduler event 114 and matching success reports
+- [x] Verify disconnected copies for the four selected workloads and recovered-key decryption of both selected VM archives
+- [ ] Independently validate Home Assistant missed-daily-schedule recovery and carry out recurring manual reviews
 - [ ] Complete restored Assist/Hermes, physical voice, automation and data-completeness validation
 - [x] Complete onboarding and end-to-end conversational validation for both Voice Preview Edition units
 - [x] Deploy and validate the authenticated Home Assistant-to-Hermes A2A conversation bridge

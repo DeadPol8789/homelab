@@ -1,6 +1,6 @@
 # Uptime Kuma Deployment
 
-> **Last documented:** September 2026  
+> **Last documented:** October 2026
 > **Status:** Initial availability monitoring operational; broader coverage and per-monitor notification validation in progress
 
 This document records the initial Uptime Kuma deployment and the available Home Assistant monitoring result. Live monitor targets, device names, addresses, notification destinations, credentials, and dashboard exports remain private.
@@ -20,7 +20,7 @@ The recorded result establishes that the configured availability check succeeded
 | Initial alerting | Configured | Notification delivery and recovery messages require a recorded result for each required monitor and destination. |
 | Home Assistant monitor | Existing monitor saved; state reported **Up** | This confirms its configured availability check at that time. |
 | Metrics and capacity monitoring | Prometheus and Grafana remain planned | Their deployment is separate from the initial Uptime Kuma milestone. |
-| Monitoring recovery | Not yet documented as tested | Backup coverage, restoration, and restored monitor behavior still need validation. |
+| Monitoring recovery | **Selected local-archive restore tested** | Encrypted copies passed transfer/decryption checks separately. Local restore passed application health, dashboard HTTP, SQLite integrity and aggregate-count comparison after isolated network adaptations; login, alerts and target behavior remain untested. |
 
 ## Home Assistant Check
 
@@ -47,6 +47,16 @@ If that host or its supporting power or network path becomes unavailable, the lo
 
 The monitoring workload should receive only the connectivity required for its checks and notifications. Monitor credentials and notification secrets must remain outside the public repository. No live access-policy configuration is published here.
 
+## Selected Backup and Isolated Restoration
+
+A fresh protected container backup completed with the Docker data directory included in the root filesystem. The original service remained healthy after backup. Decompression/TAR checks, ciphertext transfer comparison and manual decryption matching the original archive passed. A verified encrypted copy was also placed on disconnected removable storage.
+
+The local source archive was restored to a separate test container with its own disk, no production network interface and automatic startup disabled. Docker initially failed to bind the inherited address. A temporary loopback address and reconnection to its existing internal Docker bridge allowed the application to start. Health became healthy and the local dashboard returned HTTP success.
+
+Read-only SQLite integrity returned `ok`. User, monitor and notification-definition counts matched the current original. Record contents, login, monitor connectivity and notification delivery were not tested. No decrypted external archive was used for this particular restoration; its encrypted-copy check was separate.
+
+The application stopped with exit code zero, the loopback adaptation was removed and the test container was shut down. The original remained running. Weekly source scheduling is now enabled for this container scope, but the first automatic run remains unverified; external encrypted export is manual. See [Backup and recovery](backup-and-recovery.md).
+
 ## Remaining Validation
 
 - Record the private monitor inventory and the purpose of each check.
@@ -54,12 +64,12 @@ The monitoring workload should receive only the connectivity required for its ch
 - Perform an approved failure-and-recovery test and confirm both detection and notification delivery.
 - Review check timing and retry behavior to make alerts useful without excessive noise.
 - Extend coverage to required services and document remaining gaps.
-- Define backup scope for Uptime Kuma configuration, persistent data, and required secrets.
-- Test restoration and confirm that monitors and notifications behave as intended afterward.
+- Maintain the recorded root-filesystem backup scope, monitor growth and verify the new weekly job's first scheduled run.
+- Extend the selected isolated restore to login, configuration equivalence and approved monitor/notification behavior.
 - Evaluate independent outage detection for the shared host and network dependencies.
 - Add the planned metrics and capacity-monitoring layer when its requirements are defined.
 
-These are follow-up tasks, not claims that failure testing, recovery testing, or comprehensive coverage has already been completed.
+The selected recovery checks above do not establish failure/notification testing, full restored behavior or comprehensive coverage.
 
 ## Public Documentation Boundary
 
